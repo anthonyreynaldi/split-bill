@@ -36,6 +36,9 @@ The code is layered. The view calls hooks (TanStack), hooks call Server Actions,
 src/
   app/[locale]/       routes (thin pages, compose feature components)
   components/ui/      shadcn generated — don't hand-edit
+  components/layout/  app shell (header, language toggle)
+  components/providers/ QueryProvider etc.
+  lib/utils.ts        shadcn `cn()` helper (path required by shadcn CLI)
   features/<name>/    components/ (view) + hooks/ (view logic)
   shared/dto/         zod DTOs used by client + server
   shared/lib/         money, ActionResult, utils
@@ -59,6 +62,7 @@ See [CLAUDE.md → Conventions](../CLAUDE.md#conventions). In short:
 - one commit per logical step.
 
 ## Testing
+- `npm run check` runs lint, typecheck and the tests in one go. Run it before every commit.
 - `npm test` runs all Vitest tests.
 - `src/domain/**/*.test.ts` covers the calculation, including rounding and nett-settlement edge cases.
 - `src/server/services/**/*.test.ts` runs services against the **memory** repositories (`createMemoryContainer()`), so no DB is needed.

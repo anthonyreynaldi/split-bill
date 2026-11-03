@@ -6,6 +6,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { AppHeader } from "@/components/layout/app-header";
 import { Toaster } from "@/components/ui/sonner";
+import { QueryProvider } from "@/components/providers/query-provider";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -46,11 +47,13 @@ export default async function LocaleLayout({
     >
       <body className="min-h-full flex flex-col bg-muted/30">
         <NextIntlClientProvider>
-          <AppHeader />
-          <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6">
-            {children}
-          </main>
-          <Toaster richColors />
+          <QueryProvider>
+            <AppHeader />
+            <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6">
+              {children}
+            </main>
+            <Toaster richColors />
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>
