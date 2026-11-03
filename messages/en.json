@@ -220,5 +220,27 @@
       "total": "Total",
       "mode": "Settlement"
     }
+  },
+  "share": {
+    "button": "Share",
+    "title": "Share a view-only link",
+    "intro": "Anyone with the link can see the summary, but nobody can edit it.",
+    "create": "Create link",
+    "enabled": "Link is active",
+    "copy": "Copy",
+    "copied": "Copied",
+    "passcode": "Passcode",
+    "passcodeOn": "On",
+    "passcodeOff": "Off",
+    "setPasscode": "Set",
+    "removePasscode": "Remove passcode",
+    "passcodeHint": "4–32 characters. Viewers enter it once per device. Setting a new one replaces the old one.",
+    "readOnly": "View only",
+    "notFound": "This link does not exist or was turned off.",
+    "gate": {
+      "title": "Protected bill",
+      "description": "Enter the passcode you got from the organiser.",
+      "submit": "Open"
+    }
   }
 }

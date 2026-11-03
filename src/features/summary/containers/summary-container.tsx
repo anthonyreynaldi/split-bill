@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useFormatters } from "@/components/format/use-formatters";
 import { useUpdateEvent } from "@/features/events/hooks/use-events";
 import { ExportActionsContainer } from "@/features/export/containers/export-actions-container";
+import { ShareDialogContainer } from "@/features/share/containers/share-dialog-container";
 import { SummaryView, type SettlementMode } from "../components/summary-view";
 import { useSummary } from "../hooks/use-summary";
 
@@ -49,7 +50,12 @@ export function SummaryContainer(props: { eventId: string }) {
         money={fmt.money}
         date={fmt.date}
         onCaptureEl={setCaptureEl}
-        actions={<ExportActionsContainer eventId={props.eventId} captureEl={captureEl} name={summary.data.event.name} />}
+        actions={
+          <>
+            <ExportActionsContainer eventId={props.eventId} captureEl={captureEl} name={summary.data.event.name} />
+            <ShareDialogContainer eventId={props.eventId} />
+          </>
+        }
       />
     </div>
   );

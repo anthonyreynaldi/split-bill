@@ -116,3 +116,17 @@ Both settlement plans come back in one response, so switching tabs is instant. T
 | `exportSummaryExcel` | `ExportExcelInput { eventId, locale: 'id' \| 'en' }` | `FileDto { filename, mimeType, base64 }` | `UNAUTHORIZED`, `NOT_FOUND` | .xlsx with 4 sheets (People, Who pays whom, Items, Bills). Money is stored as real numbers, so it can be summed in Excel |
 
 The **image** export has no action. `useExportImage()` renders the summary element in the browser with `html-to-image`, so it also works on public share pages.
+
+### Share: `src/server/actions/share.actions.ts` → `features/share/hooks/use-share.ts`
+| Action | Who | Input DTO | Output | Errors | Purpose |
+|---|---|---|---|---|---|
+| `getShareLink` | owner | `EventIdInput` | `ShareLinkDto \| null` | `UNAUTHORIZED`, `NOT_FOUND` | Current settings (`slug`, `enabled`, `hasPasscode`) |
+| `upsertShareLink` | owner | `UpsertShareLinkInput { eventId, enabled?, passcode?: string \| null }` | `ShareLinkDto` | `UNAUTHORIZED`, `NOT_FOUND`, `VALIDATION_ERROR` | Create the link, turn it on or off, set the passcode (string) or remove it (`null`) |
+| `getSharedSummary` | **public** | `SharedSummaryInput { slug }` | `SummaryDto` | `NOT_FOUND`, `PASSCODE_REQUIRED` | Read-only summary |
+| `verifySharePasscode` | **public** | `VerifyPasscodeInput { slug, passcode }` | `null` (+ sets a 12 h httpOnly access cookie for this slug) | `NOT_FOUND`, `PASSCODE_INVALID`, `TOO_MANY_ATTEMPTS` | Unlock a protected link. 5 wrong tries lock it for 15 minutes |
+
+Security notes:
+- The slug is 128-bit random.
+- Passcodes are stored as bcrypt hashes and never returned.
+- The public DTO contains no owner data.
+- Share pages are marked `noindex`.

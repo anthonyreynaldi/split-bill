@@ -220,5 +220,27 @@
       "total": "Total",
       "mode": "Pelunasan"
     }
+  },
+  "share": {
+    "button": "Bagikan",
+    "title": "Bagikan tautan lihat-saja",
+    "intro": "Siapa pun yang punya tautan bisa melihat ringkasan, tapi tidak bisa mengubahnya.",
+    "create": "Buat tautan",
+    "enabled": "Tautan aktif",
+    "copy": "Salin",
+    "copied": "Tersalin",
+    "passcode": "Kode akses",
+    "passcodeOn": "Aktif",
+    "passcodeOff": "Tidak",
+    "setPasscode": "Atur",
+    "removePasscode": "Hapus kode akses",
+    "passcodeHint": "4–32 karakter. Pembuka tautan cukup memasukkannya sekali per perangkat. Kode baru menggantikan yang lama.",
+    "readOnly": "Hanya lihat",
+    "notFound": "Tautan ini tidak ada atau sudah dinonaktifkan.",
+    "gate": {
+      "title": "Tagihan dilindungi",
+      "description": "Masukkan kode akses dari pembuat acara.",
+      "submit": "Buka"
+    }
   }
 }
