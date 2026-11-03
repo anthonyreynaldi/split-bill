@@ -27,6 +27,9 @@ The code is layered. The view calls hooks (TanStack), hooks call Server Actions,
 | `DATA_BACKEND` | server | `supabase` (default) or `memory` (no DB; data is lost on restart, useful for demos) |
 
 ## Database schema / migrations
+- `supabase/migrations/20261103000001_init.sql` creates the tables, constraints, RLS (deny-all) and the `save_bill(jsonb)` function. That function saves a bill with its items, allocations and charges in **one transaction**, and refuses to move a bill to another event.
+- `supabase/migrations/20261103000002_storage.sql` creates the private `bill-images` bucket (5 MB, jpeg/png/webp).
+- The DB **cannot** check that `paid_by` or allocation participants belong to the bill's event. `BillService` validates this.
 - The SQL lives in `supabase/migrations/NNNN_name.sql`, and the ERD is in [architecture.md §2](architecture.md#2-data-model-erd).
 - Every schema change needs a new migration, an update to the repository mapper, and an update to the ERD.
 - Regenerate the types with `npm run db:types`. They are written to `src/server/repositories/supabase/db.types.ts`.

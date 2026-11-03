@@ -10,10 +10,13 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run lint && npm run typecheck && npm test"
+    "check": "npm run lint && npm run typecheck && npm test",
+    "db:types": "supabase gen types typescript --linked --schema public > src/server/repositories/supabase/db.types.ts",
+    "db:push": "supabase db push"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
+    "@supabase/supabase-js": "^2.118.0",
     "@tanstack/react-form": "^1.33.5",
     "@tanstack/react-query": "^5.105.3",
     "class-variance-authority": "^0.7.1",
