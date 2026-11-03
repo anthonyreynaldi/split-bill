@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
   // Dev logs Server Action arguments by default, which would print passwords
   // and passcodes in the terminal. Keep it off.
   logging: { serverFunctions: false },
+  // Receipt photos are compressed in the browser (~0.5 MB) but allow up to the 5 MB service limit.
+  experimental: { serverActions: { bodySizeLimit: "6mb" } },
   turbopack: {
     rules: {
       "*.css": {

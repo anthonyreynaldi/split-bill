@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { BillFormValues } from "./bill.dto";
+import { IdSchema } from "./common";
 
 /**
  * What we ask the vision model to return. This is **lenient** on purpose:
@@ -43,9 +44,22 @@ export type OcrResult = z.infer<typeof OcrResult>;
 
 /** OCR output after normalisation: ready to prefill the bill form. Not saved yet. */
 export const BillDraftDto = BillFormValues.extend({
+  /** ok = prefilled; failed = model error / unreadable (form is empty); disabled = no OCR configured. */
+  ocrStatus: z.enum(["ok", "failed", "disabled"]),
   /** Total printed on the receipt, so the user can compare with the calculated one. */
   receiptTotal: z.number().nullable(),
   /** Signed URL to show the image next to the draft. */
   imageUrl: z.string().nullable(),
 });
 export type BillDraftDto = z.infer<typeof BillDraftDto>;
+
+/**
+ * Input for `uploadReceipt`: a FormData with `eventId` and `file` (image/jpeg|png|webp, ≤ 5 MB).
+ * The browser compresses photos before upload (see features/ocr/hooks/compress-image.ts).
+ */
+export const UploadReceiptInput = z
+  .instanceof(FormData)
+  // FormData values are untyped; the pipe below does the real checking.
+  .transform((fd) => ({ eventId: String(fd.get("eventId") ?? ""), file: fd.get("file") as Blob }))
+  .pipe(z.object({ eventId: IdSchema, file: z.instanceof(Blob, { error: "required" }) }));
+export type UploadReceiptInput = z.input<typeof UploadReceiptInput>;

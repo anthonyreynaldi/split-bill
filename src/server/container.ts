@@ -1,6 +1,8 @@
 import "server-only";
 import { bcryptHasher } from "./auth/password";
 import { env } from "./env";
+import type { OcrProvider } from "./providers/ocr/ocr-provider";
+import { createOpenRouterOcrProvider } from "./providers/ocr/openrouter";
 import type { Repositories } from "./repositories/interfaces";
 import { createMemoryRepositories } from "./repositories/memory";
 import { createSupabaseRepositories } from "./repositories/supabase";
@@ -23,6 +25,13 @@ function createRepositories(): Repositories {
   }
 }
 
+/** OCR is optional: without a key + model, uploads still work and the user types the bill. */
+function createOcrProvider(): OcrProvider | null {
+  const e = env();
+  if (!e.OPENROUTER_API_KEY || !e.OPENROUTER_MODEL) return null;
+  return createOpenRouterOcrProvider({ apiKey: e.OPENROUTER_API_KEY, model: e.OPENROUTER_MODEL, appUrl: e.APP_URL });
+}
+
 export interface Container {
   repos: Repositories;
   services: Services;
@@ -38,7 +47,7 @@ export function getContainer(): Container {
   if (!container) {
     g.__splitBillRepos ??= createRepositories();
     const repos = g.__splitBillRepos;
-    container = { repos, services: createServices({ repos, hasher: bcryptHasher }) };
+    container = { repos, services: createServices({ repos, hasher: bcryptHasher, ocr: createOcrProvider() }) };
   }
   return container;
 }

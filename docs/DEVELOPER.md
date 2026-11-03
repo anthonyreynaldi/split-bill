@@ -76,6 +76,11 @@ See [CLAUDE.md → Conventions](../CLAUDE.md#conventions). In short:
 - `src/server/repositories/contract.test.ts` holds the **same tests for every backend**. Memory always runs. Supabase runs when the `SUPABASE_TEST_*` vars are set. A new database backend is "done" when this file passes against it.
 - `src/server/services/**/*.test.ts` runs services against the **memory** repositories (`createMemoryContainer()`), so no DB is needed.
 
+## OCR
+- `src/server/providers/ocr/ocr-provider.ts` holds the `OcrProvider` port and the shared receipt prompt. `openrouter.ts` is the implementation.
+- `src/server/services/ocr-normalize.ts` is pure and tested: model JSON (major units) becomes form values (minor units).
+- To add a provider, implement `OcrProvider` and return it from `createOcrProvider()` in `container.ts`.
+
 ## API documentation
 - [server-actions.md](server-actions.md) is the hand-written guide to calling each action from a hook.
 - `npm run docs` builds a TypeDoc HTML site from the TSDoc comments into `docs/api/`. Open `docs/api/index.html`.
@@ -90,5 +95,7 @@ See [CLAUDE.md → Conventions](../CLAUDE.md#conventions). In short:
 | `SyntaxError` / unsupported engine on `npm install` | You're on Node 14. Run `nvm use`. |
 | Password visible in the dev terminal | It shouldn't be: `logging.serverFunctions` is turned off in `next.config.ts`. Keep it off. |
 | `UNAUTHORIZED` from every action | `SESSION_SECRET` is missing or changed. Log in again. |
+| Upload says "Automatic reading is not set up" | Set both `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`, then restart `npm run dev`. |
+| OCR always says "Could not read" | The server log shows `[ocr] extraction failed: ...`. Usually the model isn't vision-capable, is rate-limited, or no longer exists. Pick another one from the free vision list. |
 | OCR returns `OCR_FAILED` | Check `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`. Free models are rate-limited, so try again or enter the bill manually. |
 | ESLint `no-restricted-imports` error | You crossed a layer boundary. Move the code to the right layer (see CLAUDE.md). |

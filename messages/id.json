@@ -159,5 +159,16 @@
       "unassigned": "{amount} belum dibagi ke siapa pun.",
       "receiptMismatch": "Di struk tertulis {receipt}. Periksa item."
     }
+  },
+  "ocr": {
+    "upload": "Unggah foto struk",
+    "hint": "atau isi tagihan di bawah",
+    "reading": "Membaca struk…",
+    "privacy": "Foto dikirim ke layanan AI untuk membaca teksnya.",
+    "status": {
+      "ok": "Struk terbaca. Periksa setiap baris, lalu pilih siapa yang bayar dan siapa pesan apa.",
+      "failed": "Struk tidak terbaca. Foto sudah terlampir; silakan isi item.",
+      "disabled": "Pembacaan otomatis belum diatur. Foto sudah terlampir; silakan isi item."
+    }
   }
 }
