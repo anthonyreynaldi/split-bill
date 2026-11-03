@@ -8,3 +8,4 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 - Next.js 16 scaffold with shadcn/ui (base-nova).
 - i18n: Bahasa Indonesia (default) and English, with an ID/EN toggle in the header.
 - TanStack Query provider, `ActionResult`/`AppError` contract, Vitest, ESLint layer-boundary rules, per-layer CLAUDE.md files.
+- Domain: money `allocate()` (largest remainder), item split, charges (ID receipt order), bill and event calculation, per-bill and nett settlement, with 37 tests.

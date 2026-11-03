@@ -19,6 +19,21 @@ After a group meal or trip, someone has to work out from paper receipts who owes
 | **Charge** | Tax, service or discount, as a percent or a fixed amount. Shared **proportionally** to item subtotals or **evenly**, chosen per bill. |
 | **Settlement** | Who pays whom. In **per-bill** mode, everyone pays each bill's payer. In **nett** mode, balances are offset across all bills and the number of transfers is minimized. |
 
+## Calculation rules (implemented in `src/domain`)
+1. **Item split.** An `even` item is split equally among **all event participants**. A `custom` item is split proportionally to each person's **units**. Units are portions (qty 3 → A: 2, B: 1), and halves are allowed. A custom item with nobody selected is **unassigned**.
+2. **Charge order** follows Indonesian receipts:
+   1. discount on the subtotal,
+   2. service on (subtotal − discount),
+   3. tax on (subtotal − discount + service).
+
+   Percent charges are rounded to the nearest rupiah.
+3. **Charge sharing**, chosen per bill:
+   - `proportional`: by each person's item subtotal. Unassigned items carry their share too.
+   - `even`: equally among the people who have items on that bill.
+4. **Rounding.** Every split uses the largest-remainder method, so per-person amounts always add up exactly to the bill total.
+5. **Balances.** On a bill with a payer, each other person owes the payer their part. Unassigned money stays with the payer. Bills without a payer count as consumption but are left out of settlement, and the UI warns about them.
+6. **Nett settlement** matches the largest debtor with the largest creditor, repeatedly. This takes at most n−1 transfers.
+
 ## Must-have features (v1)
 1. Register and log in with email and password. This is custom for now and has the same shape as Supabase Auth, so we can switch later.
 2. Create, edit and delete events and participants.

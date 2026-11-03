@@ -15,3 +15,4 @@ The money math lives here: splitting items, distributing charges, building per-p
 - `charges.ts`: tax/service/discount → per-participant amounts
 - `bill-calc.ts`: one bill → per-person breakdown
 - `settlement.ts`: balances, per-bill transfers, nett transfers
+- `test-fixtures.ts`: builders for tests only
