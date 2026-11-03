@@ -11,3 +11,4 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 - Domain: money `allocate()` (largest remainder), item split, charges (ID receipt order), bill and event calculation, per-bill and nett settlement, with 37 tests.
 - DTOs: zod schemas for auth, events, bills, OCR, summary and share (messages are i18n keys); test that ID and EN message files match.
 - Database: Supabase migrations (tables, RLS deny-all, transactional `save_bill`, private `bill-images` bucket) and typed `db.types.ts`.
+- Repositories: interfaces, in-memory and Supabase implementations, a contract test suite shared by both, `container.ts` wiring and validated env (`.env.example`).

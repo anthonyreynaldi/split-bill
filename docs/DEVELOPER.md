@@ -14,6 +14,7 @@ The code is layered. The view calls hooks (TanStack), hooks call Server Actions,
    - by pasting each SQL file, in order, into the Supabase SQL editor.
 5. Create a **private** Storage bucket named `bill-images`. Migration `0002` does this when it is run through the CLI.
 6. Copy `.env.example` to `.env.local` and fill in the values (see below).
+   > **No Supabase yet?** Set `DATA_BACKEND=memory` and a `SESSION_SECRET`, and you can run the app with no database. Data is lost on restart.
 7. Run `npm run dev` and open http://localhost:3000.
 
 ## Environment variables
@@ -23,8 +24,10 @@ The code is layered. The view calls hooks (TanStack), hooks call Server Actions,
 | `SUPABASE_SERVICE_ROLE_KEY` | server only, **secret** | Used by `repositories/supabase` |
 | `SESSION_SECRET` | server only, **secret** | ≥ 32 random chars. Signs the session and share cookies (`openssl rand -base64 32`) |
 | `OPENROUTER_API_KEY` | server only, **secret** | OCR |
-| `OPENROUTER_MODEL` | server | Vision model id, e.g. a `:free` model (see ADR 0005) |
+| `OPENROUTER_MODEL` | server | Vision model id, e.g. a `:free` model (see ADR 0005). Empty means OCR is disabled. |
 | `DATA_BACKEND` | server | `supabase` (default) or `memory` (no DB; data is lost on restart, useful for demos) |
+| `APP_URL` | server | Public base URL used in share links |
+| `SUPABASE_TEST_URL` / `SUPABASE_TEST_SERVICE_ROLE_KEY` | tests only | Optional. Runs the repository contract tests against a throwaway Supabase project |
 
 ## Database schema / migrations
 - `supabase/migrations/20261103000001_init.sql` creates the tables, constraints, RLS (deny-all) and the `save_bill(jsonb)` function. That function saves a bill with its items, allocations and charges in **one transaction**, and refuses to move a bill to another event.
@@ -68,6 +71,7 @@ See [CLAUDE.md → Conventions](../CLAUDE.md#conventions). In short:
 - `npm run check` runs lint, typecheck and the tests in one go. Run it before every commit.
 - `npm test` runs all Vitest tests.
 - `src/domain/**/*.test.ts` covers the calculation, including rounding and nett-settlement edge cases.
+- `src/server/repositories/contract.test.ts` holds the **same tests for every backend**. Memory always runs. Supabase runs when the `SUPABASE_TEST_*` vars are set. A new database backend is "done" when this file passes against it.
 - `src/server/services/**/*.test.ts` runs services against the **memory** repositories (`createMemoryContainer()`), so no DB is needed.
 
 ## API documentation
