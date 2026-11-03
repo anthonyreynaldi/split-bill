@@ -1,0 +1,28 @@
+{
+  "common": {
+    "appName": "Split Bill",
+    "tagline": "Foto struknya, pilih siapa pesan apa, lunasi dengan adil.",
+    "language": "Bahasa",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "edit": "Ubah",
+    "add": "Tambah",
+    "loading": "Memuat…",
+    "back": "Kembali"
+  },
+  "home": {
+    "getStarted": "Mulai",
+    "feature1": "Baca struk otomatis dari foto",
+    "feature2": "Bagi item rata atau per porsi",
+    "feature3": "Pelunasan nett antar tagihan: lebih sedikit transfer",
+    "feature4": "Ekspor ke Excel, gambar, atau tautan lihat-saja"
+  },
+  "errors": {
+    "VALIDATION_ERROR": "Beberapa isian tidak valid.",
+    "UNAUTHORIZED": "Silakan masuk terlebih dahulu.",
+    "FORBIDDEN": "Anda tidak memiliki akses.",
+    "NOT_FOUND": "Tidak ditemukan.",
+    "INTERNAL_ERROR": "Terjadi kesalahan. Silakan coba lagi."
+  }
+}

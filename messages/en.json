@@ -1,0 +1,28 @@
+{
+  "common": {
+    "appName": "Split Bill",
+    "tagline": "Snap the receipt, pick who had what, settle up fairly.",
+    "language": "Language",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "loading": "Loading…",
+    "back": "Back"
+  },
+  "home": {
+    "getStarted": "Get started",
+    "feature1": "Read receipts automatically from a photo",
+    "feature2": "Split items evenly or by portion",
+    "feature3": "Nett settlement across bills: fewer transfers",
+    "feature4": "Export to Excel, an image or a view-only link"
+  },
+  "errors": {
+    "VALIDATION_ERROR": "Some fields are invalid.",
+    "UNAUTHORIZED": "Please log in first.",
+    "FORBIDDEN": "You don't have access to this.",
+    "NOT_FOUND": "Not found.",
+    "INTERNAL_ERROR": "Something went wrong. Please try again."
+  }
+}
