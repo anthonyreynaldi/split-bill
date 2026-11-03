@@ -14,3 +14,4 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 - Repositories: interfaces, in-memory and Supabase implementations, a contract test suite shared by both, `container.ts` wiring and validated env (`.env.example`).
 - Auth: register, login and logout with email and password (bcrypt, signed httpOnly cookie), header user menu, redirect to /login for /events, locale-aware 404 page. Server Action argument logging turned off.
 - Events: create and list events, an event page with people (add, rename, remove) and a bill list, delete with confirmation. Fixed the shadcn font variable (Geist).
+- Bills: bill editor with title, date, payer, items (qty × price, auto total), even or custom portion split, tax/service/discount, a choice of proportional or equal charge sharing, and a live per-person preview. Edit and delete.

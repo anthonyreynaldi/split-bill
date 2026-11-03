@@ -97,5 +97,67 @@
       "deleteTitle": "Hapus {name}?",
       "deleteDescription": "Acara beserta semua tagihan dan fotonya akan dihapus. Tidak bisa dibatalkan."
     }
+  },
+  "bills": {
+    "newTitle": "Tagihan baru",
+    "editTitle": "Ubah tagihan",
+    "delete": "Hapus tagihan",
+    "deleteTitle": "Hapus tagihan ini?",
+    "deleteDescription": "Tagihan dan fotonya akan dihapus.",
+    "title": "Judul",
+    "titlePlaceholder": "mis. Makan malam di Warung Made",
+    "date": "Tanggal",
+    "paidBy": "Dibayar oleh",
+    "paidByPlaceholder": "Siapa yang bayar?",
+    "receiptImage": "Foto struk",
+    "fixErrors": "Perbaiki isian yang ditandai.",
+    "items": {
+      "title": "Item",
+      "empty": "Belum ada item.",
+      "name": "Item",
+      "qty": "Jml",
+      "unitPrice": "Harga",
+      "total": "Total",
+      "add": "Tambah item",
+      "remove": "Hapus item"
+    },
+    "split": {
+      "even": "Semua orang",
+      "custom": "Pilih orang",
+      "portions": "Porsi untuk",
+      "assigned": "{assigned} dari {qty} terbagi",
+      "nobody": "Belum ada yang dipilih",
+      "noPeople": "Tambahkan orang ke acara untuk membagi item."
+    },
+    "charges": {
+      "title": "Pajak, layanan & diskon",
+      "tax": "Pajak",
+      "service": "Layanan",
+      "discount": "Diskon",
+      "amount": "Nominal",
+      "value": "Nilai",
+      "remove": "Hapus",
+      "quick": {
+        "tax": "Pajak 10%",
+        "service": "Layanan 5%",
+        "discount": "Diskon"
+      },
+      "splitMode": "Cara membaginya",
+      "proportional": "Sesuai pesanan masing-masing",
+      "proportionalHint": "Yang pesan lebih banyak menanggung pajak dan layanan lebih besar.",
+      "even": "Sama rata",
+      "evenHint": "Dibagi rata ke orang-orang di tagihan ini."
+    },
+    "preview": {
+      "title": "Total",
+      "subtotal": "Subtotal",
+      "discount": "Diskon",
+      "service": "Layanan",
+      "tax": "Pajak",
+      "total": "Total",
+      "perPerson": "Per orang",
+      "unassigned": "{amount} belum dibagi ke siapa pun.",
+      "receiptMismatch": "Di struk tertulis {receipt}. Periksa item."
+    }
   }
 }

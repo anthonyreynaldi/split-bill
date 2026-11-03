@@ -97,5 +97,67 @@
       "deleteTitle": "Delete {name}?",
       "deleteDescription": "This deletes the event with all its bills and photos. This cannot be undone."
     }
+  },
+  "bills": {
+    "newTitle": "New bill",
+    "editTitle": "Edit bill",
+    "delete": "Delete bill",
+    "deleteTitle": "Delete this bill?",
+    "deleteDescription": "The bill and its photo will be deleted.",
+    "title": "Title",
+    "titlePlaceholder": "e.g. Dinner at Warung Made",
+    "date": "Date",
+    "paidBy": "Paid by",
+    "paidByPlaceholder": "Who paid?",
+    "receiptImage": "Receipt photo",
+    "fixErrors": "Please fix the highlighted fields.",
+    "items": {
+      "title": "Items",
+      "empty": "No items yet.",
+      "name": "Item",
+      "qty": "Qty",
+      "unitPrice": "Price",
+      "total": "Total",
+      "add": "Add item",
+      "remove": "Remove item"
+    },
+    "split": {
+      "even": "Everyone",
+      "custom": "Choose people",
+      "portions": "Portions for",
+      "assigned": "{assigned} of {qty} assigned",
+      "nobody": "Nobody chosen",
+      "noPeople": "Add people to the event to split items."
+    },
+    "charges": {
+      "title": "Tax, service & discount",
+      "tax": "Tax",
+      "service": "Service",
+      "discount": "Discount",
+      "amount": "Amount",
+      "value": "Value",
+      "remove": "Remove",
+      "quick": {
+        "tax": "Tax 10%",
+        "service": "Service 5%",
+        "discount": "Discount"
+      },
+      "splitMode": "How to share them",
+      "proportional": "By what each person ordered",
+      "proportionalHint": "Someone who ordered more pays more tax and service.",
+      "even": "Equally",
+      "evenHint": "Split equally among people on this bill."
+    },
+    "preview": {
+      "title": "Totals",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "service": "Service",
+      "tax": "Tax",
+      "total": "Total",
+      "perPerson": "Per person",
+      "unassigned": "{amount} is not assigned to anyone yet.",
+      "receiptMismatch": "The receipt says {receipt}. Check the items."
+    }
   }
 }

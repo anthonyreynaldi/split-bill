@@ -81,3 +81,17 @@ Every action here can return `UNAUTHORIZED`. Actions that take an `eventId` retu
 
 Query keys: `['events']` (list) and `['events', eventId]` (detail). Mutations invalidate these.
 
+
+### Bills: `src/server/actions/bills.actions.ts` → `features/bills/hooks/use-bills.ts`
+Every action here can return `UNAUTHORIZED` and `NOT_FOUND` (an event or bill that is missing or not yours). A bill is always saved **whole**, with all its items, allocations and charges in one transaction.
+
+| Action | Input DTO | Output | Extra errors | Purpose |
+|---|---|---|---|---|
+| `getBill` | `BillRefInput { eventId, billId }` | `BillDto` (+ signed `imageUrl`) | none | Load a bill for editing |
+| `createBill` | `CreateBillInput { eventId, ...BillFormValues }` | `BillDto` | `VALIDATION_ERROR` with `fieldErrors.paidBy` / `items.N.allocations` / `imagePath` when they point outside the event | New bill |
+| `updateBill` | `UpdateBillInput { eventId, billId, ...BillFormValues }` | `BillDto` | same as `createBill` | Replace a bill |
+| `deleteBill` | `BillRefInput` | `null` | none | Delete a bill and its photo |
+
+`BillFormValues = { title, billDate, paidBy, imagePath, chargeSplitMode, items[{ name, qty, unitPrice, total, splitMode, allocations[{ participantId, units }] }], charges[{ kind, mode, value }] }`. Money is in integer minor units.
+
+The editor's live preview runs the **same** pure `calculateBill()` from `src/domain` in the browser, so on-screen totals always match the server.
