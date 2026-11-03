@@ -7,6 +7,7 @@ These diagrams use **Mermaid**. They render on GitHub and in VS Code: install th
 flowchart LR
   subgraph Client["Browser"]
     V["View<br/>features/*/components<br/>(props in, events out)"]
+    CT["Containers<br/>features/*/containers<br/>(hooks → views)"]
     H["Hooks<br/>features/*/hooks<br/>(TanStack Query / Form)"]
   end
   subgraph Server["Next.js server"]
@@ -23,7 +24,8 @@ flowchart LR
   DB[("Supabase<br/>Postgres + Storage")]
   OR(["OpenRouter"])
 
-  V --> H --> A --> S --> I
+  CT --> V
+  CT --> H --> A --> S --> I
   SB -. implements .-> I
   M -. implements .-> I
   S --> D
@@ -115,17 +117,18 @@ flowchart TD
 sequenceDiagram
   actor U as Creator
   participant H as useOcrUpload (hook)
-  participant A as ocr.actions
+  participant A as ocr.actions (uploadReceipt)
   participant S as OcrService
   participant ST as ImageStorage (Supabase Storage)
   participant P as OcrProvider (OpenRouter)
   U->>H: choose receipt photo
-  H->>A: uploadAndExtract(eventId, file)
-  A->>S: extract(session, eventId, file)
+  H->>H: compressImage() ≤1600px JPEG
+  H->>A: uploadReceipt(FormData{eventId, file})
+  A->>S: uploadAndExtract(userId, eventId, file)
   S->>ST: put(file) → image_path
   S->>P: extract(imageBase64)
   P-->>S: JSON text
-  S->>S: OcrResultDto.safeParse()
+  S->>S: OcrResult.safeParse() → ocrToFormValues()
   S-->>A: BillDraftDto (not saved)
   A-->>H: ActionResult<BillDraftDto>
   H-->>U: prefilled bill form, user reviews

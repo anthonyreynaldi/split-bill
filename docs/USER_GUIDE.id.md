@@ -16,20 +16,20 @@ Split Bill membantu kelompok menghitung siapa berutang ke siapa setelah makan be
 2. Tambahkan **orang-orang** dalam acara. Cukup nama, tidak perlu akun.
 
 ## Fitur: Tambah tagihan dari foto
-1. Di dalam acara, klik **Tambah tagihan**, lalu **Unggah foto**.
+1. Di dalam acara, klik **Tambah tagihan**, lalu **Unggah foto struk**. Di ponsel Anda bisa langsung memotret.
 2. Tunggu beberapa detik selagi aplikasi membaca struk.
-3. **Periksa hasilnya.** Perbaiki item, jumlah, atau harga yang salah.
+3. **Periksa hasilnya.** Perbaiki item, jumlah, atau harga yang salah. Jika total di struk berbeda dengan total hitungan, akan muncul peringatan berisi nominal di struk.
 4. Pilih **siapa yang membayar** tagihan ini.
-5. Klik **Simpan**.
+5. Klik **Simpan**. Belum ada yang tersimpan sebelum ini.
 
-> Foto dikirim ke layanan AI untuk membaca teksnya. Jika gagal, Anda tetap bisa mengetik tagihan secara manual.
+> Foto dikirim ke layanan AI untuk membaca teksnya. Jika gagal, foto tetap terlampir dan Anda bisa mengetik itemnya sendiri.
 
 ## Fitur: Tambah atau ubah tagihan secara manual
-Klik **Tambah tagihan**, lalu **Isi manual**. Masukkan setiap item beserta nama, jumlah, dan harganya. Item bisa ditambah, diubah, atau dihapus kapan saja.
+Klik **Tambah tagihan** dan isi formulir di bawah kotak unggah. Klik **Tambah item** untuk setiap baris (nama, jumlah, harga). Total baris dihitung otomatis dan bisa Anda ubah. Panel **Total** langsung diperbarui saat Anda mengetik. Buka tagihan dari halaman acara untuk mengubah atau menghapusnya.
 
 ## Fitur: Siapa memesan apa
 Untuk setiap item, pilih:
-- **Bagi rata**: semua orang dalam acara menanggung sama rata.
+- **Semua orang**: semua orang dalam acara menanggung sama rata.
 - **Pilih orang**: pilih siapa yang memesan dan berapa banyak, misalnya 3 porsi sate → Ana 2, Budi 1. Boleh setengah.
 
 **Pajak, layanan, dan diskon:** pilih apakah dibagi **sesuai pesanan masing-masing** (lebih adil) atau **sama rata**.
@@ -44,7 +44,9 @@ Ada dua cara pelunasan:
 ## Fitur: Ekspor dan bagikan
 - **Excel**: unduh ringkasan dalam bentuk spreadsheet.
 - **Gambar**: unduh gambar ringkasan untuk dikirim lewat chat.
-- **Tautan berbagi**: buat tautan yang bisa dibuka siapa saja untuk **melihat** (bukan mengubah) ringkasan. Anda bisa menambahkan **kode akses**, dan pembuka tautan harus memasukkannya sebelum bisa melihat apa pun.
+- **Tautan berbagi**: klik **Bagikan**, lalu **Buat tautan**, dan salin. Siapa pun yang punya tautan bisa **melihat** (bukan mengubah) ringkasan.
+  - Tambahkan **kode akses** (4–32 karakter), dan pembuka tautan cukup memasukkannya sekali per perangkat. Setelah 5 kali salah, tautan dikunci 15 menit.
+  - Hapus centang **Tautan aktif** untuk mematikan tautan kapan saja.
 
 ## Tanya jawab
 - **Kenapa satu orang Rp 3.334 dan lainnya Rp 3.333?** Uang tidak bisa dibagi ke pecahan rupiah. Kelebihan satu rupiah diberikan ke satu orang, sehingga total selalu sama persis dengan struk.

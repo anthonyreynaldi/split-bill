@@ -2,7 +2,7 @@
 
 Split group bills fairly, without the spreadsheet. Upload a receipt photo and let OCR read the items. Then assign each item to the people who had it, and see exactly who owes whom. You can see this per bill, or **nett** across the whole trip.
 
-> Status: **in development (v1)**. See [docs/CHANGELOG.md](docs/CHANGELOG.md).
+> Status: **v1 feature-complete**. See [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 ## Features (v1)
 - 📸 Receipt OCR: a photo becomes an editable draft (items, qty, price, tax, service).
@@ -19,6 +19,14 @@ npm install
 cp .env.example .env.local   # fill in the Supabase + OpenRouter keys
 npm run dev                  # http://localhost:3000
 ```
+**Try it without any accounts:** in `.env.local` set `DATA_BACKEND=memory` and any 32+ character `SESSION_SECRET`. Everything works except automatic receipt reading, and data is lost on restart.
+
+| Command | What it does |
+|---|---|
+| `npm run check` | lint + typecheck + all tests (run before every commit) |
+| `npm run docs` | build the API reference site into `docs/api/index.html` |
+| `npm run db:push` / `npm run db:types` | apply migrations / regenerate DB types (Supabase CLI) |
+
 For the full setup, including the database: [docs/DEVELOPER.md](docs/DEVELOPER.md).
 
 ## Documentation map

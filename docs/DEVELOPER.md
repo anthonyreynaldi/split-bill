@@ -85,6 +85,16 @@ See [CLAUDE.md → Conventions](../CLAUDE.md#conventions). In short:
 - [server-actions.md](server-actions.md) is the hand-written guide to calling each action from a hook.
 - `npm run docs` builds a TypeDoc HTML site from the TSDoc comments into `docs/api/`. Open `docs/api/index.html`.
 
+## Manual end-to-end check (before a release)
+1. Register, log out, log in (also try a wrong password).
+2. Create an event and add 3 people. Rename one and remove one.
+3. Add a bill from a photo (with OCR configured) and check that the draft is prefilled. Fix it, choose the payer, and save.
+4. Add a second bill by hand. Use custom portions on one item (e.g. qty 3 → 2 + 1). Add tax 10% and service 5%.
+5. On the summary, check that the per-person totals add up to the bill totals, and switch between Nett and Per bill.
+6. Download the Excel and image exports.
+7. Share with a passcode and open the link in a private window: wrong code, right code, view only.
+8. Switch between ID and EN on every page.
+
 ## Deployment
 - Vercel is recommended: import the repo and set the env vars from the table above.
 - Supabase: run the migrations against the production project first.

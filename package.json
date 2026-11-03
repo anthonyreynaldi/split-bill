@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "check": "npm run lint && npm run typecheck && npm test",
     "db:types": "supabase gen types typescript --linked --schema public > src/server/repositories/supabase/db.types.ts",
-    "db:push": "supabase db push"
+    "db:push": "supabase db push",
+    "docs": "typedoc"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -45,6 +46,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.4",
     "tailwindcss": "^4",
+    "typedoc": "^0.28.20",
     "typescript": "^5",
     "vitest": "^5.1.0"
   },

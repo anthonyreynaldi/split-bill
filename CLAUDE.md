@@ -18,12 +18,15 @@ A web app for splitting bills within a group event. The creator uploads receipt 
 - Lint: `npm run lint` · Type check: `npm run typecheck` · Build: `npm run build`
 - API docs (TypeDoc HTML → `docs/api/`): `npm run docs`
 - DB types: `npm run db:types` (needs the Supabase CLI to be logged in)
+- Everything before a commit: `npm run check` (lint + typecheck + tests)
+- Run without a database: `DATA_BACKEND=memory` in `.env.local`
 
 ## Architecture: layer rules (MUST follow)
 ```
 components (view) → hooks (TanStack) → server/actions → server/services → repositories/interfaces
                                                          ↘ domain (pure)        ↑ supabase/ | memory/
 ```
+0. **Containers** (`src/features/*/containers`) are the glue: `'use client'` components that call hooks and render views. Pages only render containers.
 1. **View** (`src/features/*/components`) receives props and emits callbacks. It never fetches data, never imports `server/`, and contains no business rules.
 2. **Hooks** (`src/features/*/hooks`) hold the view logic: TanStack Query/Form, calling Server Actions, mapping errors to UI.
 3. **Server Actions** (`src/server/actions`) are thin. Each one parses its input with a zod DTO, gets the session, calls a service, and returns `ActionResult<T>`.
