@@ -4,7 +4,7 @@
 A web app for splitting bills within a group event. The creator uploads receipt photos, OCR fills in a draft of the items, and the creator assigns items to people. The app then shows what each person owes, either per bill or as a nett settlement across bills. The result can be exported to Excel or PNG, or shared through a read-only link that can have a passcode. Full requirements: [docs/PROJECT_BRIEF.md](docs/PROJECT_BRIEF.md).
 
 ## Stack
-- Next.js (App Router) + TypeScript (strict). UI is shadcn/ui + Tailwind.
+- **Next.js 16** (App Router) + TypeScript (strict). APIs differ from older versions (e.g. `middleware` → `proxy.ts`, async `params`). Check `node_modules/next/dist/docs/` before using a Next API. See @AGENTS.md. UI is shadcn/ui + Tailwind.
 - TanStack Query (server state), TanStack Form (forms), zod (DTOs and validation).
 - next-intl: locales `id` (default) and `en`. Message files live in `messages/`.
 - Supabase (Postgres + Storage), accessed **only** from `src/server/repositories/supabase/`.
