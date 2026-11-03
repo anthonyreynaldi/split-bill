@@ -63,5 +63,39 @@
       "switchPrompt": "Already have an account?",
       "switchLink": "Log in"
     }
+  },
+  "events": {
+    "new": {
+      "title": "New event",
+      "name": "Event name",
+      "namePlaceholder": "e.g. Bali Trip, Friday Lunch",
+      "currency": "Currency",
+      "submit": "Create"
+    },
+    "list": {
+      "title": "My events",
+      "empty": "No events yet. Create one above.",
+      "people": "{count, plural, =1 {# person} other {# people}}",
+      "bills": "{count, plural, =1 {# bill} other {# bills}}"
+    },
+    "detail": {
+      "summary": "Summary",
+      "delete": "Delete event",
+      "people": "People ({count})",
+      "noPeople": "No people yet. Add everyone who shares the bills.",
+      "addPerson": "Add person",
+      "addPersonPlaceholder": "Name",
+      "bills": "Bills ({count})",
+      "addBill": "Add bill",
+      "noBills": "No bills yet.",
+      "addPeopleFirst": "Tip: add the people first, then the bills.",
+      "paidBy": "Paid by {name}",
+      "noPayer": "No payer",
+      "items": "{count, plural, =1 {# item} other {# items}}",
+      "removePersonTitle": "Remove {name}?",
+      "removePersonDescription": "They will be removed from every split. Bills they paid will have no payer.",
+      "deleteTitle": "Delete {name}?",
+      "deleteDescription": "This deletes the event with all its bills and photos. This cannot be undone."
+    }
   }
 }

@@ -63,5 +63,39 @@
       "switchPrompt": "Sudah punya akun?",
       "switchLink": "Masuk"
     }
+  },
+  "events": {
+    "new": {
+      "title": "Acara baru",
+      "name": "Nama acara",
+      "namePlaceholder": "mis. Liburan Bali, Makan Siang Jumat",
+      "currency": "Mata uang",
+      "submit": "Buat"
+    },
+    "list": {
+      "title": "Acara saya",
+      "empty": "Belum ada acara. Buat di atas.",
+      "people": "{count} orang",
+      "bills": "{count} tagihan"
+    },
+    "detail": {
+      "summary": "Ringkasan",
+      "delete": "Hapus acara",
+      "people": "Orang ({count})",
+      "noPeople": "Belum ada orang. Tambahkan semua yang ikut patungan.",
+      "addPerson": "Tambah orang",
+      "addPersonPlaceholder": "Nama",
+      "bills": "Tagihan ({count})",
+      "addBill": "Tambah tagihan",
+      "noBills": "Belum ada tagihan.",
+      "addPeopleFirst": "Tip: tambahkan orang dulu, lalu tagihan.",
+      "paidBy": "Dibayar {name}",
+      "noPayer": "Belum ada pembayar",
+      "items": "{count} item",
+      "removePersonTitle": "Hapus {name}?",
+      "removePersonDescription": "Orang ini dihapus dari semua pembagian. Tagihan yang ia bayar tidak punya pembayar.",
+      "deleteTitle": "Hapus {name}?",
+      "deleteDescription": "Acara beserta semua tagihan dan fotonya akan dihapus. Tidak bisa dibatalkan."
+    }
   }
 }

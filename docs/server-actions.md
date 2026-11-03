@@ -41,10 +41,11 @@ export function useCreateEvent() {
 
 ### Form (TanStack Form + the same zod DTO)
 ```ts
+// The zod schema and its TS type share one name (CreateEventInput).
 const form = useForm({
-  defaultValues: { name: '' } satisfies CreateEventInput,
-  validators: { onChange: CreateEventInputSchema },
-  onSubmit: ({ value }) => createEventMutation.mutateAsync(value),
+  defaultValues: { name: '', currency: 'IDR' },
+  validators: { onSubmit: CreateEventInput },   // same schema the action parses
+  onSubmit: ({ value }) => mutation.mutateAsync(value),
 });
 ```
 
@@ -63,3 +64,20 @@ Every action returns `ActionResult<Output>`. Every action can also return `VALID
 // Example: hooks/use-auth.ts
 useQuery({ queryKey: ['auth', 'me'], queryFn: () => unwrap(getCurrentUser(undefined)) });
 ```
+
+### Events and participants: `src/server/actions/events.actions.ts` → `features/events/hooks/use-events.ts`
+Every action here can return `UNAUTHORIZED`. Actions that take an `eventId` return `NOT_FOUND` when the event is missing **or belongs to someone else**, so ids can't be probed.
+
+| Action | Input DTO | Output | Purpose |
+|---|---|---|---|
+| `listEvents` | none | `EventListItemDto[]` | My events, newest first, with participant and bill counts |
+| `createEvent` | `CreateEventInput { name, currency? = 'IDR' }` | `EventDto` | New event |
+| `getEventDetail` | `EventIdInput { eventId }` | `EventDetailDto { event, participants, bills }` | Everything the event page needs in **one** call |
+| `updateEvent` | `UpdateEventInput { eventId, name?, currency?, settlementMode? }` | `EventDto` | Rename or change settings |
+| `deleteEvent` | `EventIdInput` | `null` | Delete the event, its bills and its photos |
+| `addParticipant` | `AddParticipantInput { eventId, name }` | `ParticipantDto` | Add a person |
+| `renameParticipant` | `RenameParticipantInput { eventId, participantId, name }` | `ParticipantDto` | Rename |
+| `removeParticipant` | `RemoveParticipantInput { eventId, participantId }` | `null` | Remove them from all splits; bills they paid lose their payer |
+
+Query keys: `['events']` (list) and `['events', eventId]` (detail). Mutations invalidate these.
+
