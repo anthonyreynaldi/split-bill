@@ -102,3 +102,10 @@ The editor's live preview runs the **same** pure `calculateBill()` from `src/dom
 | `uploadReceipt` | `FormData { eventId, file }` (`UploadReceiptInput`; jpeg/png/webp ≤ 5 MB, compressed in the browser first) | `BillDraftDto` (`BillFormValues` + `ocrStatus`, `receiptTotal`, `imageUrl`) | `UNAUTHORIZED`, `NOT_FOUND`, `VALIDATION_ERROR` | Store the photo, read it, and return an **unsaved** draft |
 
 `ocrStatus`: `ok` means prefilled. `failed` means the model errored or returned junk; the draft is empty but the photo is kept. `disabled` means `OPENROUTER_API_KEY` or `OPENROUTER_MODEL` isn't set. The draft only becomes a bill when the user presses Save (`createBill`).
+
+### Summary: `src/server/actions/summary.actions.ts` → `features/summary/hooks/use-summary.ts`
+| Action | Input DTO | Output | Errors | Purpose |
+|---|---|---|---|---|
+| `getSummary` | `EventIdInput { eventId }` | `SummaryDto` | `UNAUTHORIZED`, `NOT_FOUND` | Per-person totals (`people`), per-bill breakdown (`bills[].perPerson[].items`), **both** `nettTransfers` and `perBillTransfers`, plus warnings (`billsWithoutPayer`, `unassigned`) |
+
+Both settlement plans come back in one response, so switching tabs is instant. The chosen mode is saved with `updateEvent({ settlementMode })`. The share link uses the same `SummaryDto` (built by `buildSummary()` in `summary.service.ts`).

@@ -11,6 +11,7 @@ import { AuthService } from "./auth.service";
 import { BillService } from "./bill.service";
 import { EventService } from "./event.service";
 import { OcrService } from "./ocr.service";
+import { SummaryService } from "./summary.service";
 
 export interface ServiceDeps {
   repos: Repositories;
@@ -25,6 +26,7 @@ export function createServices({ repos, hasher, ocr = null }: ServiceDeps) {
     events: new EventService(repos),
     bills: new BillService(repos),
     ocr: new OcrService(repos, ocr),
+    summary: new SummaryService(repos),
   };
 }
 

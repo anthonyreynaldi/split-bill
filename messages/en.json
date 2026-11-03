@@ -170,5 +170,25 @@
       "failed": "Could not read the receipt. The photo is attached; please fill in the items.",
       "disabled": "Automatic reading is not set up. The photo is attached; please fill in the items."
     }
+  },
+  "summary": {
+    "grandTotal": "Total of all bills",
+    "transfers": "Who pays whom",
+    "settled": "Nothing to settle.",
+    "consumed": "Consumed",
+    "paid": "Paid",
+    "details": "Show items",
+    "charges": "Tax/service/discount",
+    "getsBack": "gets back {amount}",
+    "owes": "owes {amount}",
+    "even": "settled",
+    "warnNoPayer": "No payer set for: {bills}. These bills are not included in settlement.",
+    "warnUnassigned": "{amount} is not assigned to anyone yet.",
+    "mode": {
+      "nett": "Nett",
+      "perBill": "Per bill",
+      "nettHint": "Debts cancel out across bills, so there are fewer transfers.",
+      "perBillHint": "Everyone pays back whoever paid each bill."
+    }
   }
 }
