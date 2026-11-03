@@ -23,6 +23,22 @@
     "UNAUTHORIZED": "Please log in first.",
     "FORBIDDEN": "You don't have access to this.",
     "NOT_FOUND": "Not found.",
-    "INTERNAL_ERROR": "Something went wrong. Please try again."
+    "INTERNAL_ERROR": "Something went wrong. Please try again.",
+    "EMAIL_TAKEN": "This email is already registered.",
+    "INVALID_CREDENTIALS": "Wrong email or password.",
+    "PASSCODE_REQUIRED": "This bill is protected by a passcode.",
+    "PASSCODE_INVALID": "Wrong passcode.",
+    "TOO_MANY_ATTEMPTS": "Too many attempts. Try again in a few minutes.",
+    "OCR_FAILED": "Could not read the receipt. Please fill it in manually."
+  },
+  "validation": {
+    "required": "Required.",
+    "invalidEmail": "Enter a valid email.",
+    "passwordTooShort": "At least 8 characters.",
+    "tooLong": "Too long.",
+    "mustBePositive": "Must be more than 0.",
+    "mustBeWhole": "Must be a whole number.",
+    "invalid": "Invalid value.",
+    "passcodeLength": "4 to 32 characters."
   }
 }

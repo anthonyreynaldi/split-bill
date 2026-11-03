@@ -9,3 +9,4 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 - i18n: Bahasa Indonesia (default) and English, with an ID/EN toggle in the header.
 - TanStack Query provider, `ActionResult`/`AppError` contract, Vitest, ESLint layer-boundary rules, per-layer CLAUDE.md files.
 - Domain: money `allocate()` (largest remainder), item split, charges (ID receipt order), bill and event calculation, per-bill and nett settlement, with 37 tests.
+- DTOs: zod schemas for auth, events, bills, OCR, summary and share (messages are i18n keys); test that ID and EN message files match.

@@ -23,6 +23,22 @@
     "UNAUTHORIZED": "Silakan masuk terlebih dahulu.",
     "FORBIDDEN": "Anda tidak memiliki akses.",
     "NOT_FOUND": "Tidak ditemukan.",
-    "INTERNAL_ERROR": "Terjadi kesalahan. Silakan coba lagi."
+    "INTERNAL_ERROR": "Terjadi kesalahan. Silakan coba lagi.",
+    "EMAIL_TAKEN": "Email ini sudah terdaftar.",
+    "INVALID_CREDENTIALS": "Email atau kata sandi salah.",
+    "PASSCODE_REQUIRED": "Tagihan ini dilindungi kode akses.",
+    "PASSCODE_INVALID": "Kode akses salah.",
+    "TOO_MANY_ATTEMPTS": "Terlalu banyak percobaan. Coba lagi beberapa menit lagi.",
+    "OCR_FAILED": "Struk tidak terbaca. Silakan isi secara manual."
+  },
+  "validation": {
+    "required": "Wajib diisi.",
+    "invalidEmail": "Masukkan email yang valid.",
+    "passwordTooShort": "Minimal 8 karakter.",
+    "tooLong": "Terlalu panjang.",
+    "mustBePositive": "Harus lebih dari 0.",
+    "mustBeWhole": "Harus bilangan bulat.",
+    "invalid": "Nilai tidak valid.",
+    "passcodeLength": "4 sampai 32 karakter."
   }
 }
