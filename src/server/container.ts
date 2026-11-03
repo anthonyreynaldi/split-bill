@@ -1,8 +1,10 @@
 import "server-only";
+import { bcryptHasher } from "./auth/password";
 import { env } from "./env";
 import type { Repositories } from "./repositories/interfaces";
 import { createMemoryRepositories } from "./repositories/memory";
 import { createSupabaseRepositories } from "./repositories/supabase";
+import { createServices, type Services } from "./services";
 
 /**
  * ════════════════════════════════════════════════════════════════════
@@ -23,14 +25,20 @@ function createRepositories(): Repositories {
 
 export interface Container {
   repos: Repositories;
+  services: Services;
 }
 
-// Keep one instance across dev hot-reloads (otherwise the memory backend
-// would lose its data on every file save).
-const globalForContainer = globalThis as unknown as { __splitBillContainer?: Container };
+// Repositories survive dev hot-reloads (so DATA_BACKEND=memory keeps its data);
+// services are rebuilt per module load so code edits take effect.
+const g = globalThis as unknown as { __splitBillRepos?: Repositories };
+let container: Container | undefined;
 
 /** Lazily build and cache the container. Call from Server Actions only. */
 export function getContainer(): Container {
-  globalForContainer.__splitBillContainer ??= { repos: createRepositories() };
-  return globalForContainer.__splitBillContainer;
+  if (!container) {
+    g.__splitBillRepos ??= createRepositories();
+    const repos = g.__splitBillRepos;
+    container = { repos, services: createServices({ repos, hasher: bcryptHasher }) };
+  }
+  return container;
 }

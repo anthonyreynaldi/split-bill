@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { UserMenuContainer } from "@/features/auth/containers/user-menu-container";
 import { LanguageToggle } from "./language-toggle";
 
 /** Top bar shown on every page. App-shell component (not a feature). */
@@ -11,7 +12,10 @@ export function AppHeader() {
         <Link href="/" className="text-lg font-semibold">
           {t("appName")}
         </Link>
-        <LanguageToggle />
+        <div className="flex items-center gap-2">
+          <UserMenuContainer />
+          <LanguageToggle />
+        </div>
       </div>
     </header>
   );

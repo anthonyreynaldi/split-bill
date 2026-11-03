@@ -9,7 +9,9 @@
     "edit": "Edit",
     "add": "Add",
     "loading": "Loading…",
-    "back": "Back"
+    "back": "Back",
+    "notFound": "Page not found.",
+    "backHome": "Back to home"
   },
   "home": {
     "getStarted": "Get started",
@@ -40,5 +42,26 @@
     "mustBeWhole": "Must be a whole number.",
     "invalid": "Invalid value.",
     "passcodeLength": "4 to 32 characters."
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "submitting": "Please wait…",
+    "logout": "Log out",
+    "myEvents": "My events",
+    "login": {
+      "title": "Log in",
+      "description": "Welcome back. Log in to manage your bills.",
+      "submit": "Log in",
+      "switchPrompt": "No account yet?",
+      "switchLink": "Register"
+    },
+    "register": {
+      "title": "Register",
+      "description": "Create an account to start splitting bills.",
+      "submit": "Create account",
+      "switchPrompt": "Already have an account?",
+      "switchLink": "Log in"
+    }
   }
 }

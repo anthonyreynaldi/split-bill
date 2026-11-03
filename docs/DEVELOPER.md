@@ -45,7 +45,9 @@ src/
   components/layout/  app shell (header, language toggle)
   components/providers/ QueryProvider etc.
   lib/utils.ts        shadcn `cn()` helper (path required by shadcn CLI)
-  features/<name>/    components/ (view) + hooks/ (view logic)
+  features/<name>/    components/ (view) + hooks/ (view logic) + containers/ (glue)
+  components/form/    shared form views (TextField, error translation)
+  proxy.ts            locale prefix + optimistic redirect to /login for /events/*
   shared/dto/         zod DTOs used by client + server
   shared/lib/         money, ActionResult, utils
   domain/             pure calculation (split, charges, settlement)
@@ -86,6 +88,7 @@ See [CLAUDE.md → Conventions](../CLAUDE.md#conventions). In short:
 | Problem | Fix |
 |---|---|
 | `SyntaxError` / unsupported engine on `npm install` | You're on Node 14. Run `nvm use`. |
+| Password visible in the dev terminal | It shouldn't be: `logging.serverFunctions` is turned off in `next.config.ts`. Keep it off. |
 | `UNAUTHORIZED` from every action | `SESSION_SECRET` is missing or changed. Log in again. |
 | OCR returns `OCR_FAILED` | Check `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`. Free models are rate-limited, so try again or enter the bill manually. |
 | ESLint `no-restricted-imports` error | You crossed a layer boundary. Move the code to the right layer (see CLAUDE.md). |

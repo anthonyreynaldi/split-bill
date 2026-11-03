@@ -49,8 +49,17 @@ const form = useForm({
 ```
 
 ## Actions
-*This table is filled in as features are built. Use one row per action.*
+Every action returns `ActionResult<Output>`. Every action can also return `VALIDATION_ERROR` and `INTERNAL_ERROR`, so those aren't repeated below.
 
-| Action | File | Input DTO | Output | Errors | Purpose |
-|---|---|---|---|---|---|
-| — | — | — | — | — | — |
+### Auth: `src/server/actions/auth.actions.ts` → hooks in `features/auth/hooks/use-auth.ts`
+| Action | Input DTO | Output | Errors | Purpose |
+|---|---|---|---|---|
+| `register` | `RegisterInput { email, password }` | `SessionUserDto` | `EMAIL_TAKEN` | Create an account and start a session |
+| `login` | `LoginInput { email, password }` | `SessionUserDto` | `INVALID_CREDENTIALS` | Start a session |
+| `logout` | none (`undefined`) | `null` | none | End the session |
+| `getCurrentUser` | none (`undefined`) | `SessionUserDto \| null` | none | Who is logged in (`null` if nobody) |
+
+```ts
+// Example: hooks/use-auth.ts
+useQuery({ queryKey: ['auth', 'me'], queryFn: () => unwrap(getCurrentUser(undefined)) });
+```

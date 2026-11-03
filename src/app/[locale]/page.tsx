@@ -1,6 +1,8 @@
 import { useTranslations } from "next-intl";
 import { CheckCircle2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 
 /** Landing page (public). */
 export default function HomePage() {
@@ -23,6 +25,11 @@ export default function HomePage() {
           ))}
         </ul>
       </CardContent>
+      <CardFooter>
+        <Link href="/events" className={buttonVariants({ size: "lg" })}>
+          {t("home.getStarted")}
+        </Link>
+      </CardFooter>
     </Card>
   );
 }

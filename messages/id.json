@@ -9,7 +9,9 @@
     "edit": "Ubah",
     "add": "Tambah",
     "loading": "Memuat…",
-    "back": "Kembali"
+    "back": "Kembali",
+    "notFound": "Halaman tidak ditemukan.",
+    "backHome": "Kembali ke beranda"
   },
   "home": {
     "getStarted": "Mulai",
@@ -40,5 +42,26 @@
     "mustBeWhole": "Harus bilangan bulat.",
     "invalid": "Nilai tidak valid.",
     "passcodeLength": "4 sampai 32 karakter."
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Kata sandi",
+    "submitting": "Mohon tunggu…",
+    "logout": "Keluar",
+    "myEvents": "Acara saya",
+    "login": {
+      "title": "Masuk",
+      "description": "Selamat datang kembali. Masuk untuk mengelola tagihan.",
+      "submit": "Masuk",
+      "switchPrompt": "Belum punya akun?",
+      "switchLink": "Daftar"
+    },
+    "register": {
+      "title": "Daftar",
+      "description": "Buat akun untuk mulai membagi tagihan.",
+      "submit": "Buat akun",
+      "switchPrompt": "Sudah punya akun?",
+      "switchLink": "Masuk"
+    }
   }
 }

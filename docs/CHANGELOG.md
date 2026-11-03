@@ -12,3 +12,4 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 - DTOs: zod schemas for auth, events, bills, OCR, summary and share (messages are i18n keys); test that ID and EN message files match.
 - Database: Supabase migrations (tables, RLS deny-all, transactional `save_bill`, private `bill-images` bucket) and typed `db.types.ts`.
 - Repositories: interfaces, in-memory and Supabase implementations, a contract test suite shared by both, `container.ts` wiring and validated env (`.env.example`).
+- Auth: register, login and logout with email and password (bcrypt, signed httpOnly cookie), header user menu, redirect to /login for /events, locale-aware 404 page. Server Action argument logging turned off.

@@ -9,6 +9,9 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
  *   client-side via TanStack Query + Server Actions (see docs/decisions/0001).
  */
 const nextConfig: NextConfig = {
+  // Dev logs Server Action arguments by default, which would print passwords
+  // and passcodes in the terminal. Keep it off.
+  logging: { serverFunctions: false },
   turbopack: {
     rules: {
       "*.css": {

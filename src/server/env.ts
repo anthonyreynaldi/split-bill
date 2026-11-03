@@ -26,7 +26,9 @@ let cached: Env | undefined;
 /** Parsed env. Throws a readable error listing every problem. */
 export function env(): Env {
   if (cached) return cached;
-  const parsed = EnvSchema.safeParse(process.env);
+  // Treat `KEY=` (empty) in .env files as "not set".
+  const raw = Object.fromEntries(Object.entries(process.env).filter(([, v]) => v !== ""));
+  const parsed = EnvSchema.safeParse(raw);
   if (!parsed.success) {
     throw new Error(`Invalid environment:\n${z.prettifyError(parsed.error)}\nSee .env.example`);
   }

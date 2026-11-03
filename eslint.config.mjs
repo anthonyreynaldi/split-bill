@@ -33,9 +33,14 @@ const eslintConfig = defineConfig([
 
   // 2. View components: no server code at all. Data comes in via props/hooks.
   {
-    files: ["src/components/**/*.{ts,tsx}", "src/features/*/components/**/*.{ts,tsx}"],
+    files: [
+      "src/components/**/*.{ts,tsx}",
+      "src/features/*/components/**/*.{ts,tsx}",
+      "src/features/*/containers/**/*.{ts,tsx}",
+      "src/app/**/*.{ts,tsx}",
+    ],
     rules: restrict({
-      group: ["@/server", "@/server/**"],
+      group: ["@/server", "@/server/**", "**/server/**"],
       message: "View components must not import server code. Use a hook in features/<name>/hooks.",
     }),
   },
@@ -58,7 +63,7 @@ const eslintConfig = defineConfig([
   // 4. Services: business rules only. Depend on repository INTERFACES.
   {
     files: ["src/server/services/**/*.ts"],
-    ignores: ["src/server/services/**/*.test.ts"],
+    ignores: ["src/server/services/**/*.test.ts", "src/server/services/test-utils.ts"],
     rules: restrict(
       {
         group: [
@@ -66,6 +71,13 @@ const eslintConfig = defineConfig([
           "@/server/repositories/memory/**",
           "@/server/container",
           "@/server/actions/**",
+          // relative forms of the same paths
+          "**/repositories/supabase",
+          "**/repositories/supabase/**",
+          "**/repositories/memory",
+          "**/repositories/memory/**",
+          "**/container",
+          "**/actions/**",
         ],
         message: "Services depend only on repositories/interfaces (ADR 0002).",
       },
