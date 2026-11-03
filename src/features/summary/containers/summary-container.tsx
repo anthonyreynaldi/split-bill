@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { ArrowLeft } from "lucide-react";
 import { errorCodeOf } from "@/shared/lib/result";
@@ -10,18 +10,12 @@ import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFormatters } from "@/components/format/use-formatters";
 import { useUpdateEvent } from "@/features/events/hooks/use-events";
+import { ExportActionsContainer } from "@/features/export/containers/export-actions-container";
 import { SummaryView, type SettlementMode } from "../components/summary-view";
 import { useSummary } from "../hooks/use-summary";
-import type { SummaryDto } from "@/shared/dto";
 
-/**
- * /events/[eventId]/summary. The settlement mode is saved on the event.
- * `renderActions` lets the export/share features add their buttons.
- */
-export function SummaryContainer(props: {
-  eventId: string;
-  renderActions?: (ctx: { summary: SummaryDto; mode: SettlementMode; captureEl: HTMLDivElement | null }) => ReactNode;
-}) {
+/** /events/[eventId]/summary. The settlement mode is saved on the event. */
+export function SummaryContainer(props: { eventId: string }) {
   const tc = useTranslations("common");
   const tErr = useTranslations("errors");
   const summary = useSummary(props.eventId);
@@ -55,7 +49,7 @@ export function SummaryContainer(props: {
         money={fmt.money}
         date={fmt.date}
         onCaptureEl={setCaptureEl}
-        actions={props.renderActions?.({ summary: summary.data, mode: current, captureEl })}
+        actions={<ExportActionsContainer eventId={props.eventId} captureEl={captureEl} name={summary.data.event.name} />}
       />
     </div>
   );

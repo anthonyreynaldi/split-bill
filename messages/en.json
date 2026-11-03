@@ -190,5 +190,35 @@
       "nettHint": "Debts cancel out across bills, so there are fewer transfers.",
       "perBillHint": "Everyone pays back whoever paid each bill."
     }
+  },
+  "export": {
+    "excel": "Excel",
+    "image": "Image",
+    "xlsx": {
+      "sheets": {
+        "people": "People",
+        "transfers": "Who pays whom",
+        "items": "Items",
+        "bills": "Bills"
+      },
+      "person": "Person",
+      "consumed": "Consumed",
+      "paid": "Paid",
+      "balance": "Balance",
+      "from": "From",
+      "to": "To",
+      "amount": "Amount",
+      "bill": "Bill",
+      "item": "Item",
+      "portions": "Portions",
+      "date": "Date",
+      "paidBy": "Paid by",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "service": "Service",
+      "tax": "Tax",
+      "total": "Total",
+      "mode": "Settlement"
+    }
   }
 }

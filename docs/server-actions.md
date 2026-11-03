@@ -109,3 +109,10 @@ The editor's live preview runs the **same** pure `calculateBill()` from `src/dom
 | `getSummary` | `EventIdInput { eventId }` | `SummaryDto` | `UNAUTHORIZED`, `NOT_FOUND` | Per-person totals (`people`), per-bill breakdown (`bills[].perPerson[].items`), **both** `nettTransfers` and `perBillTransfers`, plus warnings (`billsWithoutPayer`, `unassigned`) |
 
 Both settlement plans come back in one response, so switching tabs is instant. The chosen mode is saved with `updateEvent({ settlementMode })`. The share link uses the same `SummaryDto` (built by `buildSummary()` in `summary.service.ts`).
+
+### Export: `src/server/actions/export.actions.ts` → `features/export/hooks/use-export.ts`
+| Action | Input DTO | Output | Errors | Purpose |
+|---|---|---|---|---|
+| `exportSummaryExcel` | `ExportExcelInput { eventId, locale: 'id' \| 'en' }` | `FileDto { filename, mimeType, base64 }` | `UNAUTHORIZED`, `NOT_FOUND` | .xlsx with 4 sheets (People, Who pays whom, Items, Bills). Money is stored as real numbers, so it can be summed in Excel |
+
+The **image** export has no action. `useExportImage()` renders the summary element in the browser with `html-to-image`, so it also works on public share pages.

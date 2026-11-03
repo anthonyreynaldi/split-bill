@@ -72,3 +72,14 @@ export const SummaryDto = z.object({
   grandTotal: z.number(),
 });
 export type SummaryDto = z.infer<typeof SummaryDto>;
+
+/** Input for `exportSummaryExcel`. `locale` picks the language of sheet names and headers. */
+export const ExportExcelInput = z.object({
+  eventId: z.uuid(),
+  locale: z.enum(["id", "en"]),
+});
+export type ExportExcelInput = z.infer<typeof ExportExcelInput>;
+
+/** A generated file, base64-encoded so it travels safely through a Server Action. */
+export const FileDto = z.object({ filename: z.string(), mimeType: z.string(), base64: z.string() });
+export type FileDto = z.infer<typeof FileDto>;

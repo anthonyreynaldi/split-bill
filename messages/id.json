@@ -190,5 +190,35 @@
       "nettHint": "Utang saling mengurangi antar tagihan, jadi transfer lebih sedikit.",
       "perBillHint": "Setiap orang membayar ke orang yang membayar tiap tagihan."
     }
+  },
+  "export": {
+    "excel": "Excel",
+    "image": "Gambar",
+    "xlsx": {
+      "sheets": {
+        "people": "Orang",
+        "transfers": "Siapa bayar ke siapa",
+        "items": "Item",
+        "bills": "Tagihan"
+      },
+      "person": "Orang",
+      "consumed": "Konsumsi",
+      "paid": "Sudah bayar",
+      "balance": "Saldo",
+      "from": "Dari",
+      "to": "Ke",
+      "amount": "Jumlah",
+      "bill": "Tagihan",
+      "item": "Item",
+      "portions": "Porsi",
+      "date": "Tanggal",
+      "paidBy": "Dibayar oleh",
+      "subtotal": "Subtotal",
+      "discount": "Diskon",
+      "service": "Layanan",
+      "tax": "Pajak",
+      "total": "Total",
+      "mode": "Pelunasan"
+    }
   }
 }

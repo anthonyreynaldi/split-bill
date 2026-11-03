@@ -17,3 +17,4 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 - Bills: bill editor with title, date, payer, items (qty × price, auto total), even or custom portion split, tax/service/discount, a choice of proportional or equal charge sharing, and a live per-person preview. Edit and delete.
 - OCR: upload a receipt photo (compressed in the browser), read it with an OpenRouter vision model and prefill the bill as a draft. The photo is kept even when OCR fails or is disabled.
 - Summary: who pays whom (nett or per bill, saved per event), per-person consumed, paid and balance with item details, and warnings for bills without a payer or with unassigned items.
+- Export: download the summary as Excel (4 sheets, translated headers, numeric money cells) or as a PNG image.
