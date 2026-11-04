@@ -181,9 +181,14 @@ export function createMemoryRepositories(): Repositories {
   };
 }
 
-/** Same semantics as the SQL `group by participant_id, sum(units)`. */
-function mergeUnits(list: { participantId: string; units: number }[]) {
-  const m = new Map<string, number>();
-  for (const a of list) m.set(a.participantId, (m.get(a.participantId) ?? 0) + a.units);
-  return [...m].map(([participantId, units]) => ({ participantId, units }));
+/** Same semantics as the SQL `group by participant_id, unit_index` with `sum(units)`. */
+function mergeUnits(list: { participantId: string; units: number; unit?: number }[]) {
+  const m = new Map<string, { participantId: string; units: number; unit?: number }>();
+  for (const a of list) {
+    const key = `${a.participantId}|${a.unit ?? ""}`;
+    const acc = m.get(key);
+    if (acc) acc.units += a.units;
+    else m.set(key, a.unit === undefined ? { participantId: a.participantId, units: a.units } : { ...a });
+  }
+  return [...m.values()];
 }

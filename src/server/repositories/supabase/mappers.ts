@@ -77,7 +77,11 @@ export const toBill = (r: BillRowWithChildren): Bill => ({
     unitPrice: Number(it.unit_price),
     total: Number(it.total),
     splitMode: it.split_mode as SplitMode,
-    allocations: it.item_allocations.map((a) => ({ participantId: a.participant_id, units: Number(a.units) })),
+    allocations: it.item_allocations.map((a) =>
+      a.unit_index === null
+        ? { participantId: a.participant_id, units: Number(a.units) }
+        : { participantId: a.participant_id, units: Number(a.units), unit: a.unit_index },
+    ),
   })),
   charges: [...r.bill_charges].sort(byPosition).map((c) => ({
     id: c.id,
@@ -103,7 +107,11 @@ export const toSaveBillPayload = (d: SaveBillData): Json => ({
     unit_price: it.unitPrice,
     total: it.total,
     split_mode: it.splitMode,
-    allocations: it.allocations.map((a) => ({ participant_id: a.participantId, units: a.units })),
+    allocations: it.allocations.map((a) => ({
+      participant_id: a.participantId,
+      units: a.units,
+      unit_index: a.unit ?? null,
+    })),
   })),
   charges: d.charges.map((c) => ({ kind: c.kind, mode: c.mode, value: c.value })),
 });

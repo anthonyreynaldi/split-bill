@@ -31,6 +31,40 @@ describe("SummaryService", () => {
     expect(s.people.find((p) => p.participantId === a.id)).toMatchObject({ owed: 30000, paid: 30000, balance: 0 });
   });
 
+  it("per-unit split: qty 2 pizza, unit 1 → 2 people, unit 2 → 3 people", async () => {
+    const { services } = createTestServices();
+    const u = await services.auth.register({ email: "a@b.co", password: "secret123" });
+    const e = await services.events.create(u.id, { name: "Trip" });
+    const ppl = [];
+    for (const name of ["A", "B", "C", "D", "E"]) ppl.push(await services.events.addParticipant(u.id, { eventId: e.id, name }));
+    const [a, b, c, d, x] = ppl;
+    const tick = (unit: number, ...ids: string[]) => ids.map((participantId) => ({ participantId, units: 1, unit }));
+    const saved = await services.bills.create(u.id, {
+      eventId: e.id,
+      title: "Pizza night",
+      billDate: null,
+      paidBy: a.id,
+      imagePath: null,
+      chargeSplitMode: "proportional",
+      items: [
+        {
+          name: "Pizza",
+          qty: 2,
+          unitPrice: 30000,
+          total: 60000,
+          splitMode: "per_unit",
+          allocations: [...tick(0, a.id, b.id), ...tick(1, c.id, d.id, x.id)],
+        },
+      ],
+      charges: [],
+    });
+    expect(saved.items[0].allocations.map((al) => al.unit)).toEqual([0, 0, 1, 1, 1]);
+
+    const s = await services.summary.get(u.id, e.id);
+    const owed = Object.fromEntries(s.people.map((p) => [p.participantId, p.owed]));
+    expect([a, b, c, d, x].map((p) => owed[p.id])).toEqual([15000, 15000, 10000, 10000, 10000]);
+  });
+
   it("hides other users' events", async () => {
     const { services } = createTestServices();
     const u = await services.auth.register({ email: "a@b.co", password: "secret123" });

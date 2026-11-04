@@ -114,9 +114,9 @@ export type Database = {
         Relationships: [Rel<"bill_items_bill_id_fkey", "bill_id", "bills">];
       };
       item_allocations: {
-        Row: { item_id: string; participant_id: string; units: number };
-        Insert: { item_id: string; participant_id: string; units: number };
-        Update: { item_id?: string; participant_id?: string; units?: number };
+        Row: { item_id: string; participant_id: string; units: number; unit_index: number | null };
+        Insert: { item_id: string; participant_id: string; units: number; unit_index?: number | null };
+        Update: { item_id?: string; participant_id?: string; units?: number; unit_index?: number | null };
         Relationships: [
           Rel<"item_allocations_item_id_fkey", "item_id", "bill_items">,
           Rel<"item_allocations_participant_id_fkey", "participant_id", "participants">,

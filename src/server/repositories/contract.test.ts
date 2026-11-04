@@ -90,6 +90,33 @@ describe.each(backends)("%s repositories", (_name, make) => {
     expect(await r.bills.findById(b.id)).toEqual(b);
   });
 
+  it("bills: per-unit allocations keep their unit index (and dedupe per unit)", async () => {
+    const { r, ana, budi, billData } = await setup();
+    const data = billData({
+      items: [
+        {
+          name: "Pizza",
+          qty: 2,
+          unitPrice: 30000,
+          total: 60000,
+          splitMode: "per_unit",
+          allocations: [
+            { participantId: ana.id, units: 1, unit: 0 },
+            { participantId: budi.id, units: 1, unit: 0 },
+            { participantId: ana.id, units: 1, unit: 1 },
+          ],
+        },
+      ],
+    });
+    const b = await r.bills.save(data);
+    const sortKey = (a: { participantId: string; unit?: number }) => `${a.unit}|${a.participantId}`;
+    const got = [...b.items[0].allocations].sort((x, y) => sortKey(x).localeCompare(sortKey(y)));
+    const want = [...data.items[0].allocations].sort((x, y) => sortKey(x).localeCompare(sortKey(y)));
+    expect(b.items[0].splitMode).toBe("per_unit");
+    expect(got).toEqual(want);
+    expect(await r.bills.findById(b.id)).toEqual(b);
+  });
+
   it("bills: save with id replaces items and charges", async () => {
     const { r, billData } = await setup();
     const b = await r.bills.save(billData());
