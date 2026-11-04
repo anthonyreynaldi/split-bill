@@ -11,7 +11,13 @@ The code is layered. The view calls hooks (TanStack), hooks call Server Actions,
 3. Create a Supabase project at https://supabase.com, or run it locally with `npx supabase start` (needs Docker).
 4. Apply the migrations in `supabase/migrations/`. Either:
    - with the CLI: `npx supabase link --project-ref <ref>` and then `npx supabase db push`, or
-   - by pasting each SQL file, in order, into the Supabase SQL editor.
+   - by pasting each SQL file, in order, into the Supabase SQL editor, or
+   - with `psql` (no CLI or Docker needed). Put the **Session pooler** URI from Dashboard → Connect in `.env.local` as `SUPABASE_DB_URL`, then run each file in order:
+     ```bash
+     set -a; . ./.env.local; set +a
+     psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 --single-transaction -f supabase/migrations/<file>.sql
+     ```
+     The "Direct connection" host is IPv6-only and often fails from home or office networks, so use the pooler. psql doesn't record which files have run, so apply only new ones.
 5. Create a **private** Storage bucket named `bill-images`. Migration `0002` does this when it is run through the CLI.
 6. Copy `.env.example` to `.env.local` and fill in the values (see below).
    > **No Supabase yet?** Set `DATA_BACKEND=memory` and a `SESSION_SECRET`, and you can run the app with no database. Data is lost on restart.
