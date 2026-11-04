@@ -92,7 +92,11 @@ Every action here can return `UNAUTHORIZED` and `NOT_FOUND` (an event or bill th
 | `updateBill` | `UpdateBillInput { eventId, billId, ...BillFormValues }` | `BillDto` | same as `createBill` | Replace a bill |
 | `deleteBill` | `BillRefInput` | `null` | none | Delete a bill and its photo |
 
-`BillFormValues = { title, billDate, paidBy, imagePath, chargeSplitMode, items[{ name, qty, unitPrice, total, splitMode, allocations[{ participantId, units }] }], charges[{ kind, mode, value }] }`. Money is in integer minor units.
+`BillFormValues = { title, billDate, paidBy, imagePath, chargeSplitMode, items[{ name, qty, unitPrice, total, splitMode, allocations[{ participantId, units, unit? }] }], charges[{ kind, mode, value }] }`. Money is in integer minor units.
+
+`splitMode` is `even`, `custom` or `per_unit`:
+- `custom`: `units` are portions (weights).
+- `per_unit`: send one allocation per person per unit, `{ participantId, units: 1, unit }`, where `unit` is the 0-based unit index. `qty` must be a whole number from 1 to 50 (`MAX_PER_UNIT_QTY`), otherwise the action fails with `VALIDATION_ERROR` and the field error `items.<i>.qty: perUnitQty`.
 
 The editor's live preview runs the **same** pure `calculateBill()` from `src/domain` in the browser, so on-screen totals always match the server.
 

@@ -89,7 +89,7 @@ See [CLAUDE.md → Conventions](../CLAUDE.md#conventions). In short:
 1. Register, log out, log in (also try a wrong password).
 2. Create an event and add 3 people. Rename one and remove one.
 3. Add a bill from a photo (with OCR configured) and check that the draft is prefilled. Fix it, choose the payer, and save.
-4. Add a second bill by hand. Use custom portions on one item (e.g. qty 3 → 2 + 1). Add tax 10% and service 5%.
+4. Add a second bill by hand. Use custom portions on one item (e.g. qty 3 → 2 + 1) and **Per unit** on another (e.g. qty 2: unit 1 → 2 people, unit 2 → 3 people). Add tax 10% and service 5%.
 5. On the summary, check that the per-person totals add up to the bill totals, and switch between Nett and Per bill.
 6. Download the Excel and image exports.
 7. Share with a passcode and open the link in a private window: wrong code, right code, view only.

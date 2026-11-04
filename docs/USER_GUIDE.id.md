@@ -31,6 +31,7 @@ Klik **Tambah tagihan** dan isi formulir di bawah kotak unggah. Klik **Tambah it
 Untuk setiap item, pilih:
 - **Semua orang**: semua orang dalam acara menanggung sama rata.
 - **Pilih orang**: pilih siapa yang memesan dan berapa banyak, misalnya 3 porsi sate → Ana 2, Budi 1. Boleh setengah.
+- **Per porsi**: setiap porsi punya kelompok orangnya sendiri. Contoh: 2 pizza seharga Rp 30.000. Ana dan Budi berbagi pizza pertama, sedangkan Citra, Dedi dan Eka berbagi pizza kedua. Pilih **Per porsi**, lalu di **Porsi ke-1** centang Ana dan Budi, dan di **Porsi ke-2** centang Citra, Dedi dan Eka. Ana dan Budi masing-masing membayar Rp 15.000, dan tiga lainnya Rp 10.000. **Semua** mencentang semua orang di porsi itu. Per porsi bisa dipakai jika jumlahnya bilangan bulat 1 sampai 50.
 
 **Pajak, layanan, dan diskon:** pilih apakah dibagi **sesuai pesanan masing-masing** (lebih adil) atau **sama rata**.
 

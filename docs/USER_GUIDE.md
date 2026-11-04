@@ -31,6 +31,7 @@ Click **Add bill** and fill in the form below the upload box. Click **Add item**
 For each item, choose:
 - **Everyone**: everyone in the event shares it equally.
 - **Choose people**: pick who had it and how many each, e.g. 3 satay portions → Ana 2, Budi 1. Halves are allowed.
+- **Per unit**: each unit gets its own group of people. Example: 2 pizzas at Rp 30.000. Ana and Budi shared pizza 1, and Citra, Dedi and Eka shared pizza 2. Choose **Per unit**, then on **Unit 1** tick Ana and Budi, and on **Unit 2** tick Citra, Dedi and Eka. Ana and Budi pay Rp 15.000 each, and the other three pay Rp 10.000 each. **All** ticks everyone on that unit. Per unit works when the quantity is a whole number from 1 to 50.
 
 **Tax, service and discount:** choose whether to share them **by what each person ordered** (fairer) or **equally**.
 

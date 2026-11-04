@@ -76,10 +76,11 @@ erDiagram
     numeric qty
     bigint unit_price
     bigint total
-    text split_mode "even | custom" }
+    text split_mode "even | custom | per_unit" }
   item_allocations { uuid item_id FK
     uuid participant_id FK
-    numeric units }
+    numeric units
+    int unit_index "per_unit only, 0-based" }
   bill_charges { uuid id PK
     uuid bill_id FK
     text kind "tax | service | discount"
@@ -99,8 +100,10 @@ flowchart TD
   I["Each item total"] --> E{"split_mode"}
   E -- even --> EV["total ÷ all participants<br/>(largest remainder)"]
   E -- custom --> CU["total × units_i ÷ Σunits<br/>(largest remainder)"]
+  E -- per_unit --> PU["total ÷ qty per unit,<br/>then each unit ÷ its ticked people<br/>(largest remainder, twice)"]
   EV --> ST["Person item subtotal"]
   CU --> ST
+  PU --> ST
   ST --> CH{"charge_split_mode"}
   CH -- proportional --> P["charge × subtotal_i ÷ Σsubtotal"]
   CH -- even --> Q["charge ÷ people on bill"]

@@ -19,4 +19,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 - Summary: who pays whom (nett or per bill, saved per event), per-person consumed, paid and balance with item details, and warnings for bills without a payer or with unassigned items.
 - Export: download the summary as Excel (4 sheets, translated headers, numeric money cells) or as a PNG image.
 - Share: read-only public link per event (/s/<slug>), optional passcode (bcrypt, 5 tries then a 15 minute lock, 12 hour access cookie), turn the link on or off, image export on the shared view.
+- Bills: **Per unit** split. Each unit of an item's qty gets its own group of people, and each unit's price is split equally within that group. Migration `20261104000001_per_unit_split.sql` adds `item_allocations.unit_index`.
 - Docs: TypeDoc API site (`npm run docs`), updated architecture diagrams, user guides (EN/ID) matching the UI, manual release checklist.
+
+### Fixed
+- Bills: reopening a bill right after saving it showed the old values, and saving again reverted the edit.
