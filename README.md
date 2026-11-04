@@ -25,7 +25,8 @@ npm run dev                  # http://localhost:3000
 |---|---|
 | `npm run check` | lint + typecheck + all tests (run before every commit) |
 | `npm run docs` | build the API reference site into `docs/api/index.html` |
-| `npm run db:push` / `npm run db:types` | apply migrations / regenerate DB types (Supabase CLI) |
+| `npm run db:migrate` | apply new migrations to the DB in `SUPABASE_DB_URL` (CI does this on every merge to `main`) |
+| `npm run db:types` | regenerate DB types (Supabase CLI) |
 
 For the full setup, including the database: [docs/DEVELOPER.md](docs/DEVELOPER.md).
 
