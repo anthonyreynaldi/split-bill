@@ -118,14 +118,23 @@ export function BillItemsSection(props: {
                     qty={qty}
                     splitMode={splitMode}
                     allocations={allocations}
-                    onModeChange={(m) => form.setFieldValue(`items[${i}].splitMode`, m)}
+                    onModeChange={(m) => {
+                      // custom portions and per-unit ticks mean different things: never mix them
+                      if ((m === "per_unit") !== (splitMode === "per_unit")) form.setFieldValue(`items[${i}].allocations`, []);
+                      form.setFieldValue(`items[${i}].splitMode`, m);
+                    }}
                     onAllocationsChange={(a) => form.setFieldValue(`items[${i}].allocations`, a)}
                     format={fmt.number}
                     labels={{
                       even: t("split.even"),
                       custom: t("split.custom"),
+                      perUnit: t("split.perUnit"),
+                      perUnitHint: t("split.perUnitHint"),
+                      unit: (n) => t("split.unit", { n }),
+                      everyone: t("split.allOnUnit"),
                       portions: t("split.portions"),
                       assigned: (a, q) => t("split.assigned", { assigned: a, qty: q }),
+                      unitsAssigned: (a, q) => t("split.unitsAssigned", { assigned: a, total: q }),
                       nobody: t("split.nobody"),
                       noPeople: t("split.noPeople"),
                     }}

@@ -50,18 +50,38 @@ export function useBill(eventId: string, billId: string | null) {
   });
 }
 
+/**
+ * Drop allocations that don't belong to the item's split mode before saving:
+ * per-unit ticks for units beyond the current qty (qty was lowered), and the
+ * `unit` field on non-per-unit items.
+ */
+export function cleanAllocations(values: BillFormValues): BillFormValues {
+  return {
+    ...values,
+    items: values.items.map((it) => ({
+      ...it,
+      allocations:
+        it.splitMode === "per_unit"
+          ? it.allocations.filter((a) => a.unit !== undefined && a.unit < it.qty)
+          : it.allocations.map(({ participantId, units }) => ({ participantId, units })),
+    })),
+  };
+}
+
 /** The bill form. `billId === null` creates, otherwise replaces. Goes back to the event after saving. */
 export function useBillForm(opts: { eventId: string; billId: string | null; initial: BillFormValues }) {
   const qc = useQueryClient();
   const router = useRouter();
   const onError = useErrorToast();
   const save = useMutation({
-    mutationFn: (values: BillFormValues) =>
-      unwrap(
+    mutationFn: (raw: BillFormValues) => {
+      const values = cleanAllocations(raw);
+      return unwrap(
         opts.billId
           ? updateBill({ eventId: opts.eventId, billId: opts.billId, ...values })
           : createBill({ eventId: opts.eventId, ...values }),
-      ),
+      );
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: eventKeys.detail(opts.eventId) });
       router.push(`/events/${opts.eventId}`);

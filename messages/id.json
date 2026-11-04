@@ -128,7 +128,12 @@
       "portions": "Porsi untuk",
       "assigned": "{assigned} dari {qty} terbagi",
       "nobody": "Belum ada yang dipilih",
-      "noPeople": "Tambahkan orang ke acara untuk membagi item."
+      "noPeople": "Tambahkan orang ke acara untuk membagi item.",
+      "perUnit": "Per porsi",
+      "perUnitHint": "Per porsi butuh jumlah bilangan bulat 1 sampai 50.",
+      "unit": "Porsi ke-{n}",
+      "allOnUnit": "Semua",
+      "unitsAssigned": "{assigned} dari {total} porsi terbagi"
     },
     "charges": {
       "title": "Pajak, layanan & diskon",

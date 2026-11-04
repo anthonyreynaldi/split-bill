@@ -128,7 +128,12 @@
       "portions": "Portions for",
       "assigned": "{assigned} of {qty} assigned",
       "nobody": "Nobody chosen",
-      "noPeople": "Add people to the event to split items."
+      "noPeople": "Add people to the event to split items.",
+      "perUnit": "Per unit",
+      "perUnitHint": "Per unit needs a whole quantity from 1 to 50.",
+      "unit": "Unit {n}",
+      "allOnUnit": "All",
+      "unitsAssigned": "{assigned} of {total} units assigned"
     },
     "charges": {
       "title": "Tax, service & discount",
