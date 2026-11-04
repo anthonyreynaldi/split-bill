@@ -82,8 +82,11 @@ export function useBillForm(opts: { eventId: string; billId: string | null; init
           : createBill({ eventId: opts.eventId, ...values }),
       );
     },
-    onSuccess: () => {
+    onSuccess: (saved) => {
       qc.invalidateQueries({ queryKey: eventKeys.detail(opts.eventId) });
+      // The editor builds its form from the cache, so store the saved bill:
+      // reopening it must never show (and re-save) the values from before this save.
+      qc.setQueryData(billKeys.detail(opts.eventId, saved.id), saved);
       router.push(`/events/${opts.eventId}`);
     },
     onError,
