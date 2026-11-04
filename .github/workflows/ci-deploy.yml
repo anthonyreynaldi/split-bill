@@ -1,0 +1,72 @@
+# ─────────────────────────────────────────────────────────────────────
+# CI/CD (ADR 0007, docs/DEVELOPER.md#deployment-automatic)
+#   pull request    → check
+#   push to main    → check → migrate (Supabase) → deploy (Vercel prod)
+# Each job only runs if the previous one passed, so code that needs a
+# new migration is never deployed before that migration is applied.
+# Secrets live in the GitHub environment "production".
+# ─────────────────────────────────────────────────────────────────────
+name: CI / Deploy
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# one production run at a time, in order; PR runs replace older ones
+concurrency:
+  group: ${{ github.event_name == 'push' && 'production' || format('pr-{0}', github.ref) }}
+  cancel-in-progress: ${{ github.event_name != 'push' }}
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+        env:
+          # build only; no real backend needed
+          DATA_BACKEND: memory
+          SESSION_SECRET: ci-build-only-not-a-real-secret-000000
+
+  migrate:
+    if: github.event_name == 'push'
+    needs: check
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Apply new Supabase migrations
+        run: npm run db:migrate
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+
+  deploy:
+    needs: migrate
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npx -y vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
+      - run: npx -y vercel@latest build --prod --token="$VERCEL_TOKEN"
+      - run: npx -y vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN"

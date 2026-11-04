@@ -9,16 +9,14 @@ The code is layered. The view calls hooks (TanStack), hooks call Server Actions,
 1. Use Node 22: `nvm install 22 && nvm use` (reads `.nvmrc`).
 2. Install dependencies: `npm install`.
 3. Create a Supabase project at https://supabase.com, or run it locally with `npx supabase start` (needs Docker).
-4. Apply the migrations in `supabase/migrations/`. Either:
-   - with the CLI: `npx supabase link --project-ref <ref>` and then `npx supabase db push`, or
-   - by pasting each SQL file, in order, into the Supabase SQL editor, or
-   - with `psql` (no CLI or Docker needed). Put the **Session pooler** URI from Dashboard → Connect in `.env.local` as `SUPABASE_DB_URL`, then run each file in order:
-     ```bash
-     set -a; . ./.env.local; set +a
-     psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 --single-transaction -f supabase/migrations/<file>.sql
-     ```
-     The "Direct connection" host is IPv6-only and often fails from home or office networks, so use the pooler. psql doesn't record which files have run, so apply only new ones.
-5. Create a **private** Storage bucket named `bill-images`. Migration `0002` does this when it is run through the CLI.
+4. Apply the migrations in `supabase/migrations/`:
+   1. In the Supabase dashboard, click **Connect**, choose **Session pooler**, and copy the URI with your DB password filled in. The "Direct connection" host is IPv6-only and often fails from home or office networks.
+   2. Put it in `.env.local` as `SUPABASE_DB_URL=...`.
+   3. Run `npm run db:migrate`. Add `-- --dry-run` to only list what would run.
+
+   It runs `supabase db push` ([scripts/db-migrate.sh](../scripts/db-migrate.sh)), which records applied versions in `supabase_migrations.schema_migrations`. So it only applies **new** files, and CI uses the same command (see [Deployment](#deployment)).
+   > Applied some files by hand in the SQL editor? Mark them as done once so they aren't run again: `npx supabase@3 migration repair --status applied <version> --remote="$SUPABASE_DB_URL"`. The version is the file's timestamp prefix.
+5. The **private** Storage bucket `bill-images` is created by migration `20261103000002_storage.sql`.
 6. Copy `.env.example` to `.env.local` and fill in the values (see below).
    > **No Supabase yet?** Set `DATA_BACKEND=memory` and a `SESSION_SECRET`, and you can run the app with no database. Data is lost on restart.
 7. Run `npm run dev` and open http://localhost:3000.
@@ -101,9 +99,32 @@ See [CLAUDE.md → Conventions](../CLAUDE.md#conventions). In short:
 7. Share with a passcode and open the link in a private window: wrong code, right code, view only.
 8. Switch between ID and EN on every page.
 
-## Deployment
-- Vercel is recommended: import the repo and set the env vars from the table above.
-- Supabase: run the migrations against the production project first.
+## Deployment (automatic)
+[.github/workflows/ci-deploy.yml](../.github/workflows/ci-deploy.yml) does everything ([ADR 0007](decisions/0007-ci-migrate-then-deploy.md)):
+
+| Trigger | Jobs |
+|---|---|
+| Pull request | **check**: lint, typecheck, tests and build |
+| Push / merge to `main` | **check** → **migrate** (`npm run db:migrate` against production) → **deploy** (Vercel CLI, production) |
+
+If a job fails, the later ones don't run. A broken migration never deploys code that needs it.
+
+### One-time setup
+1. **Vercel project.** Run `npx vercel@latest link` once. This creates the gitignored `.vercel/project.json`, which holds `orgId` and `projectId`. Alternatively, import the repo in the Vercel dashboard.
+2. **Vercel env vars** (Project → Settings → Environment Variables):
+   - **Production:** `DATA_BACKEND=supabase`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SESSION_SECRET`, `APP_URL` (your production URL), and optionally `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`.
+   - **Preview:** `DATA_BACKEND=memory` and a different `SESSION_SECRET`, so PR previews never touch production data.
+3. **GitHub secrets** (repo → Settings → Environments → create `production` → add secrets):
+   - `SUPABASE_DB_URL`: the Session pooler URI;
+   - `VERCEL_TOKEN`: from https://vercel.com/account/tokens;
+   - `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`: from `.vercel/project.json`.
+4. [vercel.json](../vercel.json) turns off Vercel's own Git deploy for `main`, so production is only deployed by the workflow, **after** migrating. PR preview deploys from Vercel's Git integration still work.
+
+### Writing migrations safely
+The migration runs a minute **before** the new code is live, so the old code briefly runs against the new schema.
+- Prefer additive changes: new tables, nullable or defaulted columns, `create or replace function`.
+- To rename or drop something, do it in two releases. First stop using it in the code, then remove it in a later migration.
+- Never edit a migration that has already been applied. Add a new file instead.
 
 ## Troubleshooting
 | Problem | Fix |

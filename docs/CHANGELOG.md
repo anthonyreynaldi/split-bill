@@ -20,7 +20,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 - Export: download the summary as Excel (4 sheets, translated headers, numeric money cells) or as a PNG image.
 - Share: read-only public link per event (/s/<slug>), optional passcode (bcrypt, 5 tries then a 15 minute lock, 12 hour access cookie), turn the link on or off, image export on the shared view.
 - Bills: **Per unit** split. Each unit of an item's qty gets its own group of people, and each unit's price is split equally within that group. Migration `20261104000001_per_unit_split.sql` adds `item_allocations.unit_index`.
-- Docs: applying migrations with `psql` and the optional `SUPABASE_DB_URL` (session pooler).
+- `npm run db:migrate`: applies only new migrations (history-tracked `supabase db push`) using `SUPABASE_DB_URL` (session pooler). Replaces the broken `db:push` script.
+- CI/CD: GitHub Actions checks every PR. On `main` it runs check → migrate → Vercel production deploy (ADR 0007).
 - Docs: TypeDoc API site (`npm run docs`), updated architecture diagrams, user guides (EN/ID) matching the UI, manual release checklist.
 
 ### Fixed

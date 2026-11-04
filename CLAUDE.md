@@ -18,6 +18,7 @@ A web app for splitting bills within a group event. The creator uploads receipt 
 - Lint: `npm run lint` · Type check: `npm run typecheck` · Build: `npm run build`
 - API docs (TypeDoc HTML → `docs/api/`): `npm run docs`
 - DB types: `npm run db:types` (needs the Supabase CLI to be logged in)
+- Apply new migrations: `npm run db:migrate` (uses `SUPABASE_DB_URL`). CI runs it automatically on merge to `main`, then deploys to Vercel (ADR 0007).
 - Everything before a commit: `npm run check` (lint + typecheck + tests)
 - Run without a database: `DATA_BACKEND=memory` in `.env.local`
 
@@ -51,7 +52,7 @@ ESLint `no-restricted-imports` rules enforce points 1, 4 and 6. Don't disable th
 1. Plan first (Plan mode).
 2. Write the zod DTOs in `src/shared/dto/`.
 3. Add domain logic (pure) with tests, if needed.
-4. Add or extend the repository interface, then implement it in **both** `memory/` and `supabase/`. Add a migration if the schema changes.
+4. Add or extend the repository interface, then implement it in **both** `memory/` and `supabase/`. Add a migration if the schema changes. It must be **backward compatible**, because CI migrates before deploying (ADR 0007). Never edit an applied migration.
 5. Add the service method and test it with the memory repos.
 6. Add a Server Action and document it in [docs/server-actions.md](docs/server-actions.md).
 7. Add a hook, then the view component, then the page.

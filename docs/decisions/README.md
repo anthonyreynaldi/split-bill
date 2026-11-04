@@ -10,5 +10,6 @@ Each file records one important technical decision: the **context**, the **decis
 | [0004](0004-money-as-integer.md) | Money as integer minor units | Accepted |
 | [0005](0005-ocr-openrouter.md) | OCR via OpenRouter vision model | Accepted |
 | [0006](0006-i18n-next-intl.md) | i18n with next-intl (id/en) | Accepted |
+| [0007](0007-ci-migrate-then-deploy.md) | CI applies migrations, then deploys to Vercel | Accepted |
 
 Template: copy any file, keep the headings **Context / Decision / Consequences**.
