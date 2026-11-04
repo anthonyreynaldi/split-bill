@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 
-export type SplitMode = "even" | "custom";
+export type SplitMode = "even" | "custom" | "per_unit";
 
 /**
  * Who shares one item. Pure view.

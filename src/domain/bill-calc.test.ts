@@ -95,19 +95,50 @@ describe("calculateBill", () => {
     ]);
   });
 
+  it("per-unit items feed proportional charges like any other subtotal", () => {
+    const b = bill({
+      items: [
+        item({
+          total: 60000,
+          qty: 2,
+          splitMode: "per_unit",
+          allocations: [
+            { participantId: "A", units: 1, unit: 0 },
+            { participantId: "B", units: 1, unit: 0 },
+            { participantId: "C", units: 1, unit: 1 },
+          ],
+        }),
+      ],
+      charges: [charge("tax", "percent", 10)],
+    });
+    const r = calculateBill(b, ids);
+    expect(r.perPerson.map((p) => [p.participantId, p.subtotal, p.tax, p.total])).toEqual([
+      ["A", 15000, 1500, 16500],
+      ["B", 15000, 1500, 16500],
+      ["C", 30000, 3000, 33000],
+    ]);
+  });
+
   it("always reconciles: Σ person totals + unassigned = bill total (property check)", () => {
     let seed = 7;
     const rand = () => ((seed = (seed * 1103515245 + 12345) % 2 ** 31) / 2 ** 31);
     for (let n = 0; n < 300; n++) {
       const items = Array.from({ length: 1 + Math.floor(rand() * 6) }, () => {
-        const custom = rand() < 0.6;
+        const roll = rand();
+        const mode = roll < 0.4 ? "custom" : roll < 0.7 ? "per_unit" : "even";
+        const qty = 1 + Math.floor(rand() * 4);
         return item({
           total: Math.floor(rand() * 200000),
-          qty: 1 + Math.floor(rand() * 4),
-          splitMode: custom ? "custom" : "even",
-          allocations: custom
-            ? ids.filter(() => rand() < 0.6).map((participantId) => ({ participantId, units: 0.5 + Math.floor(rand() * 4) / 2 }))
-            : [],
+          qty,
+          splitMode: mode,
+          allocations:
+            mode === "custom"
+              ? ids.filter(() => rand() < 0.6).map((participantId) => ({ participantId, units: 0.5 + Math.floor(rand() * 4) / 2 }))
+              : mode === "per_unit"
+                ? Array.from({ length: qty }, (_, unit) =>
+                    ids.filter(() => rand() < 0.5).map((participantId) => ({ participantId, units: 1, unit })),
+                  ).flat()
+                : [],
         });
       });
       const charges = [

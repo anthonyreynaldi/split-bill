@@ -15,23 +15,44 @@ const QtySchema = z
   .positive({ error: VALIDATION.mustBePositive })
   .max(100_000, { error: VALIDATION.invalid });
 
-/** One person's portion of an item (custom split). */
+/** Largest qty that can use the `per_unit` split (one row per unit in the editor). */
+export const MAX_PER_UNIT_QTY = 50;
+
+/**
+ * One person's part of an item.
+ * - `custom`: `units` = portions (weights).
+ * - `per_unit`: `unit` = 0-based unit index this person shared; `units` is 1.
+ */
 export const AllocationInput = z.object({
   participantId: IdSchema,
   units: z.number().positive({ error: VALIDATION.mustBePositive }).max(100_000),
+  unit: z.number().int().min(0).max(MAX_PER_UNIT_QTY - 1).optional(),
 });
 export type AllocationInput = z.infer<typeof AllocationInput>;
 
-/** One receipt line. `total` is authoritative; `unitPrice` is informational. */
-export const BillItemInput = z.object({
-  name: z.string().trim().min(1, { error: VALIDATION.required }).max(200, { error: VALIDATION.tooLong }),
-  qty: QtySchema,
-  unitPrice: MoneySchema,
-  total: MoneySchema,
-  splitMode: SplitModeSchema,
-  allocations: z.array(AllocationInput).max(200),
-});
+/**
+ * One receipt line. `total` is authoritative; `unitPrice` is informational.
+ * `per_unit` needs a whole-number qty from 1 to {@link MAX_PER_UNIT_QTY}.
+ */
+export const BillItemInput = z
+  .object({
+    name: z.string().trim().min(1, { error: VALIDATION.required }).max(200, { error: VALIDATION.tooLong }),
+    qty: QtySchema,
+    unitPrice: MoneySchema,
+    total: MoneySchema,
+    splitMode: SplitModeSchema,
+    allocations: z.array(AllocationInput).max(500),
+  })
+  .refine((it) => it.splitMode !== "per_unit" || isPerUnitQty(it.qty), {
+    error: VALIDATION.perUnitQty,
+    path: ["qty"],
+  });
 export type BillItemInput = z.infer<typeof BillItemInput>;
+
+/** True when `qty` can be split per unit (whole number, 1…{@link MAX_PER_UNIT_QTY}). */
+export function isPerUnitQty(qty: number): boolean {
+  return Number.isInteger(qty) && qty >= 1 && qty <= MAX_PER_UNIT_QTY;
+}
 
 /** Tax / service / discount. `percent`: 10 = 10%. `amount`: minor units. */
 export const BillChargeInput = z

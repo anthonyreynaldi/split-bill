@@ -41,7 +41,8 @@
     "mustBePositive": "Harus lebih dari 0.",
     "mustBeWhole": "Harus bilangan bulat.",
     "invalid": "Nilai tidak valid.",
-    "passcodeLength": "4 sampai 32 karakter."
+    "passcodeLength": "4 sampai 32 karakter.",
+    "perUnitQty": "Per porsi butuh bilangan bulat 1 sampai 50."
   },
   "auth": {
     "email": "Email",

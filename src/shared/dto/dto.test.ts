@@ -40,6 +40,22 @@ describe("bill DTOs", () => {
     expect(r.success).toBe(false);
   });
 
+  it("per_unit needs a whole qty from 1 to 50 and accepts unit indexes", () => {
+    const pid = "8f0c2a1e-4b5d-4c6e-9f70-1a2b3c4d5e6f";
+    const base = { name: "Pizza", unitPrice: 30000, total: 60000, splitMode: "per_unit" as const };
+    const ok = BillItemInput.safeParse({ ...base, qty: 2, allocations: [{ participantId: pid, units: 1, unit: 1 }] });
+    expect(ok.success).toBe(true);
+    expect(ok.data?.allocations[0].unit).toBe(1);
+    const frac = BillItemInput.safeParse({ ...base, qty: 1.5, allocations: [] });
+    expect(frac.error?.issues.map((i) => [i.path.join("."), i.message])).toEqual([["qty", "perUnitQty"]]);
+    expect(BillItemInput.safeParse({ ...base, qty: 51, allocations: [] }).success).toBe(false);
+    expect(
+      BillItemInput.safeParse({ ...base, qty: 2, allocations: [{ participantId: pid, units: 1, unit: 0.5 }] }).success,
+    ).toBe(false);
+    // other modes keep accepting fractional qty
+    expect(BillItemInput.safeParse({ ...base, splitMode: "even", qty: 1.5, allocations: [] }).success).toBe(true);
+  });
+
   it("percent charges must be ≤ 100, amount charges must be integers", () => {
     expect(BillChargeInput.safeParse({ kind: "tax", mode: "percent", value: 11 }).success).toBe(true);
     expect(BillChargeInput.safeParse({ kind: "tax", mode: "percent", value: 150 }).success).toBe(false);

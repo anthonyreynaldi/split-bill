@@ -19,6 +19,7 @@ export const VALIDATION = {
   mustBeWhole: "mustBeWhole",
   invalid: "invalid",
   passcodeLength: "passcodeLength",
+  perUnitQty: "perUnitQty",
 } as const;
 
 export const IdSchema = z.uuid({ error: VALIDATION.invalid });
@@ -41,7 +42,8 @@ export const CurrencySchema = z.enum(SUPPORTED_CURRENCIES as [string, ...string[
   error: VALIDATION.invalid,
 });
 
-export const SplitModeSchema = z.enum(["even", "custom"]);
+/** `even` · `custom` (portions) · `per_unit` (people per unit of the qty). */
+export const SplitModeSchema = z.enum(["even", "custom", "per_unit"]);
 export const ChargeKindSchema = z.enum(["tax", "service", "discount"]);
 export const ChargeModeSchema = z.enum(["percent", "amount"]);
 export const ChargeSplitModeSchema = z.enum(["proportional", "even"]);

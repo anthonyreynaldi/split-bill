@@ -8,8 +8,14 @@
 
 export type Id = string;
 
-/** How an item is shared: by all event participants equally, or by explicit units. */
-export type SplitMode = "even" | "custom";
+/**
+ * How an item is shared:
+ * - `even`: all event participants equally;
+ * - `custom`: proportional to explicit portions (`Allocation.units`);
+ * - `per_unit`: each unit of the qty has its own group of people (`Allocation.unit`),
+ *   and each unit's price is split equally within its group.
+ */
+export type SplitMode = "even" | "custom" | "per_unit";
 export type ChargeKind = "tax" | "service" | "discount";
 /** `percent`: value 10 = 10%. `amount`: value in minor units. */
 export type ChargeMode = "percent" | "amount";
@@ -43,10 +49,15 @@ export interface Participant {
  * Who consumed an item. `units` are **portions/weights**: shares are
  * proportional to units. Typically units add up to the item qty
  * (qty 3 → A: 2, B: 1), and fractions are allowed (0.5).
+ *
+ * For `per_unit` items, `unit` is the 0-based unit index the person shared
+ * (one row per person per unit) and `units` is ignored (stored as 1).
  */
 export interface Allocation {
   participantId: Id;
   units: number;
+  /** 0-based unit index; only used when the item's `splitMode === 'per_unit'`. */
+  unit?: number;
 }
 
 export interface BillItem {
@@ -58,7 +69,7 @@ export interface BillItem {
   /** Line total as printed on the receipt. */
   total: number;
   splitMode: SplitMode;
-  /** Used when `splitMode === 'custom'`. */
+  /** Used when `splitMode` is `custom` or `per_unit`. */
   allocations: Allocation[];
 }
 
