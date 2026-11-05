@@ -5,6 +5,7 @@ import {
   CreateEventInput,
   OcrResult,
   RegisterInput,
+  SaveParticipantsInput,
   UpsertShareLinkInput,
 } from "./index";
 
@@ -24,6 +25,20 @@ describe("event DTOs", () => {
 
   it("rejects an empty name with the i18n key", () => {
     expect(CreateEventInput.safeParse({ name: "  " }).error?.issues[0].message).toBe("required");
+  });
+
+  it("validates a batch of people edits", () => {
+    const eventId = "6f1c2c47-6c7e-4b8e-9a1e-2f4b8f0c1d2e";
+    const ok = SaveParticipantsInput.parse({
+      eventId,
+      add: [" Ana ", "Budi"],
+      rename: [{ participantId: eventId, name: " Citra " }],
+      remove: [],
+    });
+    expect(ok.add).toEqual(["Ana", "Budi"]);
+    expect(ok.rename[0].name).toBe("Citra");
+    const bad = SaveParticipantsInput.safeParse({ eventId, add: ["  "], rename: [], remove: ["nope"] });
+    expect(bad.error?.issues.map((i) => i.path.join("."))).toEqual(["add.0", "remove.0"]);
   });
 });
 

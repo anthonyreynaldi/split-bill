@@ -35,6 +35,23 @@ export type RenameParticipantInput = z.infer<typeof RenameParticipantInput>;
 export const RemoveParticipantInput = z.object({ eventId: IdSchema, participantId: IdSchema });
 export type RemoveParticipantInput = z.infer<typeof RemoveParticipantInput>;
 
+/** Most people one save may add, rename or remove (per list). */
+export const MAX_PEOPLE_CHANGES = 200;
+
+/**
+ * Input for `saveParticipants`: every people edit made on the event page, saved at once.
+ * - `add`: names of new people, in order
+ * - `rename`: existing people with their new name
+ * - `remove`: existing people to delete (they leave every split; bills they paid lose the payer)
+ */
+export const SaveParticipantsInput = z.object({
+  eventId: IdSchema,
+  add: z.array(NameSchema).max(MAX_PEOPLE_CHANGES),
+  rename: z.array(z.object({ participantId: IdSchema, name: NameSchema })).max(MAX_PEOPLE_CHANGES),
+  remove: z.array(IdSchema).max(MAX_PEOPLE_CHANGES),
+});
+export type SaveParticipantsInput = z.infer<typeof SaveParticipantsInput>;
+
 // ── Outputs ──────────────────────────────────────────────────────────────
 
 export const ParticipantDto = z.object({ id: z.string(), name: z.string() });
