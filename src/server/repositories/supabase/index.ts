@@ -24,6 +24,14 @@ export const BILL_IMAGES_BUCKET = "bill-images";
 export function createSupabaseRepositories(config: { url: string; serviceKey: string }): Repositories {
   const db: Db = createSupabaseClient(config.url, config.serviceKey);
 
+  const listParticipants = async (eventId: string) => {
+    const rows = check(
+      await db.from("participants").select("*").eq("event_id", eventId).order("position").order("created_at"),
+      "participants.listByEvent",
+    );
+    return rows.map(toParticipant);
+  };
+
   const findBill = async (id: string) => {
     const res = await db.from("bills").select(BILL_SELECT).eq("id", id).maybeSingle();
     const row = check(res, "bills.findById") as BillRowWithChildren | null;
@@ -93,18 +101,7 @@ export function createSupabaseRepositories(config: { url: string; serviceKey: st
     },
 
     participants: {
-      async listByEvent(eventId) {
-        const rows = check(
-          await db
-            .from("participants")
-            .select("*")
-            .eq("event_id", eventId)
-            .order("position")
-            .order("created_at"),
-          "participants.listByEvent",
-        );
-        return rows.map(toParticipant);
-      },
+      listByEvent: listParticipants,
       async create(eventId, name) {
         const { count } = await db
           .from("participants")
@@ -129,6 +126,14 @@ export function createSupabaseRepositories(config: { url: string; serviceKey: st
       async delete(id) {
         // FKs: bills.paid_by → set null, item_allocations → cascade
         check(await db.from("participants").delete().eq("id", id), "participants.delete");
+      },
+      async applyChanges(eventId, changes) {
+        // one RPC = one transaction (migration 20261105000001_save_participants.sql)
+        check(
+          await db.rpc("save_participants", { p_event_id: eventId, p_changes: changes }),
+          "participants.applyChanges",
+        );
+        return listParticipants(eventId);
       },
     },
 

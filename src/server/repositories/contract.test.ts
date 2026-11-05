@@ -140,6 +140,31 @@ describe.each(backends)("%s repositories", (_name, make) => {
     expect(after.items[0].allocations.map((a) => a.participantId)).not.toContain(ana.id);
   });
 
+  it("participants.applyChanges: remove, rename, append in order; ignores other events' ids", async () => {
+    const { r, user, event, ana, budi, billData } = await setup();
+    const b = await r.bills.save(billData());
+    const other = await r.events.create({ ownerId: user.id, name: "Other", currency: "IDR" });
+    const zed = await r.participants.create(other.id, "Zed");
+
+    const after = await r.participants.applyChanges(event.id, {
+      add: ["Citra", "Dedi", "Eka"],
+      rename: [
+        { id: budi.id, name: "Budi S" },
+        { id: zed.id, name: "hijacked" },
+      ],
+      remove: [ana.id, zed.id],
+    });
+
+    expect(after.map((p) => p.name)).toEqual(["Budi S", "Citra", "Dedi", "Eka"]);
+    expect(await r.participants.listByEvent(event.id)).toEqual(after);
+    expect((await r.participants.listByEvent(other.id)).map((p) => p.name)).toEqual(["Zed"]);
+    const bill = (await r.bills.findById(b.id))!;
+    expect(bill.paidBy).toBeNull();
+    expect(bill.items[0].allocations.map((a) => a.participantId)).not.toContain(ana.id);
+    // a no-op batch is fine
+    expect(await r.participants.applyChanges(event.id, { add: [], rename: [], remove: [] })).toEqual(after);
+  });
+
   it("deleting an event cascades", async () => {
     const { r, event, billData } = await setup();
     const b = await r.bills.save(billData());

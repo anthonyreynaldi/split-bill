@@ -58,7 +58,22 @@ export interface ParticipantRepository {
   rename(id: Id, name: string): Promise<Participant>;
   /** Also clears `paidBy` on bills and removes the participant's allocations. */
   delete(id: Id): Promise<void>;
+  /**
+   * Apply a batch of edits to one event's people **atomically** (all or nothing):
+   * removes first (same side effects as {@link delete}), then renames, then
+   * appends `add` in order after the existing people. Ids that are not in this
+   * event are ignored, so callers must check ownership first.
+   * @returns the event's people afterwards, in order.
+   */
+  applyChanges(eventId: Id, changes: ParticipantChanges): Promise<Participant[]>;
 }
+
+/** Batch of people edits for {@link ParticipantRepository.applyChanges}. */
+export type ParticipantChanges = {
+  add: string[];
+  rename: { id: Id; name: string }[];
+  remove: Id[];
+};
 
 /** Data needed to create or fully replace a bill. Item/charge ids are assigned by the repository. */
 export type SaveBillData = Omit<Bill, "id" | "createdAt" | "items" | "charges"> & {

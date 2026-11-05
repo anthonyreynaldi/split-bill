@@ -156,6 +156,7 @@ export type Database = {
     Views: { [_ in never]: never };
     Functions: {
       save_bill: { Args: { p_bill: Json }; Returns: string };
+      save_participants: { Args: { p_event_id: string; p_changes: Json }; Returns: undefined };
     };
     Enums: { [_ in never]: never };
     CompositeTypes: { [_ in never]: never };

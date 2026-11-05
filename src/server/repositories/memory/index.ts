@@ -28,6 +28,15 @@ export function createMemoryRepositories(): Repositories {
   const stamp = (id: string) => order.set(id, ++seq);
   const byOrder = (a: { id: string }, b: { id: string }) => order.get(a.id)! - order.get(b.id)!;
 
+  /** Delete a person; bills they paid lose the payer and their allocations go. */
+  const removeParticipant = (id: string) => {
+    participants.delete(id);
+    for (const b of bills.values()) {
+      if (b.paidBy === id) b.paidBy = null;
+      for (const it of b.items) it.allocations = it.allocations.filter((a) => a.participantId !== id);
+    }
+  };
+
   const get = <T>(map: Map<string, T>, id: string, what: string): T => {
     const v = map.get(id);
     if (!v) throw new AppError("NOT_FOUND", `${what} ${id} not found`);
@@ -99,11 +108,18 @@ export function createMemoryRepositories(): Repositories {
         return clone(p);
       },
       async delete(id) {
-        participants.delete(id);
-        for (const b of bills.values()) {
-          if (b.paidBy === id) b.paidBy = null;
-          for (const it of b.items) it.allocations = it.allocations.filter((a) => a.participantId !== id);
+        removeParticipant(id);
+      },
+      async applyChanges(eventId, { add, rename, remove }) {
+        const inEvent = (id: string) => participants.get(id)?.eventId === eventId;
+        for (const id of remove) if (inEvent(id)) removeParticipant(id);
+        for (const { id, name } of rename) if (inEvent(id)) participants.set(id, { ...participants.get(id)!, name });
+        for (const name of add) {
+          const p: Participant = { id: uuid(), eventId, name };
+          participants.set(p.id, p);
+          stamp(p.id);
         }
+        return [...participants.values()].filter((p) => p.eventId === eventId).sort(byOrder).map(clone);
       },
     },
 
