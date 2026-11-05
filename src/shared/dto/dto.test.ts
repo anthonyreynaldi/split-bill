@@ -82,6 +82,22 @@ describe("OcrResult (lenient model output)", () => {
   it("tolerates missing fields", () => {
     expect(OcrResult.parse({}).items).toEqual([]);
   });
+
+  it("accepts null for unknown numbers and names (the prompt asks for null when unsure)", () => {
+    const r = OcrResult.parse({
+      merchant: null,
+      date: null,
+      items: [{ name: null, qty: null, unitPrice: null, total: 50000 }],
+      subtotal: 163000,
+      discount: null,
+      service: null,
+      tax: null,
+      total: null,
+    });
+    expect(r.items[0]).toEqual({ name: "?", qty: undefined, unitPrice: undefined, total: 50000 });
+    expect(r.discount).toBeUndefined();
+    expect(r.subtotal).toBe(163000);
+  });
 });
 
 describe("share DTOs", () => {

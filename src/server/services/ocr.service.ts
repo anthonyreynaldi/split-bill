@@ -42,7 +42,14 @@ export class OcrService {
 
     try {
       const parsed = OcrResult.safeParse(await this.provider.extract(file));
-      if (!parsed.success || parsed.data.items.length === 0) return { ...empty, ocrStatus: "failed" };
+      if (!parsed.success) {
+        console.warn("[ocr] model output did not match OcrResult:", parsed.error.issues.slice(0, 5));
+        return { ...empty, ocrStatus: "failed" };
+      }
+      if (parsed.data.items.length === 0) {
+        console.warn("[ocr] model found no items on the receipt");
+        return { ...empty, ocrStatus: "failed" };
+      }
       return { ...ocrToFormValues(parsed.data, event.currency, imagePath), imageUrl, ocrStatus: "ok" };
     } catch (err) {
       console.warn("[ocr] extraction failed:", err instanceof Error ? err.message : err);

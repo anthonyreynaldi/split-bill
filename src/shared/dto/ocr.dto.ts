@@ -8,6 +8,8 @@ import { IdSchema } from "./common";
  * The service normalises it into a {@link BillDraftDto}.
  */
 const looseNumber = z.preprocess((v) => {
+  // the prompt asks for null when unsure ("discount": null): treat it as "not given"
+  if (v === null) return undefined;
   if (typeof v === "string") {
     const cleaned = v.replace(/[^\d.,-]/g, "");
     // "12.500" / "12,500" (thousands) → 12500 ; "12,5" → 12.5
@@ -27,7 +29,7 @@ export const OcrResult = z.object({
   items: z
     .array(
       z.object({
-        name: z.string().default("?"),
+        name: z.string().nullish().transform((s) => s ?? "?"),
         qty: looseNumber,
         unitPrice: looseNumber,
         total: looseNumber,
