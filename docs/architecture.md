@@ -83,7 +83,7 @@ erDiagram
     int unit_index "per_unit only, 0-based" }
   bill_charges { uuid id PK
     uuid bill_id FK
-    text kind "tax | service | discount"
+    text kind "tax | service | discount | rounding"
     text mode "percent | amount"
     numeric value }
   share_links { uuid id PK

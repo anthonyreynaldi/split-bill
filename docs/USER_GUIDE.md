@@ -41,6 +41,8 @@ For each item, choose:
 
 **Tax, service and discount:** choose whether to share them **by what each person ordered** (fairer) or **equally**.
 
+**Rounding:** if the receipt has a rounding line ("Pembulatan"), add a **Rounding** charge. It can be negative (e.g. −200) or positive. The photo reader fills it in for you when it finds the line. Rounding is applied after tax and shared the same way as the other charges.
+
 ## Feature: Summary and settlement
 Open **Summary** to see, for each person, their items, their share of the charges, their total, and what they already paid.
 

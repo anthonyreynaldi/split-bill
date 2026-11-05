@@ -23,6 +23,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 - `npm run db:migrate`: applies only new migrations (history-tracked `supabase db push`) using `SUPABASE_DB_URL` (session pooler). Replaces the broken `db:push` script.
 - Export: the Image button opens a menu with **Copy image** (to paste into chat or email), **Share…** (native share sheet on phones) and **Download image**.
 - People: edit the event's people as a draft, then **Save** once. Enter adds the next name instantly, and pasting a list separated by commas or new lines adds many people. Rename in place, remove with undo, and see duplicate-name hints. Removals are confirmed. One atomic `saveParticipants` action, backed by the `save_participants` Postgres function (migration `20261105000001`).
+- Bills: **Rounding** charge ("Pembulatan"). It is a signed amount, applied after tax, and shared like the other charges. OCR now reads the receipt's rounding line into the draft, so the drafted total matches the receipt. It is shown in the preview, the summary and the Excel export (new Bills column). Migration `20261105000002_rounding_charge.sql` widens the `bill_charges` checks.
 - OCR: `OPENROUTER_MODEL` accepts a comma-separated list of free models that fall back on each other when one is rate-limited.
 - OCR: on phones, choose between **Take photo** (camera) and **Choose photo** (gallery or files). Computers show only **Choose photo**.
 - CI/CD: GitHub Actions checks every PR. On `main` it runs check → migrate → Vercel production deploy (ADR 0007).

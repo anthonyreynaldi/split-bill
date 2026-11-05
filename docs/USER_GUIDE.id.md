@@ -41,6 +41,8 @@ Untuk setiap item, pilih:
 
 **Pajak, layanan, dan diskon:** pilih apakah dibagi **sesuai pesanan masing-masing** (lebih adil) atau **sama rata**.
 
+**Pembulatan:** jika struk punya baris pembulatan, tambahkan biaya **Pembulatan**. Nilainya bisa negatif (mis. −200) atau positif. Pembaca foto akan mengisinya otomatis jika baris itu terbaca. Pembulatan dihitung setelah pajak dan dibagi dengan cara yang sama seperti biaya lainnya.
+
 ## Fitur: Ringkasan dan pelunasan
 Buka **Ringkasan** untuk melihat item setiap orang, bagian biaya tambahan, total, dan yang sudah dibayar.
 

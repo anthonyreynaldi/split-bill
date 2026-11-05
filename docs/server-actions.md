@@ -93,7 +93,7 @@ Every action here can return `UNAUTHORIZED` and `NOT_FOUND` (an event or bill th
 | `updateBill` | `UpdateBillInput { eventId, billId, ...BillFormValues }` | `BillDto` | same as `createBill` | Replace a bill |
 | `deleteBill` | `BillRefInput` | `null` | none | Delete a bill and its photo |
 
-`BillFormValues = { title, billDate, paidBy, imagePath, chargeSplitMode, items[{ name, qty, unitPrice, total, splitMode, allocations[{ participantId, units, unit? }] }], charges[{ kind, mode, value }] }`. Money is in integer minor units.
+`BillFormValues = { title, billDate, paidBy, imagePath, chargeSplitMode, items[{ name, qty, unitPrice, total, splitMode, allocations[{ participantId, units, unit? }] }], charges[{ kind, mode, value }] }`. Money is in integer minor units. `kind` is `tax | service | discount | rounding`; `rounding` is amount-only and may be negative.
 
 `splitMode` is `even`, `custom` or `per_unit`:
 - `custom`: `units` are portions (weights).
