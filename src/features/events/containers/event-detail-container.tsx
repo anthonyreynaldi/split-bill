@@ -1,50 +1,28 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { useTranslations } from "next-intl";
-import { BarChart3, Loader2, Plus, Trash2, UserPlus } from "lucide-react";
-import type { ParticipantDto } from "@/shared/dto";
+import { BarChart3, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import type { EventDetailDto } from "@/shared/dto";
 import { errorCodeOf } from "@/shared/lib/result";
 import { Link } from "@/i18n/navigation";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
-import { useFieldErrors } from "@/components/form/use-field-errors";
 import { useFormatters } from "@/components/format/use-formatters";
-import { FieldError } from "@/components/ui/field";
 import { BillList } from "../components/bill-list";
-import { ParticipantList } from "../components/participant-list";
-import {
-  useAddParticipantForm,
-  useDeleteEvent,
-  useEventDetail,
-  useRemoveParticipant,
-  useRenameParticipant,
-} from "../hooks/use-events";
+import { ParticipantEditor } from "../components/participant-editor";
+import { useDeleteEvent, useEventDetail, usePeopleEditor } from "../hooks/use-events";
 
 /** /events/[eventId]: people + bills of one event. */
 export function EventDetailContainer({ eventId }: { eventId: string }) {
-  const t = useTranslations("events");
-  const tc = useTranslations("common");
   const tErr = useTranslations("errors");
-  const fieldErrors = useFieldErrors();
 
   const detail = useEventDetail(eventId);
-  const { form: addForm } = useAddParticipantForm(eventId);
-  const nameInput = useRef<HTMLInputElement>(null);
-  const rename = useRenameParticipant(eventId);
-  const remove = useRemoveParticipant(eventId);
-  const del = useDeleteEvent(eventId);
-  // Keep the person after closing so the dialog title doesn't flash empty during its exit animation.
-  const [toRemove, setToRemove] = useState<ParticipantDto | null>(null);
-  const [removeOpen, setRemoveOpen] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const fmt = useFormatters(detail.data?.event.currency ?? "IDR");
-
   if (detail.isPending) return <Skeleton className="h-64 w-full" />;
   if (detail.isError)
     return (
@@ -52,12 +30,40 @@ export function EventDetailContainer({ eventId }: { eventId: string }) {
         <AlertDescription>{tErr(errorCodeOf(detail.error))}</AlertDescription>
       </Alert>
     );
+  return <EventDetail eventId={eventId} detail={detail.data} />;
+}
 
-  const { event, participants, bills } = detail.data;
+function EventDetail({ eventId, detail }: { eventId: string; detail: EventDetailDto }) {
+  const t = useTranslations("events");
+  const tc = useTranslations("common");
+  const tv = useTranslations("validation");
+  const people = usePeopleEditor(eventId, detail.participants);
+  const del = useDeleteEvent(eventId);
+  const [confirmRemove, setConfirmRemove] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const fmt = useFormatters(detail.event.currency);
+
+  const { event, participants, bills } = detail;
   const nameOf = (id: string | null) => participants.find((p) => p.id === id)?.name ?? null;
+  // Snapshot for the dialog so its title doesn't change during the exit animation.
+  const [removedNames, setRemovedNames] = useState("");
+  const removing = people.rows.filter((r) => r.removed).map((r) => r.original ?? r.name).join(", ");
+  if (confirmRemove && removing && removing !== removedNames) setRemovedNames(removing);
+
+  const savePeople = async () => {
+    if (await people.save()) toast.success(t("detail.peopleSaved"));
+  };
+
+  // In-app links would drop the unsaved draft silently (beforeunload doesn't fire), so stop them.
+  const guardLinks = (e: MouseEvent) => {
+    if (!people.dirty || !(e.target as HTMLElement).closest("a[href]")) return;
+    e.preventDefault();
+    e.stopPropagation();
+    toast.warning(t("detail.saveFirst"));
+  };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" onClickCapture={guardLinks}>
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="flex-1 text-2xl font-semibold">
           {event.name} <Badge variant="secondary">{event.currency}</Badge>
@@ -74,59 +80,44 @@ export function EventDetailContainer({ eventId }: { eventId: string }) {
         <CardHeader>
           <CardTitle>{t("detail.people", { count: participants.length })}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
-          <ParticipantList
-            participants={participants}
-            onRename={(participantId, name) => rename.mutate({ participantId, name })}
-            onRemove={(p) => {
-              setToRemove(p);
-              setRemoveOpen(true);
-            }}
+        <CardContent>
+          <ParticipantEditor
+            rows={people.rows.map((r) => {
+              const error = people.errors.get(r.key);
+              return {
+                key: r.key,
+                name: r.name,
+                isNew: !r.id,
+                removed: r.removed,
+                changed: !!r.id && r.name.trim() !== r.original,
+                error: error && (tv.has(error) ? tv(error) : error),
+                duplicate: people.duplicates.has(r.key),
+              };
+            })}
+            pending={people.pending}
+            changeCount={people.count}
+            canSave={people.errors.size === 0}
+            onAdd={people.add}
+            onRename={people.rename}
+            onToggleRemove={people.toggleRemove}
+            onSave={() => (people.changes.remove.length > 0 ? setConfirmRemove(true) : savePeople())}
+            onDiscard={people.discard}
             labels={{
               empty: t("detail.noPeople"),
-              rename: tc("edit"),
-              remove: tc("delete"),
+              name: (n) => t("detail.personName", { n }),
+              addPerson: t("detail.addPerson"),
+              addPlaceholder: t("detail.addPersonPlaceholder"),
+              addHint: t("detail.addPersonHint"),
+              add: tc("add"),
+              remove: (name) => t("detail.removePerson", { name }),
+              undo: (name) => t("detail.undoRemove", { name }),
+              isNew: t("detail.newPerson"),
+              duplicate: t("detail.duplicateName"),
+              unsaved: (count) => t("detail.unsaved", { count }),
               save: tc("save"),
-              cancel: tc("cancel"),
+              discard: t("detail.discard"),
             }}
           />
-          <form
-            noValidate
-            className="flex gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (addForm.state.isSubmitting) return; // no double adds while the first is saving
-              // keep focus in the field so the next name can be typed right away
-              void addForm.handleSubmit().then(() => nameInput.current?.focus());
-            }}
-          >
-            <addForm.Field name="name">
-              {(field) => (
-                <div className="flex-1">
-                  <Input
-                    ref={nameInput}
-                    aria-label={t("detail.addPerson")}
-                    placeholder={t("detail.addPersonPlaceholder")}
-                    value={field.state.value}
-                    maxLength={100}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  <FieldError
-                    errors={fieldErrors(field.state.meta, addForm.state.submissionAttempts > 0).map((message) => ({
-                      message,
-                    }))}
-                  />
-                </div>
-              )}
-            </addForm.Field>
-            <addForm.Subscribe selector={(s) => s.isSubmitting}>
-              {(busy) => (
-                <Button type="submit" variant="secondary" disabled={busy} aria-busy={busy}>
-                  {busy ? <Loader2 className="animate-spin" /> : <UserPlus />} {tc("add")}
-                </Button>
-              )}
-            </addForm.Subscribe>
-          </form>
         </CardContent>
       </Card>
 
@@ -160,14 +151,14 @@ export function EventDetailContainer({ eventId }: { eventId: string }) {
       </Card>
 
       <ConfirmDialog
-        open={removeOpen}
-        onOpenChange={setRemoveOpen}
-        title={t("detail.removePersonTitle", { name: toRemove?.name ?? "" })}
+        open={confirmRemove}
+        onOpenChange={setConfirmRemove}
+        title={t("detail.removePersonTitle", { name: removedNames })}
         description={t("detail.removePersonDescription")}
-        confirmLabel={tc("delete")}
+        confirmLabel={tc("save")}
         cancelLabel={tc("cancel")}
-        pending={remove.isPending}
-        onConfirm={() => toRemove && remove.mutate(toRemove.id, { onSettled: () => setRemoveOpen(false) })}
+        pending={people.pending}
+        onConfirm={() => void savePeople().then(() => setConfirmRemove(false))}
       />
       <ConfirmDialog
         open={confirmDelete}

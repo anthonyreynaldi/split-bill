@@ -85,7 +85,7 @@
       "people": "Orang ({count})",
       "noPeople": "Belum ada orang. Tambahkan semua yang ikut patungan.",
       "addPerson": "Tambah orang",
-      "addPersonPlaceholder": "Nama",
+      "addPersonPlaceholder": "Nama, atau tempel daftar",
       "bills": "Tagihan ({count})",
       "addBill": "Tambah tagihan",
       "noBills": "Belum ada tagihan.",
@@ -94,9 +94,19 @@
       "noPayer": "Belum ada pembayar",
       "items": "{count} item",
       "removePersonTitle": "Hapus {name}?",
-      "removePersonDescription": "Orang ini dihapus dari semua pembagian. Tagihan yang ia bayar tidak punya pembayar.",
+      "removePersonDescription": "Mereka dihapus dari semua pembagian. Tagihan yang mereka bayar tidak punya pembayar.",
       "deleteTitle": "Hapus {name}?",
-      "deleteDescription": "Acara beserta semua tagihan dan fotonya akan dihapus. Tidak bisa dibatalkan."
+      "deleteDescription": "Acara beserta semua tagihan dan fotonya akan dihapus. Tidak bisa dibatalkan.",
+      "addPersonHint": "Tekan Enter setelah setiap nama. Tempel nama yang dipisah koma atau baris baru untuk menambah banyak sekaligus. Belum ada yang tersimpan sebelum Anda menekan Simpan.",
+      "personName": "Orang ke-{n}",
+      "removePerson": "Hapus {name}",
+      "undoRemove": "Batal hapus {name}",
+      "newPerson": "Baru",
+      "duplicateName": "Nama sama dengan orang lain.",
+      "unsaved": "{count} perubahan belum disimpan",
+      "discard": "Buang",
+      "peopleSaved": "Data orang disimpan.",
+      "saveFirst": "Simpan atau buang dulu perubahan data orang."
     }
   },
   "bills": {

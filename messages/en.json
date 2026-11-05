@@ -85,7 +85,7 @@
       "people": "People ({count})",
       "noPeople": "No people yet. Add everyone who shares the bills.",
       "addPerson": "Add person",
-      "addPersonPlaceholder": "Name",
+      "addPersonPlaceholder": "Name, or paste a list",
       "bills": "Bills ({count})",
       "addBill": "Add bill",
       "noBills": "No bills yet.",
@@ -96,7 +96,17 @@
       "removePersonTitle": "Remove {name}?",
       "removePersonDescription": "They will be removed from every split. Bills they paid will have no payer.",
       "deleteTitle": "Delete {name}?",
-      "deleteDescription": "This deletes the event with all its bills and photos. This cannot be undone."
+      "deleteDescription": "This deletes the event with all its bills and photos. This cannot be undone.",
+      "addPersonHint": "Press Enter after each name. Paste names separated by commas or new lines to add many at once. Nothing is saved until you press Save.",
+      "personName": "Person {n}",
+      "removePerson": "Remove {name}",
+      "undoRemove": "Undo removing {name}",
+      "newPerson": "New",
+      "duplicateName": "Same name as another person.",
+      "unsaved": "{count, plural, =1 {# unsaved change} other {# unsaved changes}}",
+      "discard": "Discard",
+      "peopleSaved": "People saved.",
+      "saveFirst": "Save or discard your changes to people first."
     }
   },
   "bills": {
