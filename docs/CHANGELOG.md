@@ -26,3 +26,4 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 
 ### Fixed
 - Bills: reopening a bill right after saving it showed the old values, and saving again reverted the edit.
+- Events: the **Add** person button showed no feedback, so clicking it again added the same person several times. It is now disabled with a spinner while saving.

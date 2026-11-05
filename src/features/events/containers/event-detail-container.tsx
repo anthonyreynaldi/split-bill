@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { BarChart3, Plus, Trash2, UserPlus } from "lucide-react";
+import { BarChart3, Loader2, Plus, Trash2, UserPlus } from "lucide-react";
 import type { ParticipantDto } from "@/shared/dto";
 import { errorCodeOf } from "@/shared/lib/result";
 import { Link } from "@/i18n/navigation";
@@ -35,6 +35,7 @@ export function EventDetailContainer({ eventId }: { eventId: string }) {
 
   const detail = useEventDetail(eventId);
   const { form: addForm } = useAddParticipantForm(eventId);
+  const nameInput = useRef<HTMLInputElement>(null);
   const rename = useRenameParticipant(eventId);
   const remove = useRemoveParticipant(eventId);
   const del = useDeleteEvent(eventId);
@@ -94,13 +95,16 @@ export function EventDetailContainer({ eventId }: { eventId: string }) {
             className="flex gap-2"
             onSubmit={(e) => {
               e.preventDefault();
-              addForm.handleSubmit();
+              if (addForm.state.isSubmitting) return; // no double adds while the first is saving
+              // keep focus in the field so the next name can be typed right away
+              void addForm.handleSubmit().then(() => nameInput.current?.focus());
             }}
           >
             <addForm.Field name="name">
               {(field) => (
                 <div className="flex-1">
                   <Input
+                    ref={nameInput}
                     aria-label={t("detail.addPerson")}
                     placeholder={t("detail.addPersonPlaceholder")}
                     value={field.state.value}
@@ -115,9 +119,13 @@ export function EventDetailContainer({ eventId }: { eventId: string }) {
                 </div>
               )}
             </addForm.Field>
-            <Button type="submit" variant="secondary">
-              <UserPlus /> {tc("add")}
-            </Button>
+            <addForm.Subscribe selector={(s) => s.isSubmitting}>
+              {(busy) => (
+                <Button type="submit" variant="secondary" disabled={busy} aria-busy={busy}>
+                  {busy ? <Loader2 className="animate-spin" /> : <UserPlus />} {tc("add")}
+                </Button>
+              )}
+            </addForm.Subscribe>
           </form>
         </CardContent>
       </Card>
