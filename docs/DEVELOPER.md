@@ -28,7 +28,7 @@ The code is layered. The view calls hooks (TanStack), hooks call Server Actions,
 | `SUPABASE_SERVICE_ROLE_KEY` | server only, **secret** | Used by `repositories/supabase` |
 | `SESSION_SECRET` | server only, **secret** | ≥ 32 random chars. Signs the session and share cookies (`openssl rand -base64 32`) |
 | `OPENROUTER_API_KEY` | server only, **secret** | OCR |
-| `OPENROUTER_MODEL` | server | Vision model id, e.g. a `:free` model (see ADR 0005). Empty means OCR is disabled. |
+| `OPENROUTER_MODEL` | server | Vision model id, or a **comma-separated priority list**. Several `:free` models are recommended, because they fall back on each other when one is rate-limited (see ADR 0005). Empty means OCR is disabled. |
 | `DATA_BACKEND` | server | `supabase` (default) or `memory` (no DB; data is lost on restart, useful for demos) |
 | `APP_URL` | server | Public base URL used in share links |
 | `SUPABASE_TEST_URL` / `SUPABASE_TEST_SERVICE_ROLE_KEY` | tests only | Optional. Runs the repository contract tests against a throwaway Supabase project |
@@ -83,6 +83,7 @@ See [CLAUDE.md → Conventions](../CLAUDE.md#conventions). In short:
 ## OCR
 - `src/server/providers/ocr/ocr-provider.ts` holds the `OcrProvider` port and the shared receipt prompt. `openrouter.ts` is the implementation.
 - `src/server/services/ocr-normalize.ts` is pure and tested: model JSON (major units) becomes form values (minor units).
+- `OPENROUTER_MODEL` can list several models. Each request sends OpenRouter's `models` fallback list. If the request still fails (429/5xx, timeout, empty or non-JSON output), `openrouter.ts` retries with the remaining models, 25 s per attempt. That's why the new-bill page sets `maxDuration = 90`. The log shows `[ocr] read by <model>` when a fallback answered.
 - To add a provider, implement `OcrProvider` and return it from `createOcrProvider()` in `container.ts`.
 
 ## API documentation
@@ -133,6 +134,6 @@ The migration runs a minute **before** the new code is live, so the old code bri
 | Password visible in the dev terminal | It shouldn't be: `logging.serverFunctions` is turned off in `next.config.ts`. Keep it off. |
 | `UNAUTHORIZED` from every action | `SESSION_SECRET` is missing or changed. Log in again. |
 | Upload says "Automatic reading is not set up" | Set both `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`, then restart `npm run dev`. |
-| OCR always says "Could not read" | The server log shows `[ocr] extraction failed: ...`. Usually the model isn't vision-capable, is rate-limited, or no longer exists. Pick another one from the free vision list. |
+| OCR always says "Could not read" | Check the server log:<br>• `[ocr] <model> failed: HTTP 429` means rate-limited. Add more `:free` models to `OPENROUTER_MODEL`.<br>• `HTTP 400 … not a valid model ID` means the model was removed. Replace it from the free vision list.<br>• `[ocr] model output did not match OcrResult` means the model answered in an unexpected shape. Try another model first in the list.<br>• `[ocr] model found no items` means the photo is unreadable. |
 | OCR returns `OCR_FAILED` | Check `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`. Free models are rate-limited, so try again or enter the bill manually. |
 | ESLint `no-restricted-imports` error | You crossed a layer boundary. Move the code to the right layer (see CLAUDE.md). |

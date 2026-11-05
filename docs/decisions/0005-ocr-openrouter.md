@@ -13,5 +13,5 @@ Receipts vary a lot. Classic OCR (Tesseract) returns raw text that is hard to tu
 
 ## Consequences
 - ➕ Good structure extraction without training anything. Swappable: Tesseract.js, Google Vision or a paid model can each be a new provider.
-- ➖ Free models are rate-limited and can disappear. Fallback: the user enters the bill manually.
+- ➖ Free models are rate-limited and can disappear. Mitigation (2026-11-05): `OPENROUTER_MODEL` takes a priority list of several `:free` models, which fall back on each other (OpenRouter's `models` param plus a client-side retry). If all fail, the user enters the bill manually. Staying on `:free` models keeps OCR at zero cost.
 - ➖ The receipt image is sent to a third party. This is mentioned in the user guide.
