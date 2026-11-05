@@ -28,6 +28,36 @@ describe("EventService", () => {
     expect(d.participants.map((p) => p.name)).toEqual(["Budi"]);
   });
 
+  it("saves a batch of people edits at once", async () => {
+    const { services, owner, event } = await setup();
+    const ana = await services.events.addParticipant(owner.id, { eventId: event.id, name: "Ana" });
+    const budi = await services.events.addParticipant(owner.id, { eventId: event.id, name: "Budi" });
+    const saved = await services.events.saveParticipants(owner.id, {
+      eventId: event.id,
+      add: ["Citra", "Dedi"],
+      rename: [
+        { participantId: ana.id, name: "Ana B" },
+        { participantId: budi.id, name: "ignored, removed below" },
+      ],
+      remove: [budi.id, budi.id],
+    });
+    expect(saved.map((p) => p.name)).toEqual(["Ana B", "Citra", "Dedi"]);
+    expect((await services.events.getDetail(owner.id, event.id)).participants).toEqual(saved);
+  });
+
+  it("rejects batch edits of people from another event, changing nothing", async () => {
+    const { services, owner, event } = await setup();
+    const other = await services.events.create(owner.id, { name: "Other", currency: "IDR" });
+    const zed = await services.events.addParticipant(owner.id, { eventId: other.id, name: "Zed" });
+    for (const patch of [{ remove: [zed.id] }, { rename: [{ participantId: zed.id, name: "x" }] }]) {
+      await expect(
+        services.events.saveParticipants(owner.id, { eventId: event.id, add: ["New"], rename: [], remove: [], ...patch }),
+      ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    }
+    expect((await services.events.getDetail(owner.id, event.id)).participants).toEqual([]);
+    expect((await services.events.getDetail(owner.id, other.id)).participants.map((p) => p.name)).toEqual(["Zed"]);
+  });
+
   it("hides other users' events (NOT_FOUND, not FORBIDDEN)", async () => {
     const { services, other, event } = await setup();
     for (const call of [
@@ -35,6 +65,7 @@ describe("EventService", () => {
       () => services.events.update(other.id, { eventId: event.id, name: "x" }),
       () => services.events.delete(other.id, event.id),
       () => services.events.addParticipant(other.id, { eventId: event.id, name: "x" }),
+      () => services.events.saveParticipants(other.id, { eventId: event.id, add: ["x"], rename: [], remove: [] }),
     ]) {
       await expect(call()).rejects.toMatchObject({ code: "NOT_FOUND" });
     }

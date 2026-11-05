@@ -7,6 +7,7 @@ import type {
   ParticipantDto,
   RemoveParticipantInput,
   RenameParticipantInput,
+  SaveParticipantsInput,
   UpdateEventInput,
 } from "@/shared/dto";
 import { AppError } from "@/shared/lib/result";
@@ -77,6 +78,26 @@ export class EventService {
   async removeParticipant(userId: string, input: RemoveParticipantInput): Promise<void> {
     await this.requireParticipant(userId, input.eventId, input.participantId);
     await this.repos.participants.delete(input.participantId);
+  }
+
+  /**
+   * Save every people edit from the event page at once (atomic).
+   * Renames/removes must name people of this event, otherwise `NOT_FOUND`.
+   * A person both renamed and removed is just removed.
+   * @returns the event's people afterwards, in order.
+   */
+  async saveParticipants(userId: string, input: SaveParticipantsInput): Promise<ParticipantDto[]> {
+    await requireOwnedEvent(this.repos.events, userId, input.eventId);
+    const ids = new Set((await this.repos.participants.listByEvent(input.eventId)).map((p) => p.id));
+    const touched = [...input.remove, ...input.rename.map((r) => r.participantId)];
+    if (touched.some((id) => !ids.has(id))) throw new AppError("NOT_FOUND");
+
+    const remove = [...new Set(input.remove)];
+    const rename = input.rename
+      .filter((r) => !remove.includes(r.participantId))
+      .map((r) => ({ id: r.participantId, name: r.name }));
+    const people = await this.repos.participants.applyChanges(input.eventId, { add: input.add, rename, remove });
+    return people.map(toParticipantDto);
   }
 
   private async requireParticipant(userId: string, eventId: string, participantId: string) {
