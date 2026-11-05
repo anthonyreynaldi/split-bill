@@ -10,7 +10,7 @@ describe("computeChargeTotals", () => {
   it("uses Indonesian receipt order: service on subtotal, tax on subtotal+service", () => {
     expect(
       computeChargeTotals(100000, [charge("service", "percent", 5), charge("tax", "percent", 10)]),
-    ).toEqual({ discount: 0, service: 5000, tax: 10500 });
+    ).toEqual({ discount: 0, service: 5000, tax: 10500, rounding: 0 });
   });
 
   it("applies discount before service and tax", () => {
@@ -20,11 +20,24 @@ describe("computeChargeTotals", () => {
         charge("service", "percent", 5),
         charge("tax", "percent", 10),
       ]),
-    ).toEqual({ discount: 20000, service: 4000, tax: 8400 });
+    ).toEqual({ discount: 20000, service: 4000, tax: 8400, rounding: 0 });
   });
 
   it("never discounts more than the subtotal", () => {
     expect(computeChargeTotals(5000, [charge("discount", "amount", 9000)]).discount).toBe(5000);
+  });
+
+  it("adds signed rounding last, without changing the percent bases", () => {
+    expect(
+      computeChargeTotals(100000, [
+        charge("service", "percent", 5),
+        charge("tax", "percent", 10),
+        charge("rounding", "amount", -500),
+      ]),
+    ).toEqual({ discount: 0, service: 5000, tax: 10500, rounding: -500 });
+    expect(
+      computeChargeTotals(1000, [charge("rounding", "amount", 300), charge("rounding", "amount", -100)]).rounding,
+    ).toBe(200);
   });
 });
 
@@ -119,6 +132,46 @@ describe("calculateBill", () => {
     ]);
   });
 
+  it("negative rounding is shared proportionally and reconciles exactly", () => {
+    const b = bill({
+      items: [
+        item({ total: 60000, splitMode: "custom", allocations: [{ participantId: "A", units: 1 }] }),
+        item({ total: 40000, splitMode: "custom", allocations: [{ participantId: "B", units: 1 }] }),
+      ],
+      charges: [charge("rounding", "amount", -201)],
+    });
+    const r = calculateBill(b, ids);
+    expect(r.rounding).toBe(-201);
+    expect(r.total).toBe(99799);
+    expect(r.perPerson.map((p) => p.rounding)).toEqual([-121, -80]);
+    expect(sum(r.perPerson.map((p) => p.total))).toBe(r.total);
+  });
+
+  it("positive rounding is shared evenly among people on the bill", () => {
+    const b = bill({
+      items: [item({ total: 10000, splitMode: "custom", allocations: [{ participantId: "A", units: 1 }, { participantId: "C", units: 1 }] })],
+      charges: [charge("rounding", "amount", 301)],
+      chargeSplitMode: "even",
+    });
+    const r = calculateBill(b, ids);
+    expect(r.perPerson.map((p) => [p.participantId, p.rounding])).toEqual([["A", 151], ["C", 150]]);
+    expect(r.total).toBe(10301);
+  });
+
+  it("unassigned items carry their share of rounding", () => {
+    const b = bill({
+      items: [
+        item({ total: 5000, splitMode: "custom", allocations: [{ participantId: "A", units: 1 }] }),
+        item({ total: 5000, splitMode: "custom", allocations: [] }),
+      ],
+      charges: [charge("rounding", "amount", -100)],
+    });
+    const r = calculateBill(b, ids);
+    expect(r.perPerson[0].rounding).toBe(-50);
+    expect(r.unassigned).toBe(4950);
+    expect(sum(r.perPerson.map((p) => p.total)) + r.unassigned).toBe(r.total);
+  });
+
   it("always reconciles: Σ person totals + unassigned = bill total (property check)", () => {
     let seed = 7;
     const rand = () => ((seed = (seed * 1103515245 + 12345) % 2 ** 31) / 2 ** 31);
@@ -145,11 +198,12 @@ describe("calculateBill", () => {
         charge("service", "percent", Math.floor(rand() * 10)),
         charge("tax", "percent", 10),
         charge("discount", rand() < 0.5 ? "amount" : "percent", Math.floor(rand() * 15000)),
+        charge("rounding", "amount", Math.floor(rand() * 1000) - 500),
       ];
       const b = bill({ items, charges, chargeSplitMode: rand() < 0.5 ? "even" : "proportional" });
       const r = calculateBill(b, ids);
       expect(sum(r.perPerson.map((p) => p.total)) + r.unassigned).toBe(r.total);
-      for (const p of r.perPerson) expect(p.total).toBe(p.subtotal - p.discount + p.service + p.tax);
+      for (const p of r.perPerson) expect(p.total).toBe(p.subtotal - p.discount + p.service + p.tax + p.rounding);
     }
   });
 });

@@ -31,6 +31,7 @@ export async function buildSummary(repos: Repos, event: Event): Promise<SummaryD
         discount: c.discount,
         service: c.service,
         tax: c.tax,
+        rounding: c.rounding,
         total: c.total,
         unassigned: c.unassigned,
         perPerson: c.perPerson,

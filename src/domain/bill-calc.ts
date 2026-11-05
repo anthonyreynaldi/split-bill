@@ -19,7 +19,9 @@ export interface PersonBillBreakdown {
   discount: number;
   service: number;
   tax: number;
-  /** subtotal − discount + service + tax */
+  /** Signed share of the bill's rounding. */
+  rounding: number;
+  /** subtotal − discount + service + tax + rounding */
   total: number;
 }
 
@@ -30,6 +32,8 @@ export interface BillCalculation {
   discount: number;
   service: number;
   tax: number;
+  /** Signed rounding printed on the receipt (applied last). */
+  rounding: number;
   total: number;
   /** Only participants with a non-zero part of the bill, in participant order. */
   perPerson: PersonBillBreakdown[];
@@ -91,12 +95,14 @@ export function calculateBill(bill: Bill, participantIds: readonly Id[]): BillCa
   const discountBy = share(charges.discount);
   const serviceBy = share(charges.service);
   const taxBy = share(charges.tax);
+  const roundingBy = share(charges.rounding);
 
   const perPerson: PersonBillBreakdown[] = participantIds
     .map((id, i) => {
       const discount = discountBy.get(id) ?? 0;
       const service = serviceBy.get(id) ?? 0;
       const tax = taxBy.get(id) ?? 0;
+      const rounding = roundingBy.get(id) ?? 0;
       return {
         participantId: id,
         items: lines.get(id) ?? [],
@@ -104,17 +110,19 @@ export function calculateBill(bill: Bill, participantIds: readonly Id[]): BillCa
         discount,
         service,
         tax,
-        total: subtotals[i] - discount + service + tax,
+        rounding,
+        total: subtotals[i] - discount + service + tax + rounding,
       };
     })
     .filter((p) => p.items.length > 0 || p.total !== 0);
 
-  const total = subtotal - charges.discount + charges.service + charges.tax;
+  const total = subtotal - charges.discount + charges.service + charges.tax + charges.rounding;
   const unassigned =
     unassignedItems -
     (discountBy.get(UNASSIGNED) ?? 0) +
     (serviceBy.get(UNASSIGNED) ?? 0) +
-    (taxBy.get(UNASSIGNED) ?? 0);
+    (taxBy.get(UNASSIGNED) ?? 0) +
+    (roundingBy.get(UNASSIGNED) ?? 0);
 
   return { billId: bill.id, paidBy: bill.paidBy, subtotal, ...charges, total, perPerson, unassigned };
 }

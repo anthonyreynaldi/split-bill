@@ -18,6 +18,7 @@ const PersonBillDto = z.object({
   discount: z.number(),
   service: z.number(),
   tax: z.number(),
+  rounding: z.number(),
   total: z.number(),
 });
 
@@ -30,6 +31,7 @@ export const SummaryBillDto = z.object({
   discount: z.number(),
   service: z.number(),
   tax: z.number(),
+  rounding: z.number(),
   total: z.number(),
   unassigned: z.number(),
   perPerson: z.array(PersonBillDto),
