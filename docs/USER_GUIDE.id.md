@@ -14,6 +14,10 @@ Split Bill membantu kelompok menghitung siapa berutang ke siapa setelah makan be
 **Acara** mengelompokkan beberapa tagihan, misalnya "Liburan Bali" atau "Makan Siang Jumat".
 1. Klik **Acara baru** dan beri nama.
 2. Tambahkan **orang-orang** dalam acara. Cukup nama, tidak perlu akun.
+   - Ketik nama lalu tekan **Enter**. Kotak langsung kosong lagi, jadi Anda bisa mengetik nama berikutnya.
+   - Untuk menambah banyak sekaligus, tempel daftar seperti `Ana, Budi, Citra` (atau satu nama per baris).
+   - Perbaiki nama dengan mengetik langsung di kotaknya. Hapus seseorang dengan ikon tempat sampah, atau kembalikan dengan ikon batal.
+   - Setelah selesai, klik **Simpan**. Belum ada yang tersimpan sebelum ini, dan **Buang** membatalkan perubahan. Jika Anda menghapus orang, akan ada konfirmasi. Pembagian mereka dihapus, dan tagihan yang mereka bayar tidak punya pembayar.
 
 ## Fitur: Tambah tagihan dari foto
 1. Di dalam acara, klik **Tambah tagihan**. Lalu:

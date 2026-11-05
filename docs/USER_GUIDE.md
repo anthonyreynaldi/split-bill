@@ -14,6 +14,10 @@ Split Bill helps a group work out who owes whom after shared meals or trips. Tak
 An **event** groups bills together, for example "Bali Trip" or "Friday Lunch".
 1. Click **New event** and give it a name.
 2. Add the **people** in the event. A name is enough, and they don't need an account.
+   - Type a name and press **Enter**. The box clears, so you can type the next name right away.
+   - To add many at once, paste a list such as `Ana, Budi, Citra` (or one name per line).
+   - Fix a name by typing in its box. Remove someone with the bin icon, or bring them back with the undo icon.
+   - When you're done, click **Save**. Nothing is saved before this, and **Discard** throws away the changes. If you remove people, you are asked to confirm. Their splits are removed, and bills they paid lose their payer.
 
 ## Feature: Add a bill from a photo
 1. In an event, click **Add bill**. Then:
