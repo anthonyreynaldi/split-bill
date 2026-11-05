@@ -54,6 +54,29 @@ describe("buildSummaryXlsx", () => {
     expect(wb.getWorksheet("Transfers")!.getRow(2).values).toEqual([, "Budi", "Ana", 11000]);
     const items = wb.getWorksheet("Items")!;
     expect(items.rowCount).toBe(1 + 4); // header + (item + tax row) × 2 people
-    expect(wb.getWorksheet("Bills")!.getRow(3).getCell(8).value).toBe(22000);
+    expect(wb.getWorksheet("Bills")!.getRow(3).getCell(9).value).toBe(22000);
+  });
+
+  it("writes signed rounding in the Bills sheet and in each person's charges row", async () => {
+    const b = summary.bills[0];
+    const rounded: SummaryDto = {
+      ...summary,
+      bills: [
+        {
+          ...b,
+          rounding: -100,
+          total: 21900,
+          perPerson: b.perPerson.map((p) => ({ ...p, rounding: -50, total: 10950 })),
+        },
+      ],
+      grandTotal: 21900,
+    };
+    const wb = new ExcelJS.Workbook();
+    await wb.xlsx.load((await buildSummaryXlsx(rounded, labels)).buffer as ArrayBuffer);
+    const bills = wb.getWorksheet("Bills")!;
+    expect(bills.getRow(1).getCell(8).value).toBe("rounding");
+    expect(bills.getRow(2).getCell(8).value).toBe(-100);
+    expect(bills.getRow(2).getCell(9).value).toBe(21900);
+    expect(wb.getWorksheet("Items")!.getRow(3).getCell(5).value).toBe(950); // tax 1000 + rounding −50
   });
 });

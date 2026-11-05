@@ -146,17 +146,19 @@
       "unitsAssigned": "{assigned} dari {total} porsi terbagi"
     },
     "charges": {
-      "title": "Pajak, layanan & diskon",
+      "title": "Pajak, layanan, diskon & pembulatan",
       "tax": "Pajak",
       "service": "Layanan",
       "discount": "Diskon",
+      "rounding": "Pembulatan",
       "amount": "Nominal",
       "value": "Nilai",
       "remove": "Hapus",
       "quick": {
         "tax": "Pajak 10%",
         "service": "Layanan 5%",
-        "discount": "Diskon"
+        "discount": "Diskon",
+        "rounding": "Pembulatan"
       },
       "splitMode": "Cara membaginya",
       "proportional": "Sesuai pesanan masing-masing",
@@ -168,6 +170,7 @@
       "title": "Total",
       "subtotal": "Subtotal",
       "discount": "Diskon",
+      "rounding": "Pembulatan",
       "service": "Layanan",
       "tax": "Pajak",
       "total": "Total",
@@ -237,6 +240,7 @@
       "paidBy": "Dibayar oleh",
       "subtotal": "Subtotal",
       "discount": "Diskon",
+      "rounding": "Pembulatan",
       "service": "Layanan",
       "tax": "Pajak",
       "total": "Total",

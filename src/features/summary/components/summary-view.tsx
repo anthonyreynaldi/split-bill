@@ -121,10 +121,10 @@ export function SummaryView({ onCaptureEl, ...props }: {
                                 <span className="tabular-nums">{money(it.amount)}</span>
                               </li>
                             ))}
-                            {mine.service + mine.tax - mine.discount !== 0 && (
+                            {mine.service + mine.tax - mine.discount + mine.rounding !== 0 && (
                               <li className="flex justify-between gap-2">
                                 <span>{t("charges")}</span>
-                                <span className="tabular-nums">{money(mine.service + mine.tax - mine.discount)}</span>
+                                <span className="tabular-nums">{money(mine.service + mine.tax - mine.discount + mine.rounding)}</span>
                               </li>
                             )}
                           </ul>

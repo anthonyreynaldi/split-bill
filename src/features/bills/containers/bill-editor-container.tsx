@@ -241,6 +241,7 @@ function LivePreview(props: {
         discount: t("discount"),
         service: t("service"),
         tax: t("tax"),
+        rounding: t("rounding"),
         total: t("total"),
         perPerson: t("perPerson"),
         unassigned: (amount) => t("unassigned", { amount }),

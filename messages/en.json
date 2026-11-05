@@ -146,17 +146,19 @@
       "unitsAssigned": "{assigned} of {total} units assigned"
     },
     "charges": {
-      "title": "Tax, service & discount",
+      "title": "Tax, service, discount & rounding",
       "tax": "Tax",
       "service": "Service",
       "discount": "Discount",
+      "rounding": "Rounding",
       "amount": "Amount",
       "value": "Value",
       "remove": "Remove",
       "quick": {
         "tax": "Tax 10%",
         "service": "Service 5%",
-        "discount": "Discount"
+        "discount": "Discount",
+        "rounding": "Rounding"
       },
       "splitMode": "How to share them",
       "proportional": "By what each person ordered",
@@ -168,6 +170,7 @@
       "title": "Totals",
       "subtotal": "Subtotal",
       "discount": "Discount",
+      "rounding": "Rounding",
       "service": "Service",
       "tax": "Tax",
       "total": "Total",
@@ -237,6 +240,7 @@
       "paidBy": "Paid by",
       "subtotal": "Subtotal",
       "discount": "Discount",
+      "rounding": "Rounding",
       "service": "Service",
       "tax": "Tax",
       "total": "Total",

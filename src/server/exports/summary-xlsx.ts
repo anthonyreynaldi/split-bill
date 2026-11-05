@@ -21,6 +21,7 @@ export interface XlsxLabels {
   discount: string;
   service: string;
   tax: string;
+  rounding: string;
   total: string;
   mode: string;
 }
@@ -75,8 +76,8 @@ export async function buildSummaryXlsx(s: SummaryDto, l: XlsxLabels): Promise<Ui
   for (const b of s.bills)
     for (const p of b.perPerson) {
       for (const it of p.items) items.addRow({ bill: b.title, person: name(p.participantId), item: it.name, units: it.units, amount: m(it.amount) });
-      const extra = p.service + p.tax - p.discount;
-      if (extra) items.addRow({ bill: b.title, person: name(p.participantId), item: `${l.service} + ${l.tax} − ${l.discount}`, amount: m(extra) });
+      const extra = p.service + p.tax - p.discount + p.rounding;
+      if (extra) items.addRow({ bill: b.title, person: name(p.participantId), item: `${l.service} + ${l.tax} − ${l.discount} ± ${l.rounding}`, amount: m(extra) });
     }
 
   const bills = sheet(l.sheets.bills, [
@@ -87,6 +88,7 @@ export async function buildSummaryXlsx(s: SummaryDto, l: XlsxLabels): Promise<Ui
     { header: l.discount, key: "discount", width: 14, money: true },
     { header: l.service, key: "service", width: 14, money: true },
     { header: l.tax, key: "tax", width: 14, money: true },
+    { header: l.rounding, key: "rounding", width: 14, money: true },
     { header: l.total, key: "total", width: 16, money: true },
   ]);
   for (const b of s.bills)
@@ -98,6 +100,7 @@ export async function buildSummaryXlsx(s: SummaryDto, l: XlsxLabels): Promise<Ui
       discount: m(b.discount),
       service: m(b.service),
       tax: m(b.tax),
+      rounding: m(b.rounding),
       total: m(b.total),
     });
   const totalRow = bills.addRow({ title: l.total, total: m(s.grandTotal) });

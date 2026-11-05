@@ -36,6 +36,7 @@ export const exportSummaryExcel = defineAction(ExportExcelInput, async ({ eventI
     discount: t("discount"),
     service: t("service"),
     tax: t("tax"),
+    rounding: t("rounding"),
     total: t("total"),
     mode: t("mode"),
   });

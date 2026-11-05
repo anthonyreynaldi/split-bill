@@ -15,6 +15,7 @@ export function SelectField(props: {
   placeholder?: string;
   errors?: string[];
   className?: string;
+  disabled?: boolean;
 }) {
   const invalid = !!props.errors?.length;
   return (
@@ -24,6 +25,7 @@ export function SelectField(props: {
         value={props.value}
         onValueChange={(v) => props.onChange((v as string | null) ?? null)}
         items={props.options}
+        disabled={props.disabled}
       >
         <SelectTrigger id={props.id} className="w-full" aria-invalid={invalid || undefined}>
           <SelectValue placeholder={props.placeholder} />

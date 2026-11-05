@@ -17,6 +17,7 @@ export function BillPreview(props: {
     discount: string;
     service: string;
     tax: string;
+    rounding: string;
     total: string;
     perPerson: string;
     unassigned: (amount: string) => string;
@@ -40,6 +41,8 @@ export function BillPreview(props: {
         {calc.discount > 0 && row(labels.discount, `− ${money(calc.discount)}`)}
         {calc.service > 0 && row(labels.service, money(calc.service))}
         {calc.tax > 0 && row(labels.tax, money(calc.tax))}
+        {calc.rounding !== 0 &&
+          row(labels.rounding, `${calc.rounding < 0 ? "−" : "+"} ${money(Math.abs(calc.rounding))}`)}
         {row(labels.total, money(calc.total), true)}
       </div>
       {props.receiptTotal != null && props.receiptTotal !== calc.total && (

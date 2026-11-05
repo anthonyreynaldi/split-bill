@@ -15,9 +15,12 @@ const QUICK: BillChargeInput[] = [
   { kind: "tax", mode: "percent", value: 10 },
   { kind: "service", mode: "percent", value: 5 },
   { kind: "discount", mode: "amount", value: 0 },
+  { kind: "rounding", mode: "amount", value: 0 },
 ];
 
-/** Tax / service / discount rows + how they are shared. */
+const KINDS = ["tax", "service", "discount", "rounding"] as const;
+
+/** Tax / service / discount / rounding rows + how they are shared. Rounding is a signed amount. */
 export function BillChargesSection({ form, currency }: { form: BillForm; currency: string }) {
   const t = useTranslations("bills");
 
@@ -33,8 +36,17 @@ export function BillChargesSection({ form, currency }: { form: BillForm; currenc
                     <SelectField
                       id={`charge-${i}-kind`}
                       value={f.state.value}
-                      onChange={(v) => v && f.handleChange(v as BillChargeInput["kind"])}
-                      options={(["tax", "service", "discount"] as const).map((k) => ({ value: k, label: t(`charges.${k}`) }))}
+                      onChange={(v) => {
+                        if (!v) return;
+                        f.handleChange(v as BillChargeInput["kind"]);
+                        if (v === "rounding" && c.mode !== "amount") {
+                          form.setFieldValue(`charges[${i}].mode`, "amount");
+                          form.setFieldValue(`charges[${i}].value`, 0);
+                        } else if (v !== "rounding" && c.value < 0) {
+                          form.setFieldValue(`charges[${i}].value`, 0);
+                        }
+                      }}
+                      options={KINDS.map((k) => ({ value: k, label: t(`charges.${k}`) }))}
                     />
                   )}
                 </form.Field>
@@ -43,6 +55,7 @@ export function BillChargesSection({ form, currency }: { form: BillForm; currenc
                     <SelectField
                       id={`charge-${i}-mode`}
                       value={f.state.value}
+                      disabled={c.kind === "rounding"}
                       onChange={(v) => {
                         if (!v) return;
                         f.handleChange(v as BillChargeInput["mode"]);
@@ -68,7 +81,13 @@ export function BillChargesSection({ form, currency }: { form: BillForm; currenc
                         onChange={(e) => f.handleChange(Number(e.target.value) || 0)}
                       />
                     ) : (
-                      <MoneyInput aria-label={t("charges.value")} currency={currency} value={f.state.value} onChange={f.handleChange} />
+                      <MoneyInput
+                        aria-label={t("charges.value")}
+                        currency={currency}
+                        value={f.state.value}
+                        onChange={f.handleChange}
+                        allowNegative={c.kind === "rounding"}
+                      />
                     )
                   }
                 </form.Field>
