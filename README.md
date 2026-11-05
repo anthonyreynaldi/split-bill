@@ -5,9 +5,9 @@ Split group bills fairly, without the spreadsheet. Upload a receipt photo and le
 > Status: **v1 feature-complete**. See [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 ## Features (v1)
-- 📸 Receipt OCR: a photo becomes an editable draft (items, qty, price, tax, service).
+- 📸 Receipt OCR: a photo becomes an editable draft (items, qty, price, tax, service, rounding).
 - ✍️ Manual editing: add bills and items, choose who paid.
-- ➗ Flexible splits: an item is split evenly, by portions per person, or **per unit** (e.g. pizza 1 shared by 2 people, pizza 2 by 3). Tax, service and discount are shared proportionally or evenly.
+- ➗ Flexible splits: an item is split evenly, by portions per person, or **per unit** (e.g. pizza 1 shared by 2 people, pizza 2 by 3). Tax, service, discount and rounding ("Pembulatan", can be negative) are shared proportionally or evenly.
 - 🧾 Per-person summary, with **per-bill** or **nett** settlement (debts cancel out across bills).
 - 📤 Export to Excel, export to an image, or share a **read-only link** with an optional passcode.
 - 🌐 Bahasa Indonesia / English.

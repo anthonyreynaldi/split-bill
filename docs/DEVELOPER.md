@@ -36,6 +36,7 @@ The code is layered. The view calls hooks (TanStack), hooks call Server Actions,
 ## Database schema / migrations
 - `supabase/migrations/20261103000001_init.sql` creates the tables, constraints, RLS (deny-all) and the `save_bill(jsonb)` function. That function saves a bill with its items, allocations and charges in **one transaction**, and refuses to move a bill to another event.
 - `supabase/migrations/20261103000002_storage.sql` creates the private `bill-images` bucket (5 MB, jpeg/png/webp).
+- `supabase/migrations/20261105000002_rounding_charge.sql` adds the `rounding` charge kind. `bill_charges.value` may be negative for rounding only, and rounding must use `amount` mode.
 - The DB **cannot** check that `paid_by` or allocation participants belong to the bill's event. `BillService` validates this.
 - The SQL lives in `supabase/migrations/NNNN_name.sql`, and the ERD is in [architecture.md §2](architecture.md#2-data-model-erd).
 - Every schema change needs a new migration, an update to the repository mapper, and an update to the ERD.
@@ -93,7 +94,7 @@ See [CLAUDE.md → Conventions](../CLAUDE.md#conventions). In short:
 ## Manual end-to-end check (before a release)
 1. Register, log out, log in (also try a wrong password).
 2. Create an event and add 3 people. Rename one and remove one.
-3. Add a bill from a photo (with OCR configured) and check that the draft is prefilled. Fix it, choose the payer, and save.
+3. Add a bill from a photo (with OCR configured) and check that the draft is prefilled. Use a receipt with a rounding line ("Pembulatan") and check that the draft has a Rounding row and its total matches the receipt. Fix it, choose the payer, and save.
 4. Add a second bill by hand. Use custom portions on one item (e.g. qty 3 → 2 + 1) and **Per unit** on another (e.g. qty 2: unit 1 → 2 people, unit 2 → 3 people). Add tax 10% and service 5%.
 5. On the summary, check that the per-person totals add up to the bill totals, and switch between Nett and Per bill.
 6. Download the Excel and image exports.
