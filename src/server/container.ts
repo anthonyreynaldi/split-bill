@@ -2,7 +2,7 @@ import "server-only";
 import { bcryptHasher } from "./auth/password";
 import { env } from "./env";
 import type { OcrProvider } from "./providers/ocr/ocr-provider";
-import { createOpenRouterOcrProvider } from "./providers/ocr/openrouter";
+import { createOpenRouterOcrProvider, parseModelList } from "./providers/ocr/openrouter";
 import type { Repositories } from "./repositories/interfaces";
 import { createMemoryRepositories } from "./repositories/memory";
 import { createSupabaseRepositories } from "./repositories/supabase";
@@ -25,11 +25,15 @@ function createRepositories(): Repositories {
   }
 }
 
-/** OCR is optional: without a key + model, uploads still work and the user types the bill. */
+/**
+ * OCR is optional: without a key + model, uploads still work and the user types the bill.
+ * `OPENROUTER_MODEL` may list several models (comma-separated) to fall back on.
+ */
 function createOcrProvider(): OcrProvider | null {
   const e = env();
-  if (!e.OPENROUTER_API_KEY || !e.OPENROUTER_MODEL) return null;
-  return createOpenRouterOcrProvider({ apiKey: e.OPENROUTER_API_KEY, model: e.OPENROUTER_MODEL, appUrl: e.APP_URL });
+  const models = parseModelList(e.OPENROUTER_MODEL);
+  if (!e.OPENROUTER_API_KEY || models.length === 0) return null;
+  return createOpenRouterOcrProvider({ apiKey: e.OPENROUTER_API_KEY, models, appUrl: e.APP_URL });
 }
 
 export interface Container {

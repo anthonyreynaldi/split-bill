@@ -11,7 +11,10 @@ const EnvSchema = z
     SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
     SESSION_SECRET: z.string().min(32, "SESSION_SECRET must be at least 32 characters"),
     OPENROUTER_API_KEY: z.string().min(1).optional(),
-    /** Vision-capable model id. Pick a current free one: openrouter.ai/models?input_modalities=image&max_price=0 */
+    /**
+     * Vision-capable model id, or a comma-separated priority list used as fallbacks
+     * (see `createOpenRouterOcrProvider`). Free ones: openrouter.ai/models?input_modalities=image&max_price=0
+     */
     OPENROUTER_MODEL: z.string().min(1).optional(),
     APP_URL: z.url().default("http://localhost:3000"),
   })
