@@ -201,6 +201,11 @@
   "export": {
     "excel": "Excel",
     "image": "Image",
+    "imageDownload": "Download image",
+    "imageCopy": "Copy image",
+    "imageShare": "Share…",
+    "imageCopied": "Image copied. Paste it into a chat or email.",
+    "imageCopyFailed": "Couldn't copy the image. Use Download instead.",
     "xlsx": {
       "sheets": {
         "people": "People",

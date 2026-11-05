@@ -201,6 +201,11 @@
   "export": {
     "excel": "Excel",
     "image": "Gambar",
+    "imageDownload": "Unduh gambar",
+    "imageCopy": "Salin gambar",
+    "imageShare": "Bagikan…",
+    "imageCopied": "Gambar disalin. Tempel di chat atau email.",
+    "imageCopyFailed": "Gagal menyalin gambar. Gunakan Unduh.",
     "xlsx": {
       "sheets": {
         "people": "Orang",
