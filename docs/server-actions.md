@@ -78,6 +78,7 @@ Every action here can return `UNAUTHORIZED`. Actions that take an `eventId` retu
 | `addParticipant` | `AddParticipantInput { eventId, name }` | `ParticipantDto` | Add a person |
 | `renameParticipant` | `RenameParticipantInput { eventId, participantId, name }` | `ParticipantDto` | Rename |
 | `removeParticipant` | `RemoveParticipantInput { eventId, participantId }` | `null` | Remove them from all splits; bills they paid lose their payer |
+| `saveParticipants` | `SaveParticipantsInput { eventId, add: name[], rename: { participantId, name }[], remove: participantId[] }` | `ParticipantDto[]` (the event's people afterwards) | Save every people edit from the event page in **one atomic** call. Removes behave like `removeParticipant`. The event page uses this. The three single-person actions remain for scripts and tests. |
 
 Query keys: `['events']` (list) and `['events', eventId]` (detail). Mutations invalidate these.
 

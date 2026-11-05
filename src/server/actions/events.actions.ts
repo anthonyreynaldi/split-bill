@@ -11,6 +11,7 @@ import {
   EventIdInput,
   RemoveParticipantInput,
   RenameParticipantInput,
+  SaveParticipantsInput,
   UpdateEventInput,
 } from "@/shared/dto";
 import { getContainer } from "../container";
@@ -57,3 +58,12 @@ export const removeParticipant = defineAction(RemoveParticipantInput, async (inp
   await events().removeParticipant(await requireUserId(), input);
   return null;
 });
+
+/**
+ * Save a batch of people edits (add / rename / remove) at once, atomically.
+ * Input {@link SaveParticipantsInput}. Returns the event's people afterwards.
+ * Errors: `UNAUTHORIZED`, `NOT_FOUND` (event, or a person not in it), `VALIDATION_ERROR`.
+ */
+export const saveParticipants = defineAction(SaveParticipantsInput, async (input) =>
+  events().saveParticipants(await requireUserId(), input),
+);
