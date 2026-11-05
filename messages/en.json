@@ -167,7 +167,8 @@
     }
   },
   "ocr": {
-    "upload": "Upload receipt photo",
+    "takePhoto": "Take photo",
+    "chooseFile": "Choose photo",
     "hint": "or fill in the bill below",
     "reading": "Reading receipt…",
     "privacy": "The photo is sent to an AI service to read the text.",

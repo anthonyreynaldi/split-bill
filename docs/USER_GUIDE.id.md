@@ -16,7 +16,9 @@ Split Bill membantu kelompok menghitung siapa berutang ke siapa setelah makan be
 2. Tambahkan **orang-orang** dalam acara. Cukup nama, tidak perlu akun.
 
 ## Fitur: Tambah tagihan dari foto
-1. Di dalam acara, klik **Tambah tagihan**, lalu **Unggah foto struk**. Di ponsel Anda bisa langsung memotret.
+1. Di dalam acara, klik **Tambah tagihan**. Lalu:
+   - di ponsel, ketuk **Ambil foto** untuk memakai kamera, atau **Pilih foto** untuk memilih dari galeri atau file;
+   - di komputer, klik **Pilih foto**.
 2. Tunggu beberapa detik selagi aplikasi membaca struk.
 3. **Periksa hasilnya.** Perbaiki item, jumlah, atau harga yang salah. Jika total di struk berbeda dengan total hitungan, akan muncul peringatan berisi nominal di struk.
 4. Pilih **siapa yang membayar** tagihan ini.

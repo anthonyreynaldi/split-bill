@@ -16,7 +16,9 @@ An **event** groups bills together, for example "Bali Trip" or "Friday Lunch".
 2. Add the **people** in the event. A name is enough, and they don't need an account.
 
 ## Feature: Add a bill from a photo
-1. In an event, click **Add bill**, then **Upload receipt photo**. On a phone you can take the picture right away.
+1. In an event, click **Add bill**. Then:
+   - on a phone, tap **Take photo** to use the camera, or **Choose photo** to pick one from the gallery or files;
+   - on a computer, click **Choose photo**.
 2. Wait a few seconds while the app reads the receipt.
 3. **Check the result.** Fix any item, quantity or price that looks wrong. If the receipt total differs from the calculated total, a warning shows the receipt's amount.
 4. Choose **who paid** this bill.

@@ -26,7 +26,8 @@ export function NewBillContainer({ eventId }: { eventId: string }) {
           pending={upload.isPending}
           status={draft?.ocrStatus ?? null}
           labels={{
-            upload: t("upload"),
+            takePhoto: t("takePhoto"),
+            chooseFile: t("chooseFile"),
             hint: t("hint"),
             reading: t("reading"),
             privacy: t("privacy"),

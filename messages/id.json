@@ -167,7 +167,8 @@
     }
   },
   "ocr": {
-    "upload": "Unggah foto struk",
+    "takePhoto": "Ambil foto",
+    "chooseFile": "Pilih foto",
     "hint": "atau isi tagihan di bawah",
     "reading": "Membaca struk…",
     "privacy": "Foto dikirim ke layanan AI untuk membaca teksnya.",
