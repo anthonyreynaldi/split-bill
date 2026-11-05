@@ -76,6 +76,15 @@ describe("bill DTOs", () => {
     expect(BillChargeInput.safeParse({ kind: "tax", mode: "percent", value: 150 }).success).toBe(false);
     expect(BillChargeInput.safeParse({ kind: "discount", mode: "amount", value: 10.5 }).success).toBe(false);
   });
+
+  it("rounding is a signed integer amount; other kinds stay ≥ 0", () => {
+    expect(BillChargeInput.safeParse({ kind: "rounding", mode: "amount", value: -200 }).success).toBe(true);
+    expect(BillChargeInput.safeParse({ kind: "rounding", mode: "amount", value: 300 }).success).toBe(true);
+    expect(BillChargeInput.safeParse({ kind: "rounding", mode: "amount", value: -0.5 }).success).toBe(false);
+    expect(BillChargeInput.safeParse({ kind: "rounding", mode: "percent", value: 1 }).success).toBe(false);
+    expect(BillChargeInput.safeParse({ kind: "tax", mode: "amount", value: -100 }).success).toBe(false);
+    expect(BillChargeInput.safeParse({ kind: "discount", mode: "percent", value: -5 }).success).toBe(false);
+  });
 });
 
 describe("OcrResult (lenient model output)", () => {

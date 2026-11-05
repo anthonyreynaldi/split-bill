@@ -16,7 +16,8 @@ export type Id = string;
  *   and each unit's price is split equally within its group.
  */
 export type SplitMode = "even" | "custom" | "per_unit";
-export type ChargeKind = "tax" | "service" | "discount";
+/** `rounding` is amount-only and signed (receipts print e.g. "Pembulatan −200"). */
+export type ChargeKind = "tax" | "service" | "discount" | "rounding";
 /** `percent`: value 10 = 10%. `amount`: value in minor units. */
 export type ChargeMode = "percent" | "amount";
 /** How a bill's charges are shared among the people on that bill. */

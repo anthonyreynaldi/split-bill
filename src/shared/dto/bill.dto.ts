@@ -54,17 +54,33 @@ export function isPerUnitQty(qty: number): boolean {
   return Number.isInteger(qty) && qty >= 1 && qty <= MAX_PER_UNIT_QTY;
 }
 
-/** Tax / service / discount. `percent`: 10 = 10%. `amount`: minor units. */
+const MAX_CHARGE_AMOUNT = 1_000_000_000_000;
+
+/**
+ * Tax / service / discount / rounding. `percent`: 10 = 10%. `amount`: minor units.
+ *
+ * - tax / service / discount: value ≥ 0; amount → integer; percent → ≤ 100.
+ * - rounding: **amount only**, integer, may be **negative** (e.g. "Pembulatan −200").
+ */
 export const BillChargeInput = z
   .object({
     kind: ChargeKindSchema,
     mode: ChargeModeSchema,
-    value: z.number({ error: VALIDATION.required }).min(0, { error: VALIDATION.mustBePositive }),
+    value: z.number({ error: VALIDATION.required }),
   })
-  .refine((c) => c.mode === "amount" ? Number.isInteger(c.value) : c.value <= 100, {
-    error: VALIDATION.invalid,
+  .refine((c) => c.kind === "rounding" || c.value >= 0, {
+    error: VALIDATION.mustBePositive,
     path: ["value"],
-  });
+  })
+  .refine(
+    (c) =>
+      c.kind === "rounding"
+        ? c.mode === "amount" && Number.isInteger(c.value) && Math.abs(c.value) <= MAX_CHARGE_AMOUNT
+        : c.mode === "amount"
+          ? Number.isInteger(c.value) && c.value <= MAX_CHARGE_AMOUNT
+          : c.value <= 100,
+    { error: VALIDATION.invalid, path: ["value"] },
+  );
 export type BillChargeInput = z.infer<typeof BillChargeInput>;
 
 /** The editable part of a bill (used by the form and the OCR draft). */

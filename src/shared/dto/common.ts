@@ -44,7 +44,8 @@ export const CurrencySchema = z.enum(SUPPORTED_CURRENCIES as [string, ...string[
 
 /** `even` · `custom` (portions) · `per_unit` (people per unit of the qty). */
 export const SplitModeSchema = z.enum(["even", "custom", "per_unit"]);
-export const ChargeKindSchema = z.enum(["tax", "service", "discount"]);
+/** `rounding` is amount-only and may be negative. */
+export const ChargeKindSchema = z.enum(["tax", "service", "discount", "rounding"]);
 export const ChargeModeSchema = z.enum(["percent", "amount"]);
 export const ChargeSplitModeSchema = z.enum(["proportional", "even"]);
 export const SettlementModeSchema = z.enum(["per_bill", "nett"]);
