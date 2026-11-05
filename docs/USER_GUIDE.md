@@ -46,7 +46,10 @@ There are two ways to settle up:
 
 ## Feature: Export and share
 - **Excel**: downloads a spreadsheet of the summary.
-- **Image**: downloads a picture of the summary to send in chat.
+- **Image**: makes a picture of the summary. Click **Image** and choose:
+  - **Copy image**, then paste it straight into WhatsApp, Telegram or an email. Nothing is saved to your device.
+  - **Share…** (on phones), which opens your phone's share menu so you can send it to a chat, email and so on.
+  - **Download image**, which saves it as a PNG file.
 - **Share link**: click **Share**, then **Create link**, and copy it. Anyone with the link can **view** (not edit) the summary.
   - Add a **passcode** (4–32 characters) and viewers must enter it once per device. After 5 wrong tries the link is locked for 15 minutes.
   - Untick **Link is active** to turn the link off at any time.

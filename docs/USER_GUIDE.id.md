@@ -46,7 +46,10 @@ Ada dua cara pelunasan:
 
 ## Fitur: Ekspor dan bagikan
 - **Excel**: unduh ringkasan dalam bentuk spreadsheet.
-- **Gambar**: unduh gambar ringkasan untuk dikirim lewat chat.
+- **Gambar**: membuat gambar ringkasan. Klik **Gambar**, lalu pilih:
+  - **Salin gambar**, lalu tempel langsung di WhatsApp, Telegram atau email. Tidak ada file yang tersimpan di perangkat.
+  - **Bagikan…** (di ponsel), yang membuka menu berbagi ponsel untuk mengirim ke chat, email dan sebagainya.
+  - **Unduh gambar**, yang menyimpannya sebagai file PNG.
 - **Tautan berbagi**: klik **Bagikan**, lalu **Buat tautan**, dan salin. Siapa pun yang punya tautan bisa **melihat** (bukan mengubah) ringkasan.
   - Tambahkan **kode akses** (4–32 karakter), dan pembuka tautan cukup memasukkannya sekali per perangkat. Setelah 5 kali salah, tautan dikunci 15 menit.
   - Hapus centang **Tautan aktif** untuk mematikan tautan kapan saja.

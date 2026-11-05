@@ -21,6 +21,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 - Share: read-only public link per event (/s/<slug>), optional passcode (bcrypt, 5 tries then a 15 minute lock, 12 hour access cookie), turn the link on or off, image export on the shared view.
 - Bills: **Per unit** split. Each unit of an item's qty gets its own group of people, and each unit's price is split equally within that group. Migration `20261104000001_per_unit_split.sql` adds `item_allocations.unit_index`.
 - `npm run db:migrate`: applies only new migrations (history-tracked `supabase db push`) using `SUPABASE_DB_URL` (session pooler). Replaces the broken `db:push` script.
+- Export: the Image button opens a menu with **Copy image** (to paste into chat or email), **Share…** (native share sheet on phones) and **Download image**.
 - OCR: `OPENROUTER_MODEL` accepts a comma-separated list of free models that fall back on each other when one is rate-limited.
 - OCR: on phones, choose between **Take photo** (camera) and **Choose photo** (gallery or files). Computers show only **Choose photo**.
 - CI/CD: GitHub Actions checks every PR. On `main` it runs check → migrate → Vercel production deploy (ADR 0007).
