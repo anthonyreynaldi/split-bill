@@ -41,6 +41,18 @@ describe("ocrToFormValues", () => {
     const v = ocrToFormValues(OcrResult.parse({ items: [], discount: -5000 }), "IDR", null);
     expect(v.charges).toEqual([{ kind: "discount", mode: "amount", value: 5000 }]);
   });
+
+  it("keeps the sign of rounding and drops zero/missing rounding", () => {
+    const down = ocrToFormValues(OcrResult.parse({ items: [], tax: 1000, rounding: "-200" }), "IDR", null);
+    expect(down.charges).toEqual([
+      { kind: "tax", mode: "amount", value: 1000 },
+      { kind: "rounding", mode: "amount", value: -200 },
+    ]);
+    const up = ocrToFormValues(OcrResult.parse({ items: [], rounding: 0.03 }), "USD", null);
+    expect(up.charges).toEqual([{ kind: "rounding", mode: "amount", value: 3 }]);
+    expect(ocrToFormValues(OcrResult.parse({ items: [], rounding: 0 }), "IDR", null).charges).toEqual([]);
+    expect(ocrToFormValues(OcrResult.parse({ items: [], rounding: null }), "IDR", null).charges).toEqual([]);
+  });
 });
 
 describe("normaliseDate", () => {

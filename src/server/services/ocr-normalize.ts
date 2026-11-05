@@ -9,6 +9,7 @@ import { toMinor } from "@/shared/lib/money";
  * - qty defaults to 1; a missing total = qty × unitPrice; a missing unitPrice = total ÷ qty
  * - items with no usable price are dropped
  * - discount/service/tax become **amount** charges (receipts print amounts, not %)
+ * - rounding becomes a **signed** amount charge (Pembulatan −200 → −200); 0 is dropped
  * - every item starts as "split evenly"; the user refines it
  */
 export function ocrToFormValues(
@@ -39,6 +40,10 @@ export function ocrToFormValues(
   const charges: BillChargeInput[] = (["discount", "service", "tax"] as const)
     .map((kind) => ({ kind, mode: "amount" as const, value: money(r[kind]) ?? 0 }))
     .filter((c) => c.value > 0);
+  if (r.rounding != null && Number.isFinite(r.rounding)) {
+    const value = toMinor(r.rounding, currency);
+    if (value !== 0) charges.push({ kind: "rounding", mode: "amount", value });
+  }
 
   return {
     title: (r.merchant ?? "").trim().slice(0, 200) || "Receipt",

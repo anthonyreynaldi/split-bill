@@ -40,6 +40,8 @@ export const OcrResult = z.object({
   discount: looseNumber,
   service: looseNumber,
   tax: looseNumber,
+  /** Signed: negative when the receipt rounds down. */
+  rounding: looseNumber,
   total: looseNumber,
 });
 export type OcrResult = z.infer<typeof OcrResult>;

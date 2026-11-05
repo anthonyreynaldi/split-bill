@@ -21,10 +21,13 @@ Return ONLY a JSON object, no prose, no markdown fences, with this shape:
   "discount": number | null,
   "service": number | null,
   "tax": number | null,
+  "rounding": number | null,
   "total": number | null
 }
 Rules:
 - Numbers are plain numbers in the receipt currency, without thousand separators (Rp 25.000 → 25000).
 - One entry per printed line item; "total" is the line total (qty × unitPrice).
 - "service" = service charge; "tax" = PB1/PPN/tax; "discount" = total discounts as a positive number.
+- "rounding" = the rounding line (Pembulatan / Rounding / Round off / Pembulatan harga), SIGNED:
+  negative when it lowers the total (Pembulatan -200 → -200), positive when it raises it. null if there is none.
 - Do not invent items. Use null when unsure.`;
