@@ -6,6 +6,7 @@ import type { SummaryBillDto, SummaryItemDto } from "@/shared/dto";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReceiptViewer } from "@/components/common/receipt-viewer";
+import { cn } from "@/lib/utils";
 
 type PersonAmount = { participantId: string; units: number; amount: number };
 
@@ -65,59 +66,62 @@ export function BillBreakdown(props: {
                 <span className="font-semibold tabular-nums">{money(b.total)}</span>
               </summary>
 
-              <div className="space-y-4 border-t p-3">
+              {/* photo beside the items on wider screens, above them on phones */}
+              <div className={cn("gap-4 border-t p-3", b.imageUrl ? "grid items-start md:grid-cols-[16rem_minmax(0,1fr)]" : "block")}>
                 {b.imageUrl && (
                   <ReceiptViewer
                     src={b.imageUrl}
                     alt={tb("receiptImage")}
-                    className="h-96"
+                    className="h-96 md:sticky md:top-4"
                     labels={{ zoomIn: tr("zoomIn"), zoomOut: tr("zoomOut"), fit: tr("fit"), rotate: tr("rotate"), openFull: tr("openFull") }}
                   />
                 )}
 
-                <ul className="divide-y">
-                  {b.items.map((it) => (
-                    <ItemRow key={it.id} item={it} shares={byItem.get(it.id) ?? []} name={name} money={money} />
-                  ))}
-                </ul>
-
-                <dl className="space-y-1 border-t pt-3 text-sm">
-                  <div className="flex justify-between text-muted-foreground">
-                    <dt>{tp("subtotal")}</dt>
-                    <dd className="tabular-nums">{money(b.subtotal)}</dd>
-                  </div>
-                  {charges
-                    .filter(([, v]) => v !== 0)
-                    .map(([k, v]) => (
-                      <div key={k} className="flex justify-between text-muted-foreground">
-                        <dt>{tp(k)}</dt>
-                        <dd className="tabular-nums">{money(v)}</dd>
-                      </div>
+                <div className="min-w-0 space-y-4">
+                  <ul className="divide-y">
+                    {b.items.map((it) => (
+                      <ItemRow key={it.id} item={it} shares={byItem.get(it.id) ?? []} name={name} money={money} />
                     ))}
-                  <div className="flex justify-between font-semibold">
-                    <dt>{tp("total")}</dt>
-                    <dd className="tabular-nums">{money(b.total)}</dd>
-                  </div>
-                </dl>
-
-                {b.unassigned !== 0 && (
-                  <p className="flex items-center gap-1 text-sm text-destructive">
-                    <AlertTriangle className="size-4" /> {t("unassigned", { amount: money(b.unassigned) })}
-                  </p>
-                )}
-
-                <div className="rounded-md bg-muted/50 p-2 text-sm">
-                  <div className="mb-1 font-medium">{t("perPerson")}</div>
-                  <ul className="grid gap-x-4 gap-y-0.5 sm:grid-cols-2">
-                    {b.perPerson
-                      .filter((p) => p.total !== 0)
-                      .map((p) => (
-                        <li key={p.participantId} className="flex justify-between gap-2">
-                          <span className="truncate">{name(p.participantId)}</span>
-                          <span className="tabular-nums">{money(p.total)}</span>
-                        </li>
-                      ))}
                   </ul>
+
+                  <dl className="space-y-1 border-t pt-3 text-sm">
+                    <div className="flex justify-between text-muted-foreground">
+                      <dt>{tp("subtotal")}</dt>
+                      <dd className="tabular-nums">{money(b.subtotal)}</dd>
+                    </div>
+                    {charges
+                      .filter(([, v]) => v !== 0)
+                      .map(([k, v]) => (
+                        <div key={k} className="flex justify-between text-muted-foreground">
+                          <dt>{tp(k)}</dt>
+                          <dd className="tabular-nums">{money(v)}</dd>
+                        </div>
+                      ))}
+                    <div className="flex justify-between font-semibold">
+                      <dt>{tp("total")}</dt>
+                      <dd className="tabular-nums">{money(b.total)}</dd>
+                    </div>
+                  </dl>
+
+                  {b.unassigned !== 0 && (
+                    <p className="flex items-center gap-1 text-sm text-destructive">
+                      <AlertTriangle className="size-4" /> {t("unassigned", { amount: money(b.unassigned) })}
+                    </p>
+                  )}
+
+                  <div className="rounded-md bg-muted/50 p-2 text-sm">
+                    <div className="mb-1 font-medium">{t("perPerson")}</div>
+                    <ul className="grid gap-x-4 gap-y-0.5 sm:grid-cols-2">
+                      {b.perPerson
+                        .filter((p) => p.total !== 0)
+                        .map((p) => (
+                          <li key={p.participantId} className="flex justify-between gap-2">
+                            <span className="truncate">{name(p.participantId)}</span>
+                            <span className="tabular-nums">{money(p.total)}</span>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
             </details>
