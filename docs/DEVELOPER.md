@@ -84,7 +84,7 @@ See [CLAUDE.md → Conventions](../CLAUDE.md#conventions). In short:
 ## OCR
 - `src/server/providers/ocr/ocr-provider.ts` holds the `OcrProvider` port and the shared receipt prompt. `openrouter.ts` is the implementation.
 - `src/server/services/ocr-normalize.ts` is pure and tested: model JSON (major units) becomes form values (minor units).
-- `OPENROUTER_MODEL` can list several models. Each request sends OpenRouter's `models` fallback list. If the request still fails (429/5xx, timeout, empty or non-JSON output), `openrouter.ts` retries with the remaining models, 25 s per attempt. That's why the new-bill page sets `maxDuration = 90`. The log shows `[ocr] read by <model>` when a fallback answered.
+- `OPENROUTER_MODEL` can list several models. Each request sends OpenRouter's `models` fallback list. If the request still fails (429/5xx, timeout, empty or non-JSON output), `openrouter.ts` retries with the remaining models, 25 s per attempt. That's why the new-bill page sets `maxDuration = 90`. The log shows `[ocr] read by <model>` when a fallback answered. The provider returns `{ data, model }`, and the draft's `ocrModel` shows it to the user ("Read by …" under the success message).
 - To add a provider, implement `OcrProvider` and return it from `createOcrProvider()` in `container.ts`.
 
 ## API documentation

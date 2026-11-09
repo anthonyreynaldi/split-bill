@@ -47,8 +47,7 @@ After a group meal or trip, someone has to work out from paper receipts who owes
 ## Nice-to-have (later)
 - Mark individual transfers as paid.
 - A QR code for the share link, and "copy summary for WhatsApp".
-- Show the receipt image side by side with the OCR draft.
-- An offline OCR fallback (Tesseract.js).
+- ~~Show the receipt image side by side with the OCR draft.~~ Done.
 - Move to real Supabase Auth with RLS policies.
 
 ## Stack and constraints

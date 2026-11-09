@@ -104,7 +104,7 @@ The editor's live preview runs the **same** pure `calculateBill()` from `src/dom
 ### OCR: `src/server/actions/ocr.actions.ts` → `features/ocr/hooks/use-ocr-upload.ts`
 | Action | Input | Output | Errors | Purpose |
 |---|---|---|---|---|
-| `uploadReceipt` | `FormData { eventId, file }` (`UploadReceiptInput`; jpeg/png/webp ≤ 5 MB, compressed in the browser first) | `BillDraftDto` (`BillFormValues` + `ocrStatus`, `receiptTotal`, `imageUrl`) | `UNAUTHORIZED`, `NOT_FOUND`, `VALIDATION_ERROR` | Store the photo, read it, and return an **unsaved** draft |
+| `uploadReceipt` | `FormData { eventId, file }` (`UploadReceiptInput`; jpeg/png/webp ≤ 5 MB, compressed in the browser first) | `BillDraftDto` (`BillFormValues` + `ocrStatus`, `receiptTotal`, `imageUrl`, `ocrModel`: the model that answered, after any fallback, or `null` unless `ocrStatus` is `ok`) | `UNAUTHORIZED`, `NOT_FOUND`, `VALIDATION_ERROR` | Store the photo, read it, and return an **unsaved** draft |
 
 `ocrStatus`: `ok` means prefilled. `failed` means the model errored or returned junk; the draft is empty but the photo is kept. `disabled` means `OPENROUTER_API_KEY` or `OPENROUTER_MODEL` isn't set. The draft only becomes a bill when the user presses Save (`createBill`).
 

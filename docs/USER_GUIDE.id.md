@@ -23,8 +23,11 @@ Split Bill membantu kelompok menghitung siapa berutang ke siapa setelah makan be
 1. Di dalam acara, klik **Tambah tagihan**. Lalu:
    - di ponsel, ketuk **Ambil foto** untuk memakai kamera, atau **Pilih foto** untuk memilih dari galeri atau file;
    - di komputer, klik **Pilih foto**.
-2. Tunggu beberapa detik selagi aplikasi membaca struk.
-3. **Periksa hasilnya.** Perbaiki item, jumlah, atau harga yang salah. Jika total di struk berbeda dengan total hitungan, akan muncul peringatan berisi nominal di struk.
+2. Tunggu beberapa detik selagi aplikasi membaca struk. Foto langsung tampil. Jika berhasil dibaca, ada baris kecil yang menyebut model AI yang membacanya.
+3. **Periksa hasilnya dengan melihat foto.** Perbaiki item, jumlah, atau harga yang salah. Jika total di struk berbeda dengan total hitungan, akan muncul peringatan berisi nominal di struk.
+   - Di komputer, struk tetap terlihat di samping daftar item saat Anda menggulir.
+   - Di ponsel, ketuk **Lihat struk** untuk menyematkannya di bagian atas layar, lalu gulir item di bawahnya. Ketuk **Sembunyikan struk** untuk menutupnya.
+   - Gunakan tombol di atas foto untuk memperbesar, mengepaskan ke lebar, memutar foto yang miring, atau membukanya dalam ukuran penuh.
 4. Pilih **siapa yang membayar** tagihan ini.
 5. Klik **Simpan**. Belum ada yang tersimpan sebelum ini.
 

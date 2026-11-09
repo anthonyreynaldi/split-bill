@@ -23,8 +23,11 @@ An **event** groups bills together, for example "Bali Trip" or "Friday Lunch".
 1. In an event, click **Add bill**. Then:
    - on a phone, tap **Take photo** to use the camera, or **Choose photo** to pick one from the gallery or files;
    - on a computer, click **Choose photo**.
-2. Wait a few seconds while the app reads the receipt.
-3. **Check the result.** Fix any item, quantity or price that looks wrong. If the receipt total differs from the calculated total, a warning shows the receipt's amount.
+2. Wait a few seconds while the app reads the receipt. The photo shows straight away. When reading succeeds, a small line says which AI model read it.
+3. **Check the result against the photo.** Fix any item, quantity or price that looks wrong. If the receipt total differs from the calculated total, a warning shows the receipt's amount.
+   - On a computer, the receipt stays next to the items while you scroll.
+   - On a phone, tap **Show receipt** to pin it to the top of the screen, and scroll the items underneath. Tap **Hide receipt** to put it away.
+   - Use the buttons above the photo to zoom in, fit it to the width, rotate a sideways photo, or open it full size.
 4. Choose **who paid** this bill.
 5. Click **Save**. Nothing is saved before this.
 
