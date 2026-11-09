@@ -17,12 +17,16 @@ async function setup(ocr: OcrProvider | null) {
 describe("OcrService", () => {
   it("stores the image and returns a prefilled draft", async () => {
     const provider: OcrProvider = {
-      extract: async () => ({ merchant: "Warung", items: [{ name: "Nasi", qty: 2, unitPrice: 20000 }], tax: 4000, total: 44000 }),
+      extract: async () => ({
+        data: { merchant: "Warung", items: [{ name: "Nasi", qty: 2, unitPrice: 20000 }], tax: 4000, total: 44000 },
+        model: "b:free",
+      }),
     };
     const { services, user, event } = await setup(provider);
     const d = await services.ocr.uploadAndExtract(user.id, event.id, jpeg);
     expect(d).toMatchObject({
       ocrStatus: "ok",
+      ocrModel: "b:free",
       title: "Warung",
       receiptTotal: 44000,
       items: [{ name: "Nasi", qty: 2, total: 40000 }],
@@ -33,10 +37,17 @@ describe("OcrService", () => {
   });
 
   it("keeps the image and returns an empty draft when OCR fails or returns junk", async () => {
-    for (const extract of [async () => { throw new Error("rate limited"); }, async () => ({ hello: "world" })]) {
+    const extracts: OcrProvider["extract"][] = [
+      async () => {
+        throw new Error("rate limited");
+      },
+      async () => ({ data: { hello: "world" }, model: "a:free" }),
+      async () => ({ data: { items: [] }, model: "a:free" }),
+    ];
+    for (const extract of extracts) {
       const { services, user, event } = await setup({ extract });
       const d = await services.ocr.uploadAndExtract(user.id, event.id, jpeg);
-      expect(d).toMatchObject({ ocrStatus: "failed", items: [], title: "" });
+      expect(d).toMatchObject({ ocrStatus: "failed", ocrModel: null, items: [], title: "" });
       expect(d.imagePath).toBeTruthy();
     }
   });

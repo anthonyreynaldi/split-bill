@@ -54,6 +54,8 @@ export const BillDraftDto = BillFormValues.extend({
   receiptTotal: z.number().nullable(),
   /** Signed URL to show the image next to the draft. */
   imageUrl: z.string().nullable(),
+  /** The model that read the receipt (after any fallback). Null unless `ocrStatus` is `ok`. */
+  ocrModel: z.string().nullable(),
 });
 export type BillDraftDto = z.infer<typeof BillDraftDto>;
 

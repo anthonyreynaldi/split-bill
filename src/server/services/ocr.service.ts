@@ -37,11 +37,17 @@ export class OcrService {
     await this.repos.images.put(imagePath, file.data, file.contentType);
     const imageUrl = await this.repos.images.signedUrl(imagePath, IMAGE_URL_TTL_SECONDS).catch(() => null);
 
-    const empty = { ...ocrToFormValues(OcrResult.parse({}), event.currency, imagePath), title: "", imageUrl };
+    const empty = {
+      ...ocrToFormValues(OcrResult.parse({}), event.currency, imagePath),
+      title: "",
+      imageUrl,
+      ocrModel: null,
+    };
     if (!this.provider) return { ...empty, ocrStatus: "disabled" };
 
     try {
-      const parsed = OcrResult.safeParse(await this.provider.extract(file));
+      const { data, model } = await this.provider.extract(file);
+      const parsed = OcrResult.safeParse(data);
       if (!parsed.success) {
         console.warn("[ocr] model output did not match OcrResult:", parsed.error.issues.slice(0, 5));
         return { ...empty, ocrStatus: "failed" };
@@ -50,7 +56,7 @@ export class OcrService {
         console.warn("[ocr] model found no items on the receipt");
         return { ...empty, ocrStatus: "failed" };
       }
-      return { ...ocrToFormValues(parsed.data, event.currency, imagePath), imageUrl, ocrStatus: "ok" };
+      return { ...ocrToFormValues(parsed.data, event.currency, imagePath), imageUrl, ocrModel: model, ocrStatus: "ok" };
     } catch (err) {
       console.warn("[ocr] extraction failed:", err instanceof Error ? err.message : err);
       return { ...empty, ocrStatus: "failed" };

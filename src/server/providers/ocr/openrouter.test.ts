@@ -24,7 +24,7 @@ const make = (models: string[], fetchFn: typeof fetch, logs: string[] = []) =>
 describe("OpenRouter OCR provider", () => {
   it("sends one model as `model` and returns the parsed JSON", async () => {
     const f = fakeFetch(ok("a:free", '{"items":[]}'));
-    await expect(make(["a:free"], f.fn).extract(image)).resolves.toEqual({ items: [] });
+    await expect(make(["a:free"], f.fn).extract(image)).resolves.toEqual({ data: { items: [] }, model: "a:free" });
     expect(f.bodies[0]).toMatchObject({ model: "a:free" });
     expect(f.bodies[0]).not.toHaveProperty("models");
   });
@@ -32,7 +32,7 @@ describe("OpenRouter OCR provider", () => {
   it("sends several models as OpenRouter's `models` fallback list", async () => {
     const logs: string[] = [];
     const f = fakeFetch(ok("b:free", '{"total":1}'));
-    await expect(make(["a:free", "b:free"], f.fn, logs).extract(image)).resolves.toEqual({ total: 1 });
+    await expect(make(["a:free", "b:free"], f.fn, logs).extract(image)).resolves.toEqual({ data: { total: 1 }, model: "b:free" });
     expect(f.bodies[0]).toMatchObject({ models: ["a:free", "b:free"] });
     expect(logs).toEqual(["[ocr] read by b:free"]); // OpenRouter fell back on its side
   });
@@ -40,7 +40,7 @@ describe("OpenRouter OCR provider", () => {
   it("retries with the remaining models when a request fails", async () => {
     const logs: string[] = [];
     const f = fakeFetch(new Response("rate-limited upstream", { status: 429 }), ok("b:free", '{"ok":true}'));
-    await expect(make(["a:free", "b:free", "c:free"], f.fn, logs).extract(image)).resolves.toEqual({ ok: true });
+    await expect(make(["a:free", "b:free", "c:free"], f.fn, logs).extract(image)).resolves.toEqual({ data: { ok: true }, model: "b:free" });
     expect(f.bodies.map((b) => b.models ?? b.model)).toEqual([["a:free", "b:free", "c:free"], ["b:free", "c:free"]]);
     expect(logs[0]).toMatch(/^\[ocr\] a:free failed: HTTP 429/);
   });
@@ -61,7 +61,7 @@ describe("OpenRouter OCR provider", () => {
 
   it("network errors also fall through to the next model", async () => {
     const f = fakeFetch(new Error("timeout"), ok("b:free", "{}"));
-    await expect(make(["a:free", "b:free"], f.fn).extract(image)).resolves.toEqual({});
+    await expect(make(["a:free", "b:free"], f.fn).extract(image)).resolves.toEqual({ data: {}, model: "b:free" });
   });
 });
 

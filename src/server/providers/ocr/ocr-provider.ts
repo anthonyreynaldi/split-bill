@@ -1,12 +1,21 @@
 /**
  * Port for receipt reading (ADR 0005). Implementations return the model's
- * **raw parsed JSON**; `OcrService` validates it with the `OcrResult` zod DTO.
+ * **raw parsed JSON** (`data`) and which model produced it (`model`);
+ * `OcrService` validates `data` with the `OcrResult` zod DTO.
  * Add a new provider (Tesseract, Google Vision…) by implementing this and
  * choosing it in `container.ts`.
  */
 export interface OcrProvider {
   /** @throws on network/model errors or non-JSON output */
-  extract(image: { data: Uint8Array; contentType: string }): Promise<unknown>;
+  extract(image: { data: Uint8Array; contentType: string }): Promise<OcrExtraction>;
+}
+
+/** What a provider read, and who read it. */
+export interface OcrExtraction {
+  /** Raw parsed JSON from the model. */
+  data: unknown;
+  /** The model that actually answered (after any fallback), e.g. `google/gemma-4-31b-it:free`; null if unknown. */
+  model: string | null;
 }
 
 /** Instructions shared by LLM-based providers. Keep the JSON shape in sync with `OcrResult`. */

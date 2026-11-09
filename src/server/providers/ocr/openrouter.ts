@@ -1,4 +1,4 @@
-import { RECEIPT_PROMPT, type OcrProvider } from "./ocr-provider";
+import { RECEIPT_PROMPT, type OcrExtraction, type OcrProvider } from "./ocr-provider";
 
 const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 const ATTEMPT_TIMEOUT_MS = 25_000;
@@ -14,6 +14,7 @@ const ATTEMPT_TIMEOUT_MS = 25_000;
  * 2. if the request still fails (HTTP error, timeout, empty or non-JSON output),
  *    we retry with the models after the one that failed, at most `models.length` attempts.
  *
+ * Returns the parsed JSON plus the model that actually answered.
  * @throws when every model failed; the message lists each failure.
  */
 export function createOpenRouterOcrProvider(cfg: {
@@ -30,7 +31,7 @@ export function createOpenRouterOcrProvider(cfg: {
   const log = cfg.log ?? ((m: string) => console.warn(m));
 
   return {
-    async extract({ data, contentType }) {
+    async extract({ data, contentType }): Promise<OcrExtraction> {
       const imageUrl = `data:${contentType};base64,${Buffer.from(data).toString("base64")}`;
       const failures: string[] = [];
 
@@ -39,7 +40,7 @@ export function createOpenRouterOcrProvider(cfg: {
         try {
           const { model, json } = await requestOnce(doFetch, cfg, models, imageUrl);
           if (i > 0 || model !== models[0]) log(`[ocr] read by ${model}`);
-          return json;
+          return { data: json, model };
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);
           failures.push(`${models[0]}: ${msg}`);
