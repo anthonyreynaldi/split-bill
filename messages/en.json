@@ -177,6 +177,15 @@
       "perPerson": "Per person",
       "unassigned": "{amount} is not assigned to anyone yet.",
       "receiptMismatch": "The receipt says {receipt}. Check the items."
+    },
+    "receipt": {
+      "show": "Show receipt",
+      "hide": "Hide receipt",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "fit": "Fit to width",
+      "rotate": "Rotate",
+      "openFull": "Open full size"
     }
   },
   "ocr": {

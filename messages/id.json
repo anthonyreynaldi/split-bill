@@ -177,6 +177,15 @@
       "perPerson": "Per orang",
       "unassigned": "{amount} belum dibagi ke siapa pun.",
       "receiptMismatch": "Di struk tertulis {receipt}. Periksa item."
+    },
+    "receipt": {
+      "show": "Lihat struk",
+      "hide": "Sembunyikan struk",
+      "zoomIn": "Perbesar",
+      "zoomOut": "Perkecil",
+      "fit": "Pas lebar",
+      "rotate": "Putar",
+      "openFull": "Buka ukuran penuh"
     }
   },
   "ocr": {

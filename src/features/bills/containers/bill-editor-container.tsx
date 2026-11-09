@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { ArrowLeft, Receipt, Trash2 } from "lucide-react";
 import type { BillFormValues, ParticipantDto } from "@/shared/dto";
 import { errorCodeOf } from "@/shared/lib/result";
 import { Link } from "@/i18n/navigation";
@@ -16,7 +16,9 @@ import { TextField } from "@/components/form/text-field";
 import { useFieldErrors } from "@/components/form/use-field-errors";
 import { useFormatters, type Formatters } from "@/components/format/use-formatters";
 import { useEventDetail } from "@/features/events/hooks/use-events";
+import { cn } from "@/lib/utils";
 import { BillPreview } from "../components/bill-preview";
+import { ReceiptViewer } from "../components/receipt-viewer";
 import { emptyBillValues, useBill, useBillForm, useBillPreview, useDeleteBill } from "../hooks/use-bills";
 import { BillChargesSection } from "./bill-charges-section";
 import { BillItemsSection } from "./bill-items-section";
@@ -80,12 +82,18 @@ function BillFormView(props: {
   const { form } = useBillForm({ eventId: props.eventId, billId: props.billId, initial: props.initial });
   const del = useDeleteBill(props.eventId, props.billId);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [showReceipt, setShowReceipt] = useState(false); // phones/tablets only; always shown on lg+
+  const hasReceipt = !!props.imageUrl;
   const submitted = () => form.state.submissionAttempts > 0;
 
   return (
     <form
       noValidate
-      className="space-y-4"
+      className={cn(
+        "space-y-4",
+        // with a receipt, grow past the 56rem page column (up to 72rem) to fit it beside the form
+        hasReceipt && "lg:mx-[calc((100%_-_min(72rem,100vw_-_2rem))/2)]",
+      )}
       onSubmit={(e) => {
         e.preventDefault();
         form.handleSubmit();
@@ -105,102 +113,127 @@ function BillFormView(props: {
 
       {props.before}
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_18rem]">
-        <div className="space-y-4">
-          <Card>
-            <CardContent className="grid gap-3 sm:grid-cols-[1fr_10rem]">
-              <form.Field name="title">
-                {(f) => (
-                  <TextField
-                    id="bill-title"
-                    label={t("title")}
-                    placeholder={t("titlePlaceholder")}
-                    value={f.state.value}
-                    onChange={f.handleChange}
-                    onBlur={f.handleBlur}
-                    errors={fieldErrors(f.state.meta, submitted())}
-                  />
-                )}
-              </form.Field>
-              <form.Field name="billDate">
-                {(f) => (
-                  <TextField
-                    id="bill-date"
-                    type="date"
-                    label={t("date")}
-                    value={f.state.value ?? ""}
-                    onChange={(v) => f.handleChange(v || null)}
-                  />
-                )}
-              </form.Field>
-              <form.Field name="paidBy">
-                {(f) => (
-                  <SelectField
-                    id="bill-paid-by"
-                    className="sm:col-span-2"
-                    label={t("paidBy")}
-                    placeholder={t("paidByPlaceholder")}
-                    value={f.state.value}
-                    onChange={f.handleChange}
-                    options={props.participants.map((p) => ({ value: p.id, label: p.name }))}
-                  />
-                )}
-              </form.Field>
-            </CardContent>
-          </Card>
+      <div className={hasReceipt ? "grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]" : "contents"}>
+        {hasReceipt && (
+          <aside
+            className={cn(
+              "flex flex-col gap-2 self-start",
+              showReceipt && "sticky top-0 z-20 h-[45vh] bg-background pb-2",
+              "lg:sticky lg:top-4 lg:z-auto lg:h-[calc(100dvh-2rem)] lg:pb-0",
+            )}
+          >
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full lg:hidden"
+              aria-expanded={showReceipt}
+              onClick={() => setShowReceipt((v) => !v)}
+            >
+              <Receipt /> {showReceipt ? t("receipt.hide") : t("receipt.show")}
+            </Button>
+            <ReceiptViewer
+              src={props.imageUrl!}
+              alt={t("receiptImage")}
+              className={cn("flex-1", showReceipt ? "flex" : "hidden lg:flex")}
+              labels={{
+                zoomIn: t("receipt.zoomIn"),
+                zoomOut: t("receipt.zoomOut"),
+                fit: t("receipt.fit"),
+                rotate: t("receipt.rotate"),
+                openFull: t("receipt.openFull"),
+              }}
+            />
+          </aside>
+        )}
 
-          {props.imageUrl && (
+        <div className={cn("grid gap-4", hasReceipt ? "xl:grid-cols-[minmax(0,1fr)_18rem]" : "lg:grid-cols-[1fr_18rem]")}>
+          <div className="space-y-4">
             <Card>
-              <CardContent>
-                {/* eslint-disable-next-line @next/next/no-img-element -- short-lived signed URL */}
-                <img src={props.imageUrl} alt={t("receiptImage")} className="mx-auto max-h-96 rounded-md object-contain" />
+              <CardContent className="grid gap-3 sm:grid-cols-[1fr_10rem]">
+                <form.Field name="title">
+                  {(f) => (
+                    <TextField
+                      id="bill-title"
+                      label={t("title")}
+                      placeholder={t("titlePlaceholder")}
+                      value={f.state.value}
+                      onChange={f.handleChange}
+                      onBlur={f.handleBlur}
+                      errors={fieldErrors(f.state.meta, submitted())}
+                    />
+                  )}
+                </form.Field>
+                <form.Field name="billDate">
+                  {(f) => (
+                    <TextField
+                      id="bill-date"
+                      type="date"
+                      label={t("date")}
+                      value={f.state.value ?? ""}
+                      onChange={(v) => f.handleChange(v || null)}
+                    />
+                  )}
+                </form.Field>
+                <form.Field name="paidBy">
+                  {(f) => (
+                    <SelectField
+                      id="bill-paid-by"
+                      className="sm:col-span-2"
+                      label={t("paidBy")}
+                      placeholder={t("paidByPlaceholder")}
+                      value={f.state.value}
+                      onChange={f.handleChange}
+                      options={props.participants.map((p) => ({ value: p.id, label: p.name }))}
+                    />
+                  )}
+                </form.Field>
               </CardContent>
             </Card>
-          )}
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("items.title")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BillItemsSection form={form} participants={props.participants} currency={props.currency} fmt={fmt} />
-            </CardContent>
-          </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>{t("items.title")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <BillItemsSection form={form} participants={props.participants} currency={props.currency} fmt={fmt} />
+              </CardContent>
+            </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("charges.title")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BillChargesSection form={form} currency={props.currency} />
-            </CardContent>
-          </Card>
-        </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>{t("charges.title")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <BillChargesSection form={form} currency={props.currency} />
+              </CardContent>
+            </Card>
+          </div>
 
-        <div className="space-y-3 lg:sticky lg:top-4 lg:self-start">
-          <Card>
-            <CardContent>
-              <form.Subscribe selector={(s) => s.values}>
-                {(values) => (
-                  <LivePreview values={values} participants={props.participants} fmt={fmt} receiptTotal={props.receiptTotal} />
-                )}
-              </form.Subscribe>
-            </CardContent>
-          </Card>
-          <form.Subscribe selector={(s) => [s.isSubmitting, s.submissionAttempts > 0 && !s.isValid] as const}>
-            {([busy, invalid]) => (
-              <>
-                {invalid && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{t("fixErrors")}</AlertDescription>
-                  </Alert>
-                )}
-                <Button type="submit" className="w-full" disabled={busy}>
-                  {busy ? tc("loading") : tc("save")}
-                </Button>
-              </>
-            )}
-          </form.Subscribe>
+          <div className={cn("space-y-3", hasReceipt ? "xl:sticky xl:top-4 xl:self-start" : "lg:sticky lg:top-4 lg:self-start")}>
+            <Card>
+              <CardContent>
+                <form.Subscribe selector={(s) => s.values}>
+                  {(values) => (
+                    <LivePreview values={values} participants={props.participants} fmt={fmt} receiptTotal={props.receiptTotal} />
+                  )}
+                </form.Subscribe>
+              </CardContent>
+            </Card>
+            <form.Subscribe selector={(s) => [s.isSubmitting, s.submissionAttempts > 0 && !s.isValid] as const}>
+              {([busy, invalid]) => (
+                <>
+                  {invalid && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{t("fixErrors")}</AlertDescription>
+                    </Alert>
+                  )}
+                  <Button type="submit" className="w-full" disabled={busy}>
+                    {busy ? tc("loading") : tc("save")}
+                  </Button>
+                </>
+              )}
+            </form.Subscribe>
+          </div>
         </div>
       </div>
 
