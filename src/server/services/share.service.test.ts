@@ -81,4 +81,30 @@ describe("ShareService", () => {
     await expect(share.upsert(other.id, { eventId: event.id })).rejects.toMatchObject({ code: "NOT_FOUND" });
     await expect(share.getSettings(other.id, event.id)).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
+
+  it("hides receipt photos from link viewers when the owner turns them off", async () => {
+    const { services, share, owner, event } = await setup();
+    const ana = await services.events.addParticipant(owner.id, { eventId: event.id, name: "Ana" });
+    const draft = await services.ocr.uploadAndExtract(owner.id, event.id, {
+      data: new Uint8Array([0xff, 0xd8, 0xff, 1]),
+      contentType: "image/jpeg",
+    });
+    await services.bills.create(owner.id, {
+      eventId: event.id,
+      title: "Lunch",
+      billDate: null,
+      paidBy: ana.id,
+      imagePath: draft.imagePath,
+      chargeSplitMode: "proportional",
+      items: [{ name: "Soto", qty: 1, unitPrice: 10000, total: 10000, splitMode: "even", allocations: [] }],
+      charges: [],
+    });
+    const { slug } = await share.upsert(owner.id, { eventId: event.id });
+    expect((await share.getPublic(slug, false)).bills[0].imageUrl).toBeTruthy();
+    await share.upsert(owner.id, { eventId: event.id, showPhotos: false });
+    const hidden = await share.getPublic(slug, false);
+    expect(hidden.bills[0].imageUrl).toBeNull();
+    expect(hidden.bills[0].items[0].name).toBe("Soto"); // the breakdown itself still shows
+    expect(JSON.stringify(hidden)).not.toContain(draft.imagePath!); // nor the storage path
+  });
 });

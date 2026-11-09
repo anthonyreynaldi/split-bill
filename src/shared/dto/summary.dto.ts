@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { EventIdInput, SettlementModeSchema } from "./common";
+import { EventIdInput, SettlementModeSchema, SplitModeSchema } from "./common";
 import { ParticipantDto } from "./event.dto";
 
 export { EventIdInput as GetSummaryInput };
@@ -22,6 +22,19 @@ const PersonBillDto = z.object({
   total: z.number(),
 });
 
+/** One line of a bill as the owner entered it, with who shares it. */
+export const SummaryItemDto = z.object({
+  id: z.string(),
+  name: z.string(),
+  qty: z.number(),
+  unitPrice: z.number(),
+  total: z.number(),
+  splitMode: SplitModeSchema,
+  /** `custom`: portions per person. `per_unit`: one row per person per unit (`unit` is 0-based). `even`: empty. */
+  allocations: z.array(z.object({ participantId: z.string(), units: z.number(), unit: z.number().optional() })),
+});
+export type SummaryItemDto = z.infer<typeof SummaryItemDto>;
+
 export const SummaryBillDto = z.object({
   id: z.string(),
   title: z.string(),
@@ -35,6 +48,9 @@ export const SummaryBillDto = z.object({
   total: z.number(),
   unassigned: z.number(),
   perPerson: z.array(PersonBillDto),
+  items: z.array(SummaryItemDto),
+  /** Short-lived signed URL of the receipt photo; null when there is none or photos are hidden. */
+  imageUrl: z.string().nullable(),
 });
 export type SummaryBillDto = z.infer<typeof SummaryBillDto>;
 

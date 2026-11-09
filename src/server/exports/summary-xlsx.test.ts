@@ -30,6 +30,8 @@ const summary: SummaryDto = {
         { participantId: "a", items: [{ itemId: "i", name: "Soto", units: 1, amount: 10000 }], subtotal: 10000, discount: 0, service: 0, tax: 1000, rounding: 0, total: 11000 },
         { participantId: "b", items: [{ itemId: "i", name: "Soto", units: 1, amount: 10000 }], subtotal: 10000, discount: 0, service: 0, tax: 1000, rounding: 0, total: 11000 },
       ],
+      items: [{ id: "i", name: "Soto", qty: 2, unitPrice: 10000, total: 20000, splitMode: "even", allocations: [] }],
+      imageUrl: null,
     },
   ],
   people: [

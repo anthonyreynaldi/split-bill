@@ -9,7 +9,7 @@ import { buildSummary } from "./summary.service";
 export const MAX_PASSCODE_ATTEMPTS = 5;
 export const LOCK_MINUTES = 15;
 
-type Repos = Pick<Repositories, "events" | "participants" | "bills" | "shareLinks">;
+type Repos = Pick<Repositories, "events" | "participants" | "bills" | "shareLinks" | "images">;
 
 const toDto = (s: ShareLink): ShareLinkDto => ({
   slug: s.slug,
@@ -67,7 +67,7 @@ export class ShareService {
   }
 
   /**
-   * Public: the read-only summary.
+   * Public: the read-only summary. Receipt photos only when the owner allows it (`showPhotos`).
    * @throws `NOT_FOUND` (unknown or disabled link), `PASSCODE_REQUIRED`
    */
   async getPublic(slug: string, hasAccess: boolean): Promise<SharedSummaryDto> {
@@ -75,7 +75,7 @@ export class ShareService {
     if (link.passcodeHash && !hasAccess) throw new AppError("PASSCODE_REQUIRED");
     const event = await this.repos.events.findById(link.eventId);
     if (!event) throw new AppError("NOT_FOUND");
-    return buildSummary(this.repos, event);
+    return buildSummary(this.repos, event, { photos: link.showPhotos });
   }
 
   /**

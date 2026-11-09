@@ -72,4 +72,68 @@ describe("SummaryService", () => {
     const e = await services.events.create(u.id, { name: "Trip" });
     await expect(services.summary.get(x.id, e.id)).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
+
+  it("lists each bill's items with their split and a signed photo URL (only when photos are on)", async () => {
+    const { services } = createTestServices();
+    const u = await services.auth.register({ email: "p@b.co", password: "secret123" });
+    const e = await services.events.create(u.id, { name: "Trip" });
+    const [a, b] = await Promise.all(
+      ["Ana", "Budi"].map((name) => services.events.addParticipant(u.id, { eventId: e.id, name })),
+    );
+    const jpeg = { data: new Uint8Array([0xff, 0xd8, 0xff, 1]), contentType: "image/jpeg" };
+    const draft = await services.ocr.uploadAndExtract(u.id, e.id, jpeg); // stores the photo
+    await services.bills.create(u.id, {
+      eventId: e.id,
+      title: "Dinner",
+      billDate: null,
+      paidBy: a.id,
+      imagePath: draft.imagePath,
+      chargeSplitMode: "proportional",
+      items: [
+        { name: "Rice", qty: 1, unitPrice: 10000, total: 10000, splitMode: "even", allocations: [] },
+        {
+          name: "Satay",
+          qty: 3,
+          unitPrice: 10000,
+          total: 30000,
+          splitMode: "custom",
+          allocations: [
+            { participantId: a.id, units: 2 },
+            { participantId: b.id, units: 1 },
+          ],
+        },
+        {
+          name: "Pizza",
+          qty: 2,
+          unitPrice: 30000,
+          total: 60000,
+          splitMode: "per_unit",
+          allocations: [
+            { participantId: a.id, units: 1, unit: 0 },
+            { participantId: b.id, units: 1, unit: 0 },
+            { participantId: b.id, units: 1, unit: 1 },
+          ],
+        },
+      ],
+      charges: [],
+    });
+
+    const s = await services.summary.get(u.id, e.id);
+    const bill = s.bills[0];
+    expect(bill.imageUrl).toMatch(/^data:image\/jpeg;base64,/);
+    expect(bill.items.map((i) => [i.name, i.splitMode])).toEqual([
+      ["Rice", "even"],
+      ["Satay", "custom"],
+      ["Pizza", "per_unit"],
+    ]);
+    expect(bill.items[1].allocations).toEqual([
+      { participantId: a.id, units: 2 },
+      { participantId: b.id, units: 1 },
+    ]);
+    expect(bill.items[2].allocations.map((x) => x.unit).sort()).toEqual([0, 0, 1]);
+
+    const noPhotos = await services.summary.get(u.id, e.id, { photos: false });
+    expect(noPhotos.bills[0].imageUrl).toBeNull();
+    expect(noPhotos.bills[0].items).toHaveLength(3);
+  });
 });

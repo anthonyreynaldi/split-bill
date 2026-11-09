@@ -16,7 +16,8 @@ import { defineAction, requireUserId } from "./_lib/define-action";
  * Errors: `UNAUTHORIZED`, `NOT_FOUND`.
  */
 export const exportSummaryExcel = defineAction(ExportExcelInput, async ({ eventId, locale }): Promise<FileDto> => {
-  const summary = await getContainer().services.summary.get(await requireUserId(), eventId);
+  // the workbook has no pictures, so don't sign image URLs
+  const summary = await getContainer().services.summary.get(await requireUserId(), eventId, { photos: false });
   const t = await getTranslations({ locale, namespace: "export.xlsx" });
   const bytes = await buildSummaryXlsx(summary, {
     sheets: { people: t("sheets.people"), transfers: t("sheets.transfers"), items: t("sheets.items"), bills: t("sheets.bills") },
