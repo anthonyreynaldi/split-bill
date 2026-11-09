@@ -120,8 +120,9 @@ function BillFormView(props: {
           <aside
             className={cn(
               "flex flex-col gap-2 self-start",
-              showReceipt && "sticky top-0 z-20 h-[45vh] bg-background pb-2",
-              "lg:sticky lg:top-4 lg:z-auto lg:h-[calc(100dvh-2rem)] lg:pb-0",
+              // phones: pinned edge to edge at the top while the items scroll underneath
+              showReceipt && "sticky top-0 z-20 -mx-4 h-[45vh] bg-background px-4 pt-2 pb-2 shadow-md",
+              "lg:sticky lg:top-4 lg:z-auto lg:mx-0 lg:h-[calc(100dvh-2rem)] lg:p-0 lg:shadow-none",
             )}
           >
             <Button
