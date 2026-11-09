@@ -92,7 +92,7 @@ export function AllocationEditor(props: {
       </div>
 
       {props.splitMode === "custom" && (
-        <ul className="grid gap-1 sm:grid-cols-2">
+        <ul className="grid gap-1 @md:grid-cols-2">
           {props.participants.map((p) => {
             const units = unitsOf(p.id);
             const id = `${props.idPrefix}-${p.id}`;
