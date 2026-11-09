@@ -18,7 +18,7 @@ import { useFormatters, type Formatters } from "@/components/format/use-formatte
 import { useEventDetail } from "@/features/events/hooks/use-events";
 import { cn } from "@/lib/utils";
 import { BillPreview } from "../components/bill-preview";
-import { ReceiptViewer } from "../components/receipt-viewer";
+import { ReceiptViewer } from "@/components/common/receipt-viewer";
 import { emptyBillValues, useBill, useBillForm, useBillPreview, useDeleteBill } from "../hooks/use-bills";
 import { BillChargesSection } from "./bill-charges-section";
 import { BillItemsSection } from "./bill-items-section";
