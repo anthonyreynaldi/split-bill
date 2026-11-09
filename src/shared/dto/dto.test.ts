@@ -130,5 +130,7 @@ describe("share DTOs", () => {
     expect(UpsertShareLinkInput.parse({ eventId: id }).passcode).toBeUndefined();
     expect(UpsertShareLinkInput.parse({ eventId: id, passcode: null }).passcode).toBeNull();
     expect(UpsertShareLinkInput.safeParse({ eventId: id, passcode: "12" }).success).toBe(false);
+    // omitted = keep the current value (a passcode change must not re-enable a disabled link)
+    expect(UpsertShareLinkInput.parse({ eventId: id, showPhotos: false }).enabled).toBeUndefined();
   });
 });

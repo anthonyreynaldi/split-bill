@@ -16,7 +16,8 @@ const PasscodeSchema = z
  */
 export const UpsertShareLinkInput = z.object({
   eventId: IdSchema,
-  enabled: z.boolean().default(true),
+  /** Omit to keep the current value (new links: true). */
+  enabled: z.boolean().optional(),
   passcode: PasscodeSchema.nullable().optional(),
   /** Show receipt photos to link viewers. Omit to keep the current setting (new links: true). */
   showPhotos: z.boolean().optional(),
