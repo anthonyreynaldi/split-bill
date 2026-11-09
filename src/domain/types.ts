@@ -103,5 +103,7 @@ export interface ShareLink {
   failedAttempts: number;
   lockedUntil: string | null;
   enabled: boolean;
+  /** Whether link viewers see the receipt photos. */
+  showPhotos: boolean;
   createdAt: string;
 }

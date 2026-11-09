@@ -48,6 +48,7 @@ export const toShareLink = (r: Tables<"share_links">): ShareLink => ({
   failedAttempts: r.failed_attempts,
   lockedUntil: r.locked_until,
   enabled: r.enabled,
+  showPhotos: r.show_photos,
   createdAt: r.created_at,
 });
 

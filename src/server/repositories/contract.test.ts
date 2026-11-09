@@ -180,10 +180,12 @@ describe.each(backends)("%s repositories", (_name, make) => {
     const { r, event } = await setup();
     const slug = `s-${crypto.randomUUID()}`;
     const s = await r.shareLinks.create({ eventId: event.id, slug, passcodeHash: "h", enabled: true });
-    expect(s).toMatchObject({ failedAttempts: 0, lockedUntil: null });
+    expect(s).toMatchObject({ failedAttempts: 0, lockedUntil: null, showPhotos: true });
     expect((await r.shareLinks.findBySlug(slug))?.id).toBe(s.id);
     const u = await r.shareLinks.update(s.id, { failedAttempts: 3, passcodeHash: null });
-    expect(u).toMatchObject({ failedAttempts: 3, passcodeHash: null, enabled: true, slug });
+    expect(u).toMatchObject({ failedAttempts: 3, passcodeHash: null, enabled: true, showPhotos: true, slug });
+    expect(await r.shareLinks.update(s.id, { showPhotos: false })).toMatchObject({ showPhotos: false, failedAttempts: 3 });
+    expect((await r.shareLinks.findBySlug(slug))?.showPhotos).toBe(false);
     expect((await r.shareLinks.findByEventId(event.id))?.id).toBe(s.id);
   });
 

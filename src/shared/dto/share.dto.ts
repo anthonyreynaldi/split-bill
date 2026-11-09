@@ -18,6 +18,8 @@ export const UpsertShareLinkInput = z.object({
   eventId: IdSchema,
   enabled: z.boolean().default(true),
   passcode: PasscodeSchema.nullable().optional(),
+  /** Show receipt photos to link viewers. Omit to keep the current setting (new links: true). */
+  showPhotos: z.boolean().optional(),
 });
 export type UpsertShareLinkInput = z.input<typeof UpsertShareLinkInput>;
 
@@ -26,6 +28,7 @@ export const ShareLinkDto = z.object({
   slug: z.string(),
   enabled: z.boolean(),
   hasPasscode: z.boolean(),
+  showPhotos: z.boolean(),
 });
 export type ShareLinkDto = z.infer<typeof ShareLinkDto>;
 

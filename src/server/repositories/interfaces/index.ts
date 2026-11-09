@@ -97,10 +97,18 @@ export interface BillRepository {
 export interface ShareLinkRepository {
   findByEventId(eventId: Id): Promise<ShareLink | null>;
   findBySlug(slug: string): Promise<ShareLink | null>;
-  create(data: { eventId: Id; slug: string; passcodeHash: string | null; enabled: boolean }): Promise<ShareLink>;
+  /** `showPhotos` defaults to true. */
+  create(data: {
+    eventId: Id;
+    slug: string;
+    passcodeHash: string | null;
+    enabled: boolean;
+    showPhotos?: boolean;
+  }): Promise<ShareLink>;
+  /** Only the given fields change. */
   update(
     id: Id,
-    patch: Partial<Pick<ShareLink, "passcodeHash" | "enabled" | "failedAttempts" | "lockedUntil">>,
+    patch: Partial<Pick<ShareLink, "passcodeHash" | "enabled" | "showPhotos" | "failedAttempts" | "lockedUntil">>,
   ): Promise<ShareLink>;
 }
 

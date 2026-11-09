@@ -23,7 +23,16 @@ describe("ShareService", () => {
     const b = await share.upsert(owner.id, { eventId: event.id });
     expect(a.slug).toBe(b.slug);
     expect(a.slug).toMatch(/^[\w-]{22}$/);
-    expect(a).toEqual({ slug: a.slug, enabled: true, hasPasscode: false });
+    expect(a).toEqual({ slug: a.slug, enabled: true, hasPasscode: false, showPhotos: true });
+  });
+
+  it("keeps the photo setting unless it is changed", async () => {
+    const { share, owner, event } = await setup();
+    await share.upsert(owner.id, { eventId: event.id });
+    expect((await share.upsert(owner.id, { eventId: event.id, showPhotos: false })).showPhotos).toBe(false);
+    // other edits (passcode, enabled) don't reset it
+    expect((await share.upsert(owner.id, { eventId: event.id, passcode: "1234" })).showPhotos).toBe(false);
+    expect((await share.getSettings(owner.id, event.id))?.showPhotos).toBe(false);
   });
 
   it("serves the summary publicly without a passcode", async () => {

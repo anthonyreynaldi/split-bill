@@ -137,6 +137,7 @@ export type Database = {
           failed_attempts: number;
           locked_until: string | null;
           enabled: boolean;
+          show_photos: boolean;
           created_at: string;
         };
         Insert: {
@@ -147,6 +148,7 @@ export type Database = {
           failed_attempts?: number;
           locked_until?: string | null;
           enabled?: boolean;
+          show_photos?: boolean;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["share_links"]["Insert"]>;

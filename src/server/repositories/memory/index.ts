@@ -160,13 +160,14 @@ export function createMemoryRepositories(): Repositories {
       async findBySlug(slug) {
         return clone([...shareLinks.values()].find((s) => s.slug === slug) ?? null);
       },
-      async create({ eventId, slug, passcodeHash, enabled }) {
+      async create({ eventId, slug, passcodeHash, enabled, showPhotos = true }) {
         const s: ShareLink = {
           id: uuid(),
           eventId,
           slug,
           passcodeHash,
           enabled,
+          showPhotos,
           failedAttempts: 0,
           lockedUntil: null,
           createdAt: now(),
@@ -175,7 +176,8 @@ export function createMemoryRepositories(): Repositories {
         return clone(s);
       },
       async update(id, patch) {
-        const s = { ...get(shareLinks, id, "share link"), ...patch };
+        const defined = Object.fromEntries(Object.entries(patch).filter(([, v]) => v !== undefined));
+        const s = { ...get(shareLinks, id, "share link"), ...defined };
         shareLinks.set(id, s);
         return clone(s);
       },

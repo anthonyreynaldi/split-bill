@@ -11,7 +11,12 @@ export const LOCK_MINUTES = 15;
 
 type Repos = Pick<Repositories, "events" | "participants" | "bills" | "shareLinks">;
 
-const toDto = (s: ShareLink): ShareLinkDto => ({ slug: s.slug, enabled: s.enabled, hasPasscode: !!s.passcodeHash });
+const toDto = (s: ShareLink): ShareLinkDto => ({
+  slug: s.slug,
+  enabled: s.enabled,
+  hasPasscode: !!s.passcodeHash,
+  showPhotos: s.showPhotos,
+});
 
 /** 128-bit random, URL-safe. Unguessable, so the link itself is the first secret. */
 const newSlug = () => Buffer.from(crypto.getRandomValues(new Uint8Array(16))).toString("base64url");
@@ -48,12 +53,14 @@ export class ShareService {
           slug: newSlug(),
           passcodeHash: passcodeHash ?? null,
           enabled: input.enabled ?? true,
+          showPhotos: input.showPhotos ?? true,
         }),
       );
     }
     return toDto(
       await this.repos.shareLinks.update(existing.id, {
         enabled: input.enabled ?? existing.enabled,
+        showPhotos: input.showPhotos ?? existing.showPhotos,
         ...(passcodeHash !== undefined && { passcodeHash, failedAttempts: 0, lockedUntil: null }),
       }),
     );

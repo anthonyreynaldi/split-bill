@@ -172,12 +172,12 @@ export function createSupabaseRepositories(config: { url: string; serviceKey: st
         );
         return row ? toShareLink(row) : null;
       },
-      async create({ eventId, slug, passcodeHash, enabled }) {
+      async create({ eventId, slug, passcodeHash, enabled, showPhotos = true }) {
         return toShareLink(
           check(
             await db
               .from("share_links")
-              .insert({ event_id: eventId, slug, passcode_hash: passcodeHash, enabled })
+              .insert({ event_id: eventId, slug, passcode_hash: passcodeHash, enabled, show_photos: showPhotos })
               .select()
               .single(),
             "shareLinks.create",
@@ -192,6 +192,7 @@ export function createSupabaseRepositories(config: { url: string; serviceKey: st
               .update({
                 passcode_hash: patch.passcodeHash,
                 enabled: patch.enabled,
+                show_photos: patch.showPhotos,
                 failed_attempts: patch.failedAttempts,
                 locked_until: patch.lockedUntil,
               })
