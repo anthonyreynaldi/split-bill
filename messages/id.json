@@ -219,6 +219,15 @@
       "perBill": "Per tagihan",
       "nettHint": "Utang saling mengurangi antar tagihan, jadi transfer lebih sedikit.",
       "perBillHint": "Setiap orang membayar ke orang yang membayar tiap tagihan."
+    },
+    "bills": {
+      "title": "Tagihan",
+      "paidBy": "Dibayar {name}",
+      "noPayer": "Belum ada pembayar",
+      "items": "{count} item",
+      "notAssigned": "Belum dibagi ke siapa pun",
+      "unassigned": "{amount} dari tagihan ini belum dibagi ke siapa pun.",
+      "perPerson": "Per orang di tagihan ini"
     }
   },
   "export": {

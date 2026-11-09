@@ -8,11 +8,13 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BillBreakdown } from "./bill-breakdown";
 
 export type SettlementMode = SummaryDto["event"]["settlementMode"];
 
 /**
- * The whole summary: who pays whom, per-person totals and item details.
+ * The whole summary: who pays whom, per-person totals and item details, then
+ * every bill as the owner set it up (photo, who shares each item).
  * Pure view, used by the owner page AND the public share page (read-only).
  * `onCaptureEl` receives the element that is exported as an image.
  */
@@ -138,6 +140,9 @@ export function SummaryView({ onCaptureEl, ...props }: {
           ))}
         </div>
       </div>
+
+      {/* Outside the captured element: the PNG stays compact, and cross-origin photos can't break it. */}
+      <BillBreakdown bills={s.bills} name={name} money={money} date={props.date} />
     </div>
   );
 }
