@@ -189,7 +189,8 @@
       "ok": "Struk terbaca. Periksa setiap baris, lalu pilih siapa yang bayar dan siapa pesan apa.",
       "failed": "Struk tidak terbaca. Foto sudah terlampir; silakan isi item.",
       "disabled": "Pembacaan otomatis belum diatur. Foto sudah terlampir; silakan isi item."
-    }
+    },
+    "readBy": "Dibaca oleh {model}"
   },
   "summary": {
     "grandTotal": "Total semua tagihan",

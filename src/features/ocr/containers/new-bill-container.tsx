@@ -25,6 +25,7 @@ export function NewBillContainer({ eventId }: { eventId: string }) {
           onFile={(f) => upload.mutate(f)}
           pending={upload.isPending}
           status={draft?.ocrStatus ?? null}
+          model={draft?.ocrModel ?? null}
           labels={{
             takePhoto: t("takePhoto"),
             chooseFile: t("chooseFile"),
@@ -32,6 +33,7 @@ export function NewBillContainer({ eventId }: { eventId: string }) {
             reading: t("reading"),
             privacy: t("privacy"),
             status: { ok: t("status.ok"), failed: t("status.failed"), disabled: t("status.disabled") },
+            readBy: (model) => t("readBy", { model }),
           }}
         />
       }

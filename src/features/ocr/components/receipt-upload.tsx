@@ -20,6 +20,8 @@ export function ReceiptUpload(props: {
   onFile: (file: File) => void;
   pending: boolean;
   status: OcrStatus | null;
+  /** Model that read the receipt; shown under the success message. */
+  model?: string | null;
   labels: {
     takePhoto: string;
     chooseFile: string;
@@ -27,6 +29,7 @@ export function ReceiptUpload(props: {
     reading: string;
     privacy: string;
     status: Record<OcrStatus, string>;
+    readBy: (model: string) => string;
   };
 }) {
   const camera = useRef<HTMLInputElement>(null);
@@ -71,7 +74,14 @@ export function ReceiptUpload(props: {
         {props.status && (
           <Alert variant={props.status === "ok" ? "default" : "destructive"}>
             {props.status === "ok" ? <CheckCircle2 /> : <TriangleAlert />}
-            <AlertDescription>{props.labels.status[props.status]}</AlertDescription>
+            <AlertDescription>
+              <p>{props.labels.status[props.status]}</p>
+              {props.status === "ok" && props.model && (
+                <p className="text-xs text-muted-foreground" data-testid="ocr-model">
+                  {props.labels.readBy(props.model)}
+                </p>
+              )}
+            </AlertDescription>
           </Alert>
         )}
         <p className="text-xs text-muted-foreground">{props.labels.privacy}</p>

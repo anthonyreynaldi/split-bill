@@ -189,7 +189,8 @@
       "ok": "Receipt read. Check every line, then choose who paid and who had what.",
       "failed": "Could not read the receipt. The photo is attached; please fill in the items.",
       "disabled": "Automatic reading is not set up. The photo is attached; please fill in the items."
-    }
+    },
+    "readBy": "Read by {model}"
   },
   "summary": {
     "grandTotal": "Total of all bills",
