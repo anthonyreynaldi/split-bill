@@ -49,6 +49,14 @@ Untuk setiap item, pilih:
 ## Fitur: Ringkasan dan pelunasan
 Buka **Ringkasan** untuk melihat item setiap orang, bagian biaya tambahan, total, dan yang sudah dibayar.
 
+Di bawahnya, **Tagihan** menampilkan setiap tagihan. Ketuk salah satu untuk membukanya dan melihat:
+- foto struk;
+- setiap item dengan cara pembagiannya (**Semua orang**, **Pilih orang** atau **Per porsi**) dan berapa yang dibayar tiap orang. Item per porsi juga menampilkan siapa yang berbagi tiap porsi;
+- pajak, layanan, diskon dan total;
+- total tiap orang untuk tagihan itu.
+
+Teman yang membuka tautan berbagi Anda melihat bagian Tagihan yang sama, jadi semua orang bisa memeriksa pembagiannya.
+
 Ada dua cara pelunasan:
 - **Per tagihan**: setiap orang membayar ke orang yang membayar tagihan tersebut.
 - **Nett (bersih)**: utang saling mengurangi antar tagihan, sehingga transfer lebih sedikit. Contoh: Ana membayar makan siang dan Budi membayar makan malam. Alih-alih saling transfer, cukup selisihnya saja yang dikirim.
@@ -62,6 +70,7 @@ Ada dua cara pelunasan:
 - **Tautan berbagi**: klik **Bagikan**, lalu **Buat tautan**, dan salin. Siapa pun yang punya tautan bisa **melihat** (bukan mengubah) ringkasan.
   - Tambahkan **kode akses** (4–32 karakter), dan pembuka tautan cukup memasukkannya sekali per perangkat. Setelah 5 kali salah, tautan dikunci 15 menit.
   - Hapus centang **Tautan aktif** untuk mematikan tautan kapan saja.
+  - Hapus centang **Tampilkan foto struk** untuk menyembunyikan foto dari tautan (secara bawaan foto ditampilkan). Struk bisa memuat nomor kartu atau alamat. Pembuka tautan tetap melihat item dan siapa yang berbaginya.
 
 ## Tanya jawab
 - **Kenapa satu orang Rp 3.334 dan lainnya Rp 3.333?** Uang tidak bisa dibagi ke pecahan rupiah. Kelebihan satu rupiah diberikan ke satu orang, sehingga total selalu sama persis dengan struk.

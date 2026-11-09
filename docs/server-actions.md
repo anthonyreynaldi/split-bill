@@ -111,7 +111,7 @@ The editor's live preview runs the **same** pure `calculateBill()` from `src/dom
 ### Summary: `src/server/actions/summary.actions.ts` → `features/summary/hooks/use-summary.ts`
 | Action | Input DTO | Output | Errors | Purpose |
 |---|---|---|---|---|
-| `getSummary` | `EventIdInput { eventId }` | `SummaryDto` | `UNAUTHORIZED`, `NOT_FOUND` | Per-person totals (`people`), per-bill breakdown (`bills[].perPerson[].items`), **both** `nettTransfers` and `perBillTransfers`, plus warnings (`billsWithoutPayer`, `unassigned`) |
+| `getSummary` | `EventIdInput { eventId }` | `SummaryDto` | `UNAUTHORIZED`, `NOT_FOUND` | Per-person totals (`people`), per-bill breakdown (`bills[].perPerson[].items`), each bill's `items` (with `splitMode` and `allocations`) and `imageUrl` (signed, 30 min), **both** `nettTransfers` and `perBillTransfers`, plus warnings (`billsWithoutPayer`, `unassigned`) |
 
 Both settlement plans come back in one response, so switching tabs is instant. The chosen mode is saved with `updateEvent({ settlementMode })`. The share link uses the same `SummaryDto` (built by `buildSummary()` in `summary.service.ts`).
 
@@ -126,8 +126,8 @@ The **image** export has no action. `useExportImage()` renders the summary eleme
 | Action | Who | Input DTO | Output | Errors | Purpose |
 |---|---|---|---|---|---|
 | `getShareLink` | owner | `EventIdInput` | `ShareLinkDto \| null` | `UNAUTHORIZED`, `NOT_FOUND` | Current settings (`slug`, `enabled`, `hasPasscode`) |
-| `upsertShareLink` | owner | `UpsertShareLinkInput { eventId, enabled?, passcode?: string \| null }` | `ShareLinkDto` | `UNAUTHORIZED`, `NOT_FOUND`, `VALIDATION_ERROR` | Create the link, turn it on or off, set the passcode (string) or remove it (`null`) |
-| `getSharedSummary` | **public** | `SharedSummaryInput { slug }` | `SummaryDto` | `NOT_FOUND`, `PASSCODE_REQUIRED` | Read-only summary |
+| `upsertShareLink` | owner | `UpsertShareLinkInput { eventId, enabled?, passcode?: string \| null, showPhotos? }` (omitted fields keep their value) | `ShareLinkDto { slug, enabled, hasPasscode, showPhotos }` | `UNAUTHORIZED`, `NOT_FOUND`, `VALIDATION_ERROR` | Create the link, turn it on or off, set the passcode (string) or remove it (`null`), show or hide receipt photos |
+| `getSharedSummary` | **public** | `SharedSummaryInput { slug }` | `SummaryDto` | `NOT_FOUND`, `PASSCODE_REQUIRED` | Read-only summary. `bills[].imageUrl` is `null` when the owner turned photos off |
 | `verifySharePasscode` | **public** | `VerifyPasscodeInput { slug, passcode }` | `null` (+ sets a 12 h httpOnly access cookie for this slug) | `NOT_FOUND`, `PASSCODE_INVALID`, `TOO_MANY_ATTEMPTS` | Unlock a protected link. 5 wrong tries lock it for 15 minutes |
 
 Security notes:

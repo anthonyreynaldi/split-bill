@@ -49,6 +49,14 @@ For each item, choose:
 ## Feature: Summary and settlement
 Open **Summary** to see, for each person, their items, their share of the charges, their total, and what they already paid.
 
+Below that, **Bills** lists every bill. Tap one to open it and see:
+- the receipt photo;
+- each item with how it is split (**Everyone**, **Choose people** or **Per unit**) and what each person pays for it. Per-unit items also show who shared each unit;
+- tax, service, discount and the total;
+- each person's total for that bill.
+
+Friends who open your share link see the same Bills section, so everyone can check the split.
+
 There are two ways to settle up:
 - **Per bill**: everyone pays back whoever paid each bill.
 - **Nett**: amounts cancel out across bills, so fewer transfers are needed. Example: Ana paid lunch and Budi paid dinner. Instead of paying each other, only the difference is sent.
@@ -62,6 +70,7 @@ There are two ways to settle up:
 - **Share link**: click **Share**, then **Create link**, and copy it. Anyone with the link can **view** (not edit) the summary.
   - Add a **passcode** (4–32 characters) and viewers must enter it once per device. After 5 wrong tries the link is locked for 15 minutes.
   - Untick **Link is active** to turn the link off at any time.
+  - Untick **Show receipt photos** to hide the photos from the link (they're shown by default). Receipts can show card numbers or addresses. Viewers still see the items and who shares them.
 
 ## FAQ
 - **Why does someone's share show Rp 3.334 and the others Rp 3.333?** Money can't be split into fractions of a rupiah. The extra rupiah goes to one person, so the totals always match the receipt exactly.

@@ -25,6 +25,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 - People: edit the event's people as a draft, then **Save** once. Enter adds the next name instantly, and pasting a list separated by commas or new lines adds many people. Rename in place, remove with undo, and see duplicate-name hints. Removals are confirmed. One atomic `saveParticipants` action, backed by the `save_participants` Postgres function (migration `20261105000001`).
 - Bills: the receipt photo sits beside the bill form (a sticky column on wide screens, a **Show receipt** panel pinned to the top on phones) with zoom, rotate and open full size. The photo shows as soon as it is picked, before reading finishes. Item rows use a container query, so they lay out by the card's width.
 - OCR: the success message says which model read the receipt (`ocrModel` on the draft, the model that answered after any fallback).
+- Summary and share link: a **Bills** section lists every bill with its receipt photo, each item with how it's split and each person's amount (unit lines for per-unit items), the charges, and each person's total. It sits outside the PNG export area. The share dialog has a **Show receipt photos** switch (migration `20261109000001`, `share_links.show_photos`, default on). When it's off, the public summary has `imageUrl: null`.
 - Bills: **Rounding** charge ("Pembulatan"). It is a signed amount, applied after tax, and shared like the other charges. OCR now reads the receipt's rounding line into the draft, so the drafted total matches the receipt. It is shown in the preview, the summary and the Excel export (new Bills column). Migration `20261105000002_rounding_charge.sql` widens the `bill_charges` checks.
 - OCR: `OPENROUTER_MODEL` accepts a comma-separated list of free models that fall back on each other when one is rate-limited.
 - OCR: on phones, choose between **Take photo** (camera) and **Choose photo** (gallery or files). Computers show only **Choose photo**.
@@ -32,6 +33,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/). Add one line
 - Docs: TypeDoc API site (`npm run docs`), updated architecture diagrams, user guides (EN/ID) matching the UI, manual release checklist.
 
 ### Fixed
+- Share: setting a passcode (or any update without `enabled`) no longer turns a disabled share link back on.
 - Bills: reopening a bill right after saving it showed the old values, and saving again reverted the edit.
 - OCR: a correct model answer containing `null` (e.g. no discount) was rejected as "Could not read". The reason a result is rejected is now logged.
 - Events: the **Add** person button showed no feedback, so clicking it again added the same person several times. It is now disabled with a spinner while saving.
