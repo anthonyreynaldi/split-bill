@@ -32,15 +32,18 @@ export function ShareDialogContainer({ eventId }: { eventId: string }) {
               url={url}
               enabled={link.data?.enabled ?? true}
               hasPasscode={link.data?.hasPasscode ?? false}
+              showPhotos={link.data?.showPhotos ?? true}
               pending={upsert.isPending}
               onCreate={() => upsert.mutate({})}
               onEnabledChange={(enabled) => upsert.mutate({ enabled })}
+              onShowPhotosChange={(showPhotos) => upsert.mutate({ showPhotos })}
               onSetPasscode={(passcode) => upsert.mutate({ passcode })}
               onRemovePasscode={() => upsert.mutate({ passcode: null })}
               labels={{
                 create: t("create"), intro: t("intro"), enabled: t("enabled"), copy: t("copy"), copied: t("copied"),
                 passcode: t("passcode"), passcodeOn: t("passcodeOn"), passcodeOff: t("passcodeOff"),
                 setPasscode: t("setPasscode"), removePasscode: t("removePasscode"), passcodeHint: t("passcodeHint"),
+                showPhotos: t("showPhotos"), showPhotosHint: t("showPhotosHint"),
               }}
             />
           )}

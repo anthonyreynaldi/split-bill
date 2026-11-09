@@ -286,6 +286,8 @@
       "title": "Protected bill",
       "description": "Enter the passcode you got from the organiser.",
       "submit": "Open"
-    }
+    },
+    "showPhotos": "Show receipt photos",
+    "showPhotosHint": "Viewers can see each bill's photo. Receipts can show card numbers or addresses."
   }
 }

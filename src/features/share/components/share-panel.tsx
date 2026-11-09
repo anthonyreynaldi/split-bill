@@ -13,14 +13,17 @@ export function SharePanel(props: {
   url: string | null;
   enabled: boolean;
   hasPasscode: boolean;
+  showPhotos: boolean;
   pending: boolean;
   onCreate: () => void;
   onEnabledChange: (enabled: boolean) => void;
+  onShowPhotosChange: (showPhotos: boolean) => void;
   onSetPasscode: (passcode: string) => void;
   onRemovePasscode: () => void;
   labels: {
     create: string; intro: string; enabled: string; copy: string; copied: string;
     passcode: string; passcodeOn: string; passcodeOff: string; setPasscode: string; removePasscode: string; passcodeHint: string;
+    showPhotos: string; showPhotosHint: string;
   };
 }) {
   const [code, setCode] = useState("");
@@ -41,6 +44,20 @@ export function SharePanel(props: {
       <div className="flex items-center gap-2">
         <Checkbox id="share-enabled" checked={props.enabled} onCheckedChange={(c) => props.onEnabledChange(!!c)} />
         <Label htmlFor="share-enabled">{l.enabled}</Label>
+      </div>
+      <div className="flex items-start gap-2">
+        <Checkbox
+          id="share-show-photos"
+          className="mt-0.5"
+          checked={props.showPhotos}
+          disabled={props.pending}
+          onCheckedChange={(c) => props.onShowPhotosChange(!!c)}
+          aria-describedby="share-show-photos-hint"
+        />
+        <div className="space-y-0.5">
+          <Label htmlFor="share-show-photos">{l.showPhotos}</Label>
+          <p id="share-show-photos-hint" className="text-xs text-muted-foreground">{l.showPhotosHint}</p>
+        </div>
       </div>
       <div className="flex gap-2">
         <Input readOnly value={props.url} aria-label="URL" onFocus={(e) => e.target.select()} disabled={!props.enabled} />

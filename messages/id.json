@@ -286,6 +286,8 @@
       "title": "Tagihan dilindungi",
       "description": "Masukkan kode akses dari pembuat acara.",
       "submit": "Buka"
-    }
+    },
+    "showPhotos": "Tampilkan foto struk",
+    "showPhotosHint": "Pembuka tautan bisa melihat foto tiap tagihan. Struk bisa memuat nomor kartu atau alamat."
   }
 }
