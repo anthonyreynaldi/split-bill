@@ -27,12 +27,14 @@ import { BillItemsSection } from "./bill-items-section";
  * /events/[eventId]/bills/new and /events/[eventId]/bills/[billId].
  * Loads the event (people, currency) and the bill, then renders the form.
  * `draft` (from OCR) prefills a new bill. `before` renders above the form (e.g. the upload box).
+ * `previewUrl` (a local object URL) shows a just-picked photo before the upload finishes.
  */
 export function BillEditorContainer(props: {
   eventId: string;
   billId: string | null;
   draft?: (BillFormValues & { receiptTotal?: number | null; imageUrl?: string | null }) | null;
   before?: ReactNode;
+  previewUrl?: string | null;
 }) {
   const tErr = useTranslations("errors");
   const event = useEventDetail(props.eventId);
@@ -56,7 +58,7 @@ export function BillEditorContainer(props: {
       eventId={props.eventId}
       billId={props.billId}
       initial={initial}
-      imageUrl={bill.data?.imageUrl ?? props.draft?.imageUrl ?? null}
+      imageUrl={bill.data?.imageUrl ?? props.previewUrl ?? props.draft?.imageUrl ?? null}
       receiptTotal={props.draft?.receiptTotal ?? null}
       participants={event.data.participants}
       currency={event.data.event.currency}

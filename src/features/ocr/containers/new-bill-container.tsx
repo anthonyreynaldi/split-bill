@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { BillDraftDto } from "@/shared/dto";
 import { BillEditorContainer } from "@/features/bills/containers/bill-editor-container";
@@ -12,6 +12,9 @@ export function NewBillContainer({ eventId }: { eventId: string }) {
   const t = useTranslations("ocr");
   const [draft, setDraft] = useState<BillDraftDto | null>(null);
   const upload = useOcrUpload(eventId, setDraft);
+  // The picked photo, shown at once while it uploads and is read.
+  const [preview, setPreview] = useState<string | null>(null);
+  useEffect(() => () => void (preview && URL.revokeObjectURL(preview)), [preview]);
 
   return (
     <BillEditorContainer
@@ -20,9 +23,13 @@ export function NewBillContainer({ eventId }: { eventId: string }) {
       eventId={eventId}
       billId={null}
       draft={draft}
+      previewUrl={upload.isPending ? preview : null}
       before={
         <ReceiptUpload
-          onFile={(f) => upload.mutate(f)}
+          onFile={(f) => {
+            setPreview(URL.createObjectURL(f));
+            upload.mutate(f);
+          }}
           pending={upload.isPending}
           status={draft?.ocrStatus ?? null}
           model={draft?.ocrModel ?? null}
